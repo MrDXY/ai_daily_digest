@@ -1,0 +1,39 @@
+# Hacker News 站点配置
+site:
+  name: "Hacker News"
+  url: "https://news.ycombinator.com/best"
+  type: "structured"
+
+# 抓取策略
+fetch:
+  prefer_light: true
+  requires_js: false
+  wait_for: 1000
+
+# 列表页解析规则
+list_parser:
+  container: "tr.athing"
+  selectors:
+    title: "span.titleline > a"
+    url: "span.titleline > a"
+    # 分数和评论在下一个 tr 中，需要特殊处理
+    score_row: "+ tr"
+  url_prefix: ""
+
+# 额外处理逻辑
+post_process:
+  # 需要关联下一行获取分数
+  merge_rows: true
+  score_selector: "span.score"
+  comments_selector: "a:contains('comments')"
+
+# 文章详情抓取
+detail_parser:
+  enabled: true
+  # 使用 readability 自动提取正文
+  use_readability: true
+  max_details: 30
+
+cleaning:
+  remove_tags: ["script", "style", "nav", "footer", "aside"]
+  extract_text: true

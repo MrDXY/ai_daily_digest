@@ -1,0 +1,44 @@
+# GitHub Trending 站点配置
+site:
+  name: "GitHub Trending"
+  url: "https://github.com/trending"
+  type: "structured"  # structured | article | feed
+
+# 抓取策略
+fetch:
+  # 优先使用轻量抓取
+  prefer_light: true
+  # 需要 JS 渲染
+  requires_js: true
+  # 额外等待时间 (Playwright)
+  wait_for: 2000
+
+# 列表页解析规则
+list_parser:
+  # 项目容器选择器
+  container: "article.Box-row"
+  # 各字段选择器 (相对于 container)
+  selectors:
+    title: "h2 a"
+    url: "h2 a"
+    description: "p.col-9"
+    language: "span[itemprop='programmingLanguage']"
+    stars: "a.Link--muted:nth-of-type(1)"
+    forks: "a.Link--muted:nth-of-type(2)"
+    stars_today: "span.d-inline-block.float-sm-right"
+  # URL 前缀
+  url_prefix: "https://github.com"
+
+# 详情页解析 (可选，用于获取 README)
+detail_parser:
+  enabled: true
+  readme_selector: "article.markdown-body"
+  # 最大抓取详情数
+  max_details: 20
+
+# 数据清洗
+cleaning:
+  # 移除的 HTML 标签
+  remove_tags: ["script", "style", "nav", "footer"]
+  # 提取纯文本
+  extract_text: true
