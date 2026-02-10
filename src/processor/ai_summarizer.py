@@ -289,7 +289,7 @@ class AzureOpenAIProvider(BaseAIProvider):
 
             response = await client.chat.completions.create(
                 model=self.config.deployment_name,  # Azure 使用 deployment name
-                max_tokens=self.config.max_tokens,
+                max_completion_tokens=self.config.max_tokens,
                 temperature=self.config.temperature,
                 messages=messages,
             )
