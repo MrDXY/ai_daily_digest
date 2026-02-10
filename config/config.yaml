@@ -1,0 +1,108 @@
+# ============================================
+# AI 内容脱水日报 - 主配置文件
+# ============================================
+
+# 应用基础配置
+app:
+  name: "AI Daily Digest"
+  version: "1.0.0"
+  output_dir: "./output"
+  log_level: "INFO"
+
+# 爬虫配置
+crawler:
+  # 并发数
+  concurrency: 5
+  # 请求超时 (秒)
+  timeout: 30
+  # 重试次数
+  max_retries: 3
+  # 重试间隔 (秒)
+  retry_delay: 2
+  # 页面缓存配置
+  cache:
+    # 是否启用缓存
+    enabled: true
+    # 缓存目录 (相对于项目根目录)
+    cache_dir: "./output/cache"
+    # 缓存保留天数
+    keep_days: 7
+  # User-Agent 池
+  user_agents:
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  # Playwright 配置
+  playwright:
+    headless: true
+    slow_mo: 100  # 毫秒，模拟人类操作
+
+# AI 模型配置 (支持多种后端)
+ai:
+  # 当前使用的模型 provider
+  default_provider: "claude"
+
+  # Claude 配置
+  claude:
+    api_key: "${ANTHROPIC_API_KEY}"
+    model: "claude-sonnet-4-20250514"
+    max_tokens: 2048
+    temperature: 0.3
+
+  # Azure OpenAI 配置
+  azure_openai:
+    api_key: "${AZURE_OPENAI_API_KEY}"
+    api_base: "${AZURE_OPENAI_ENDPOINT}"
+    api_version: "${AZURE_OPENAI_API_VERSION}"
+    deployment_name: "gpt-5.2"
+    max_tokens: 16384
+    temperature: 0.3
+
+  # OpenAI 配置
+  openai:
+    api_key: "${OPENAI_API_KEY}"
+    model: "gpt-4o"
+    max_tokens: 2048
+    temperature: 0.3
+
+  # 自定义模型配置 (兼容 OpenAI API 格式)
+  custom:
+    api_key: "${CUSTOM_API_KEY}"
+    api_base: "https://your-model-endpoint.com/v1"
+    model: "your-model-name"
+    max_tokens: 2048
+    temperature: 0.3
+    # 额外请求头
+    extra_headers:
+      X-Custom-Header: "value"
+
+# 脱水配置
+digest:
+  # 评分阈值 (终端只显示高于此分数的项目)
+  score_threshold: 8
+  # 批量处理大小
+  batch_size: 10
+  # 摘要最大长度
+  max_summary_length: 500
+  # 最大爬取子页面数
+  max_subpage_crawl: 30
+
+# 输出配置
+output:
+  # 报告文件名格式
+  report_filename: "daily_report_{date}.md"
+  # 是否生成 JSON 格式
+  generate_json: true
+  # 终端输出样式
+  terminal:
+    show_low_score: false
+    color_theme: "monokai"
+
+# 目标网站列表
+sites:
+  - name: "github_trending"
+    enabled: false
+    config_file: "sites/github_trending.yaml"
+
+  - name: "hacker_news"
+    enabled: true
+    config_file: "sites/hacker_news.yaml"

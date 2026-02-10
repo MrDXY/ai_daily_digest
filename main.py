@@ -89,22 +89,44 @@ class DailyDigestApp:
             self.display.show_warning("No tasks to process")
             return DigestReport(date=datetime.now().strftime("%Y-%m-%d"))
 
-        # 执行抓取
-        self.display.show_info("Starting fetch...")
-        results = await self._execute_fetch(tasks)
+        # 获取缓存配置
+        cache_dir = get_cache_dir(self.config)
+        cache_enabled = self.config.crawler.cache.enabled
 
-        # 统计抓取结果
-        success_count = sum(1 for r in results if r.status == FetchStatus.SUCCESS)
-        failed_count = len(results) - success_count
-        self.display.show_fetch_result(success_count, failed_count, len(results))
+        # 使用 FetchManager 进行抓取和处理（保持 manager 可用于二次爬取）
+        async with FetchManager(
+            self.config.crawler,
+            cache_dir=cache_dir,
+            cache_enabled=cache_enabled,
+        ) as fetch_manager:
+            # 清理旧缓存
+            keep_days = self.config.crawler.cache.keep_days
+            fetch_manager.clear_old_cache(keep_days)
 
-        # 处理和摘要
-        if self.dry_run:
-            self.display.show_info("Dry run mode - skipping AI processing")
-            articles = self._create_mock_articles(results)
-        else:
-            self.display.show_info("Processing and summarizing...")
-            articles = await self._process_results(results)
+            # 执行抓取
+            self.display.show_info("Starting fetch...")
+            results = await self._execute_fetch_with_manager(tasks, fetch_manager)
+
+            # 统计抓取结果
+            success_count = sum(1 for r in results if r.status == FetchStatus.SUCCESS)
+            failed_count = len(results) - success_count
+            self.display.show_fetch_result(success_count, failed_count, len(results))
+
+            # 显示缓存统计
+            cache_stats = fetch_manager.get_stats().get("cache", {})
+            if cache_stats.get("enabled"):
+                self.display.show_info(
+                    f"Cache: {cache_stats.get('total_files', 0)} files, "
+                    f"{cache_stats.get('total_size_mb', 0)} MB"
+                )
+
+            # 处理和摘要
+            if self.dry_run:
+                self.display.show_info("Dry run mode - skipping AI processing")
+                articles = self._create_mock_articles(results)
+            else:
+                self.display.show_info("Processing and summarizing...")
+                articles = await self._process_results(results, fetch_manager)
 
         # 生成报告
         self.display.show_info("Generating report...")
@@ -175,8 +197,31 @@ class DailyDigestApp:
 
         return tasks
 
+    async def _execute_fetch_with_manager(
+        self,
+        tasks: list[FetchTask],
+        manager: 'FetchManager',
+    ) -> list[FetchResult]:
+        """使用指定的 FetchManager 执行抓取"""
+        # 使用进度条
+        progress = self.display.create_progress()
+
+        with progress:
+            task_id = progress.add_task(
+                "Fetching...",
+                total=len(tasks),
+            )
+
+            results = []
+            for task in tasks:
+                result = await manager.fetch(task)
+                results.append(result)
+                progress.update(task_id, advance=1)
+
+        return results
+
     async def _execute_fetch(self, tasks: list[FetchTask]) -> list[FetchResult]:
-        """执行抓取"""
+        """执行抓取（独立使用 FetchManager）"""
         # 获取缓存配置
         cache_dir = get_cache_dir(self.config)
         cache_enabled = self.config.crawler.cache.enabled
@@ -190,20 +235,7 @@ class DailyDigestApp:
             keep_days = self.config.crawler.cache.keep_days
             manager.clear_old_cache(keep_days)
 
-            # 使用进度条
-            progress = self.display.create_progress()
-
-            with progress:
-                task_id = progress.add_task(
-                    "Fetching...",
-                    total=len(tasks),
-                )
-
-                results = []
-                for task in tasks:
-                    result = await manager.fetch(task)
-                    results.append(result)
-                    progress.update(task_id, advance=1)
+            results = await self._execute_fetch_with_manager(tasks, manager)
 
             # 显示缓存统计
             cache_stats = manager.get_stats().get("cache", {})
@@ -218,11 +250,30 @@ class DailyDigestApp:
     async def _process_results(
         self,
         results: list[FetchResult],
+        fetch_manager: Optional['FetchManager'] = None,
     ) -> list[Article]:
         """处理抓取结果"""
         articles = []
 
         async with ProcessingPipeline(self.config) as pipeline:
+            # 设置二次爬取回调（如果有 fetch_manager）
+            if fetch_manager:
+                async def fetch_details_callback(urls: list[str], site_config: dict) -> list[FetchResult]:
+                    """二次爬取详情页的回调函数"""
+                    detail_tasks = []
+                    for url in urls:
+                        task = FetchTask(
+                            id=f"detail_{uuid.uuid4().hex[:8]}",
+                            url=url,
+                            site_name="detail",
+                            site_config=site_config,
+                        )
+                        detail_tasks.append(task)
+
+                    return await fetch_manager.fetch_many(detail_tasks)
+
+                pipeline.set_fetch_callback(fetch_details_callback)
+
             progress = self.display.create_progress()
 
             with progress:

@@ -2,7 +2,7 @@
 site:
   name: "GitHub Trending"
   url: "https://github.com/trending"
-  type: "structured"  # structured | article | feed
+  type: "structured"  # structured: 目录页，需要解析列表 | article: 内容页，直接爬取
 
 # 抓取策略
 fetch:
@@ -13,7 +13,8 @@ fetch:
   # 额外等待时间 (Playwright)
   wait_for: 2000
 
-# 列表页解析规则
+# 列表页解析规则（仅 structured 类型需要）
+# 如果此字段为空，则直接将页面作为内容页处理
 list_parser:
   # 项目容器选择器
   container: "article.Box-row"
@@ -29,12 +30,18 @@ list_parser:
   # URL 前缀
   url_prefix: "https://github.com"
 
-# 详情页解析 (可选，用于获取 README)
+# 详情页解析（用于获取详情内容）
 detail_parser:
+  # 是否启用二次爬取详情页
   enabled: true
-  readme_selector: "article.markdown-body"
   # 最大抓取详情数
   max_details: 20
+  # 是否使用 readability 自动提取（当 content_selectors 未定义时）
+  use_readability: false
+  # 内容选择器配置 - 定义要提取的字段
+  # 支持简单字符串选择器或带属性的复杂配置
+  content_selectors:
+    readme: "article.markdown-body"
 
 # 数据清洗
 cleaning:

@@ -1,0 +1,61 @@
+# 示例：带详细内容选择器的目录页配置
+# 这是一个完整的 structured 类型配置示例，展示如何使用 content_selectors
+
+site:
+  name: "Tech Blog Example"
+  url: "https://example.com/blog"
+  type: "structured"  # structured: 目录页，需要解析列表并可能二次爬取
+
+# 抓取策略
+fetch:
+  prefer_light: true
+  requires_js: false
+  wait_for: 1000
+
+# 列表页解析规则
+# 定义如何从目录页提取文章列表
+list_parser:
+  # 每个列表项的容器选择器
+  container: "article.post-card"
+  # 各字段选择器 (相对于 container)
+  selectors:
+    title: "h2.post-title a"
+    url: "h2.post-title a"
+    description: "p.post-excerpt"
+    author: "span.post-author"
+    publish_date: "time.post-date"
+    category: "span.post-category"
+  # URL 前缀（如果 URL 是相对路径）
+  url_prefix: "https://example.com"
+
+# 详情页解析配置
+detail_parser:
+  # 是否启用二次爬取详情页
+  enabled: true
+  # 最大抓取详情数
+  max_details: 20
+  # 是否使用 readability 自动提取（当 content_selectors 未定义时）
+  use_readability: false
+
+  # 内容选择器配置 - 定义要从详情页提取的字段
+  # 这些字段会被合并到列表项中，并传递给 AI 进行分析
+  content_selectors:
+    # 文章正文
+    content: "div.post-content"
+    # 文章标签
+    tags: "div.post-tags"
+    # 阅读时间
+    read_time: "span.read-time"
+    # 点赞数
+    likes: "span.like-count"
+    # 评论数
+    comments_count: "span.comment-count"
+    # 支持提取元素属性
+    cover_image:
+      selector: "img.post-cover"
+      attr: "src"
+
+# 数据清洗
+cleaning:
+  remove_tags: ["script", "style", "nav", "footer", "aside", "ads", "iframe"]
+  extract_text: true

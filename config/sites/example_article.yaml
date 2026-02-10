@@ -1,0 +1,38 @@
+# 示例：文章类型页面配置
+# 这是一个直接爬取内容页的示例配置
+
+site:
+  name: "Example Article Site"
+  url: "https://example.com/article"
+  type: "article"  # article: 直接作为内容页处理，不需要解析列表
+
+# 抓取策略
+fetch:
+  prefer_light: true
+  requires_js: false
+  wait_for: 1000
+
+# 注意：article 类型不需要 list_parser
+# list_parser: {}  # 为空或不存在时，直接作为内容页处理
+
+# 详情页解析配置
+detail_parser:
+  # 是否使用 readability 自动提取（当 content_selectors 未定义时）
+  use_readability: true
+
+  # 内容选择器配置 - 定义要提取的字段
+  # 如果定义了 content_selectors，将优先使用选择器提取
+  # 支持简单字符串选择器或带属性的复杂配置
+  # content_selectors:
+  #   title: "h1.article-title"
+  #   content: "div.article-body"
+  #   author: "span.author-name"
+  #   publish_date: "time.publish-date"
+  #   # 支持提取元素属性
+  #   cover_image:
+  #     selector: "img.cover"
+  #     attr: "src"
+
+cleaning:
+  remove_tags: ["script", "style", "nav", "footer", "aside", "ads"]
+  extract_text: true
