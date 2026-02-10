@@ -28,6 +28,7 @@ from src.core.exceptions import DigestException
 from src.crawler import FetchManager
 from src.processor import ProcessingPipeline, HTMLCleaner
 from src.notifier import ReportGenerator, TerminalDisplay
+from src.generator import ConfigGenerator
 
 
 # 配置日志
@@ -398,6 +399,26 @@ def parse_args() -> argparse.Namespace:
         help="详细输出",
     )
 
+    # 配置生成相关参数
+    parser.add_argument(
+        "--generate-config",
+        type=str,
+        metavar="URL",
+        help="根据指定 URL 生成站点配置文件",
+    )
+
+    parser.add_argument(
+        "--use-js",
+        action="store_true",
+        help="生成配置时使用 JS 渲染（配合 --generate-config 使用）",
+    )
+
+    parser.add_argument(
+        "--output",
+        type=str,
+        help="配置文件输出路径（配合 --generate-config 使用）",
+    )
+
     return parser.parse_args()
 
 
@@ -409,6 +430,17 @@ async def main() -> int:
         logging.getLogger().setLevel(logging.DEBUG)
 
     try:
+        # 如果是生成配置模式
+        if args.generate_config:
+            return await generate_site_config(
+                url=args.generate_config,
+                config_path=args.config,
+                provider=args.provider,
+                use_js=args.use_js,
+                output_path=args.output,
+            )
+
+        # 正常的日报生成模式
         app = DailyDigestApp(
             config_path=args.config,
             provider=args.provider,
@@ -430,6 +462,83 @@ async def main() -> int:
     except Exception as e:
         logger.exception(f"Unexpected error: {e}")
         return 1
+
+
+async def generate_site_config(
+    url: str,
+    config_path: Optional[str] = None,
+    provider: Optional[str] = None,
+    use_js: bool = False,
+    output_path: Optional[str] = None,
+) -> int:
+    """
+    生成站点配置文件
+
+    Args:
+        url: 目标 URL
+        config_path: 主配置文件路径
+        provider: AI provider
+        use_js: 是否使用 JS 渲染
+        output_path: 输出路径
+
+    Returns:
+        退出码
+    """
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.syntax import Syntax
+
+    console = Console()
+
+    console.print(Panel.fit(
+        f"[bold blue]🔧 站点配置生成器[/bold blue]\n\n"
+        f"目标 URL: [cyan]{url}[/cyan]\n"
+        f"JS 渲染: [yellow]{'是' if use_js else '否'}[/yellow]",
+        border_style="blue",
+    ))
+
+    # 加载配置
+    config = load_config(config_path)
+
+    # 覆盖 AI provider
+    if provider:
+        config.ai.default_provider = provider
+
+    console.print(f"\n[dim]AI Provider: {config.ai.default_provider}[/dim]\n")
+
+    # 创建生成器
+    generator = ConfigGenerator(config)
+
+    try:
+        with console.status("[bold green]正在处理...", spinner="dots"):
+            config_file_path, config_content = await generator.generate_config(
+                url=url,
+                use_js=use_js,
+                output_path=output_path,
+            )
+
+        # 显示生成的配置
+        console.print("\n[bold green]✅ 配置生成成功！[/bold green]\n")
+        console.print(f"配置文件已保存到: [cyan]{config_file_path}[/cyan]\n")
+
+        # 显示配置内容预览
+        console.print("[bold]生成的配置内容:[/bold]\n")
+        syntax = Syntax(config_content, "yaml", theme="monokai", line_numbers=True)
+        console.print(syntax)
+
+        # 提示后续操作
+        console.print("\n[dim]提示: 请检查生成的配置文件，并根据需要进行调整。[/dim]")
+        console.print("[dim]然后将其添加到 config/config.yaml 的 sites 列表中即可使用。[/dim]")
+
+        return 0
+
+    except Exception as e:
+        console.print(f"\n[bold red]❌ 配置生成失败: {e}[/bold red]")
+        logger.exception("配置生成错误")
+        return 1
+
+    finally:
+        await generator.close()
 
 
 if __name__ == "__main__":

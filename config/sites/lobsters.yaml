@@ -1,0 +1,40 @@
+site:
+  name: "Lobsters"
+  url: "https://lobste.rs/"
+  type: "structured"
+
+fetch:
+  prefer_light: true
+  requires_js: false
+  wait_for: 500
+
+list_parser:
+  container: "ol.stories.list > li.story"
+  selectors:
+    id: ":scope"
+    short_id: ":scope"
+    title: ":scope .details span.link a.u-url"
+    url: ":scope .details span.link a.u-url"
+    score: ":scope .voters a.upvoter"
+    tags: ":scope .details span.tags a.tag"
+    domain: ":scope .details a.domain"
+    author: ":scope .details .byline a.u-author"
+    author_url: ":scope .details .byline a.u-author"
+    time: ":scope .details .byline time"
+    comments_text: ":scope .details .byline span.comments_label a"
+    comments_url: ":scope .details .byline span.comments_label a"
+    description_hint: ":scope .details a.description_present"
+  url_prefix: "https://lobste.rs"
+
+detail_parser:
+  enabled: true
+  max_details: 20
+  use_readability: true
+  content_selectors:
+    title: "h1, header h1, .story .details span.link a.u-url"
+    content: ".comment_text, .story_text, .markdown, article"
+
+cleaning:
+  remove_tags: ["script", "style", "nav", "footer", "aside", "form"]
+  extract_text: true
+  trim: true

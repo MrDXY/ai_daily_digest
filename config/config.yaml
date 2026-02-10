@@ -39,7 +39,7 @@ crawler:
 # AI 模型配置 (支持多种后端)
 ai:
   # 当前使用的模型 provider
-  default_provider: "claude"
+  default_provider: "azure_openai"
 
   # Claude 配置
   claude:
@@ -104,5 +104,9 @@ sites:
     config_file: "sites/github_trending.yaml"
 
   - name: "hacker_news"
-    enabled: true
+    enabled: false
     config_file: "sites/hacker_news.yaml"
+
+  - name: "Lobsters"
+    enabled: true
+    config_file: "sites/lobsters.yaml"
