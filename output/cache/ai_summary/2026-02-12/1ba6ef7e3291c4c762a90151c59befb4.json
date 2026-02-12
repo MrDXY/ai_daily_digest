@@ -1,0 +1,31 @@
+{
+  "url": "https://hylo-lang.org/",
+  "summary": {
+    "summary": "输入内容仅包含“Hylo”相关页面的研究合作招募信息（面向学生/教授/独立贡献者），并未提供该语言的技术细节、设计目标或实现方案。可确认的是：项目在公开征集研究课题与合作方向，鼓励提出新主题并参与研究推进。由于缺少正文技术内容，无法对“全力投入值语义与泛型编程”的具体机制做出可靠概括。",
+    "core_value": "从现有文本看，其核心价值在于搭建开放的研究协作入口，吸引社区共同推进系统编程语言方向的研究议题。它解决的是“研究课题与贡献者对接/协作组织”的问题，而非直接呈现可落地的技术方案。",
+    "tech_stack": [
+      "N/A（输入未提供具体技术栈/实现语言/工具链信息）"
+    ],
+    "recommendation": "如果你关注系统编程语言、值语义与泛型编程的前沿研究，这类“开放研究课题+协作招募”页面值得跟进以获取最新研究方向与参与机会。但就当前输入而言，信息密度较低，建议补充原文/项目主页的技术介绍后再做深入评估。",
+    "score": 24.0,
+    "_source_item": {
+      "title": "Hylo: A Systems Programming Language All in on Value Semantics and Generic Programming",
+      "content": "Are you interested in research collaboration — as a student, professor, or independent contributor?\nLearn about our\nopen research topics\n, or suggest a new topic!",
+      "description": "",
+      "id": null,
+      "short_id": null,
+      "url": "https://hylo-lang.org/",
+      "score": "45",
+      "tags": "plt",
+      "domain": "hylo-lang.org",
+      "author": "fanf",
+      "author_url": "fanf",
+      "time": "29 hours ago",
+      "comments_text": "13 comments",
+      "comments_url": "13 comments",
+      "description_hint": null,
+      "source": "Lobsters"
+    }
+  },
+  "cached_at": "2026-02-12T05:06:49.946727"
+}

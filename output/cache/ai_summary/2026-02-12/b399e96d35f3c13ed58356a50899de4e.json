@@ -1,0 +1,28 @@
+{
+  "url": "https://www.kraxel.org/blog/2026/01/thank-you-ai/",
+  "summary": {
+    "summary": "作者宣布停止自建公开 Git（以及此前的 CVS）服务，原因是 AI 爬虫对 cgit 前端进行高频、低效请求，导致小型服务器被持续压垮。作者不再投入业余时间与爬虫对抗，转而将仓库主入口迁移到 GitHub/GitLab 等大型托管平台，并修复了历史链接。尽管博客已迁移为 Jekyll 静态站点仍较抗压，但爬虫造成的大量 404 也曾通过日志写满磁盘引发宕机，最终通过调整 logrotate 配置缓解。",
+    "core_value": "提供了一个现实案例：在 AI 爬虫时代，小型自建代码托管/网页前端的运维成本与抗滥用能力可能不再匹配，迁移到大型 git forge 成为更务实的选择。也提醒运维侧关注“非业务流量”带来的次生风险（如 404 洪泛导致日志爆盘）。",
+    "tech_stack": [
+      "Git",
+      "CVS",
+      "cgit",
+      "GitHub",
+      "GitLab",
+      "Apache HTTP Server",
+      "logrotate",
+      "Jekyll",
+      "WordPress"
+    ],
+    "recommendation": "值得关注其对“自建服务 vs 托管平台”的成本-收益权衡与抗爬虫现实压力的第一手反馈，并给出可操作的运维启示：静态化降低攻击面、以及日志与磁盘配额/轮转策略在异常流量下的重要性。",
+    "score": 78.0,
+    "_source_item": {
+      "title": "End of an era for me: no more self-hosted git",
+      "content": "Ok, it is over.  End of an era for me.  No more self-hosted git.  I\nhad a public git server running since 2011, and a public cvs server\nbefore that.  AI scrapers have hammered the poor, little server to\ndeath by flooding the cgit frontend with tons of pointless²\nrequests.  Actually a few months ago already.\nNow I finally decided to not try rebuild the server, be it with or\nwithout cgit web frontend.  I don't feel like taking up the fight\nwith the scrapers in my spare time, I leave that to people who are\nin a better position to do so.  Most repositories had mirrors on one\nor two of the large gitforges already.  Those are the primary\nrepositories now.  Go look\nat\ngitlab\nand\ngithub\n.\nLast week I've fixed all (I hope) dangeling links to the cgit\nrepsitories to point to the forges instead.\nNow I'm down to one self-hosted service, which is the webserver\nhosting mainly this blog and a few more little things.  In 2018 I've\nmigrated the blog from wordpress to jekyll, so it is all static\npages.  Taking this out by AI scrapers overloading the machine should\nbe next to impossible, and so far this has hold up.\nNevertheless AI scrapers already managed to trigger one outage.\nApparently millions of 404 answers where not enough to convince the\nbots that there is no cgit service (any more).  Apache had no\nproblems to deliver those, but the logs have filled up the disk so\nfast that logrotate didn't manage to keep things under control with\nthe default configuration.  Fixed config.  Knook wood.\n¹ Title inspired by\nthe\n2025\nedition of Security Nightmares\n.  Fun watching if you speak\ngerman.\n² Most inefficient way to get the complete repo.  Just clone it, ok?",
+      "description": "",
+      "url": "https://www.kraxel.org/blog/2026/01/thank-you-ai/",
+      "source": "Hacker News"
+    }
+  },
+  "cached_at": "2026-02-12T05:03:55.404927"
+}

@@ -1,0 +1,24 @@
+{
+  "url": "https://netnewswire.blog/2026/02/11/netnewswire-turns.html",
+  "summary": {
+    "summary": "文章回顾了 NetNewsWire 诞生 23 周年，并更新了当前开发进展：刚发布 7.0（Mac/iOS），正在推进 7.0.1 以修复回归问题与进行细节调整。作者同时给出后续版本规划：7.1 聚焦同步修复与改进，7.2 尚未确定方向，7.3 取决于前序进展及 WWDC 后苹果生态变化。",
+    "core_value": "通过公开里程碑与版本路线图，向用户透明传达发布后的回归修复、技术债清理与未来迭代重点，降低用户不确定性并增强社区协作预期。核心在于持续提升一款跨 Mac/iOS 的 RSS 阅读器在同步与体验上的可靠性与可用性。",
+    "tech_stack": [
+      "macOS",
+      "iOS",
+      "Swift（推测）",
+      "Apple 生态/WWDC 相关平台能力（推测）",
+      "RSS/订阅聚合（领域技术）"
+    ],
+    "recommendation": "适合关注开源/长期维护软件如何在大版本发布后快速修复回归、管理技术债并用里程碑驱动迭代的实践。对 NetNewsWire 用户而言，明确了近期同步改进方向与版本节奏，便于评估升级与反馈优先级。",
+    "score": 66.0,
+    "_source_item": {
+      "title": "NetNewsWire Turns 23",
+      "content": "NetNewsWire 1.0 for Mac shipped 23 years ago today! 🎸🎩🕶️\nHere’s where things are on this particular February 11: we just shipped 7.0 for Mac and iOS, and now we’re working on NetNewsWire 7.0.1.\nAfter a big release, no matter how careful we are, there are often some regressions to fix and tweaks to make right away, so we’re working on those. Here’s the milestone with the\ncurrent to-do list\n.\nBig picture: we still have a lot of bugs to fix, lots of tech debt to deal with, and lots of polish-needed areas of the app. With\nBrent’s retirement last year\nwe’ve been able to go\nway\nfaster on dealing with all this. We plan to keep up the pace.\nHere are our current plans:\nFor\nNetNewsWire 7.1\nwe’re focusing on syncing fixes and improvements.\nNetNewsWire 7.2\ndoesn’t have a focus yet. Could end up being UX fixes and polish, could be something else. Could be a potpourri, though we do prefer having a focus when possible.\nWe don’t have a NetNewsWire 7.3 plan yet — that’s too far out. Depends on what actually happens with 7.1 and 7.2, and it depends on what Apple adds to our to-do list at WWDC this year. (Touchscreen Macs? Folding iPhones? Big new Swift features? Who knows!)\nNote that we do add and remove tickets from milestones at any time — none of this is set in stone, of course.\nIt’s NetNewsWire’s birthday, but that’s a day to look forward, not to look back. The very best versions of NetNewsWire are still to come!",
+      "description": "",
+      "url": "https://netnewswire.blog/2026/02/11/netnewswire-turns.html",
+      "source": "Hacker News"
+    }
+  },
+  "cached_at": "2026-02-12T05:03:55.405417"
+}

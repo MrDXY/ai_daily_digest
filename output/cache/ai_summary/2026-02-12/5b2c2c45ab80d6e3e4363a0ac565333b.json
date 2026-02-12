@@ -1,0 +1,26 @@
+{
+  "url": "https://code.idtech.space/fn/hl2",
+  "summary": {
+    "summary": "Rad-Therapy II 是一个“洁净室实现”的项目，尝试在 Quake 1/QuakeWorld 生态（FTE 引擎）上复刻/承载《Half-Life 2》(2004) 的游戏逻辑与数据加载能力。项目目前无法从头到尾完整游玩，但可运行死亡竞赛等模式，并依赖用户提供正版 HL2 与 HL2DM 的资源目录。文档给出了运行方式与基于 Nuclide-SDK 的构建流程（编译游戏逻辑与引擎插件）。",
+    "core_value": "将 Source 时代的 HL2/HL2DM 资源与玩法模式在 Quake 1 引擎体系中“重新实现”，验证跨引擎兼容/移植的可行路径。它解决了“如何在非 Source 引擎中加载并驱动 HL2 资源与部分玩法”的工程问题，为研究引擎架构、资产管线与兼容层提供样例。",
+    "tech_stack": [
+      "Quake 1/QuakeWorld",
+      "FTEQW (FTE 引擎)",
+      "Nuclide-SDK",
+      "fteqcc (QuakeC 编译器)",
+      "QuakeC/游戏逻辑脚本",
+      "引擎插件系统",
+      "Steam/Valve VPK 与游戏数据文件"
+    ],
+    "recommendation": "值得关注在于其跨代引擎“洁净室复刻+插件化加载”的工程实践，对理解老引擎扩展、数据格式适配与兼容层设计很有参考价值。对模组作者与引擎开发者来说，构建链路清晰（make/update、编译 game 与 plugins），便于复现与二次开发。",
+    "score": 78.0,
+    "_source_item": {
+      "title": "Clean-room implementation of Half-Life 2 on the Quake 1 engine",
+      "content": "Rad-Therapy II\nThe original port of\nHalf-Life 2\n(2004) to Quake(World).\nThe game is\nnot\nplayable from start to finish.\nYou can play deathmatch and other odd modes.\nRequires both\nhl2\nand\nhl2dm\ndirectories in order to function. Any copy will do fine. If you're on a case-insensitive filesystem and you're running pre .vpk data files you might want to put them in a .zip and name it 'pak0.pk3'. It's generally easier to just use the latest data from Steam.\nPlaying/Installing\nRun\nFTE\nlike so:\nfteqw.exe -halflife2\nIt will then automatically attempt to install\nRad-Therapy II\n- when run from within your\nHalf-Life 2: Deathmatch\ndirectory.\nBuilding\nGit clone\nNuclide\nfirst, run\nmake update\nand\nmake fteqcc\n, then clone the repository inside the Nuclide-SDK:\ngit clone https://code.idtech.space/fn/hl2 hl2\nmake game GAME=hl2\nmake plugins GAME=hl2\nThe last command will build the plugins required for the engine to load the data files. The one before it will build the game-logic.\nMake sure that Nuclide-SDK has\nfteqcc\nand\nfteqw\npresent for building and running, respectively.\nIt will also respect versions installed by the package manager, just make sure it's up to date.\nMatrix\nIf you're a fellow Matrix user, join the Nuclide Space. Where you can ask questions, or prod devs about what they're up to.\nhttps://matrix.to/#/#nuclide:matrix.org\nIRC\nYou can also join us on #nuclide via irc.libera.chat.\nIt's bridged with the main room of the Matrix space.\nLicense\nISC License\nCopyright (c) 2019-2025 Marco \"eukara\" Cawthorne\nmarco@icculus.org\nPermission to use, copy, modify, and distribute this software for any\npurpose with or without fee is hereby granted, provided that the above\ncopyright notice and this permission notice appear in all copies.\nTHE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES\nWITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF\nMERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR\nANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES\nWHATSOEVER RESULTING FROM LOSS OF MIND, USE, DATA OR PROFITS, WHETHER\nIN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING\nOUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.\nContent Copyright Notice\nHalf-Life 2 and Half-Life 2: Deathmatch belong to Valve Corporation.\nOriginal licensed assets from Steam or a disc are required in order to experience\nRad-Therapy II\n.",
+      "description": "",
+      "url": "https://code.idtech.space/fn/hl2",
+      "source": "Hacker News"
+    }
+  },
+  "cached_at": "2026-02-12T05:03:32.880043"
+}

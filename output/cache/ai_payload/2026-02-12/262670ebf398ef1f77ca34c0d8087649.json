@@ -1,0 +1,10 @@
+{
+  "url": "https://netnewswire.blog/2026/02/11/netnewswire-turns.html",
+  "payload": {
+    "title": "NetNewsWire Turns 23",
+    "content": "NetNewsWire 1.0 for Mac shipped 23 years ago today! 🎸🎩🕶️\nHere’s where things are on this particular February 11: we just shipped 7.0 for Mac and iOS, and now we’re working on NetNewsWire 7.0.1.\nAfter a big release, no matter how careful we are, there are often some regressions to fix and tweaks to make right away, so we’re working on those. Here’s the milestone with the\ncurrent to-do list\n.\nBig picture: we still have a lot of bugs to fix, lots of tech debt to deal with, and lots of polish-needed areas of the app. With\nBrent’s retirement last year\nwe’ve been able to go\nway\nfaster on dealing with all this. We plan to keep up the pace.\nHere are our current plans:\nFor\nNetNewsWire 7.1\nwe’re focusing on syncing fixes and improvements.\nNetNewsWire 7.2\ndoesn’t have a focus yet. Could end up being UX fixes and polish, could be something else. Could be a potpourri, though we do prefer having a focus when possible.\nWe don’t have a NetNewsWire 7.3 plan yet — that’s too far out. Depends on what actually happens with 7.1 and 7.2, and it depends on what Apple adds to our to-do list at WWDC this year. (Touchscreen Macs? Folding iPhones? Big new Swift features? Who knows!)\nNote that we do add and remove tickets from milestones at any time — none of this is set in stone, of course.\nIt’s NetNewsWire’s birthday, but that’s a day to look forward, not to look back. The very best versions of NetNewsWire are still to come!",
+    "description": "",
+    "url": "https://netnewswire.blog/2026/02/11/netnewswire-turns.html"
+  },
+  "cached_at": "2026-02-12T05:02:08.677978"
+}

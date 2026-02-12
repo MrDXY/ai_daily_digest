@@ -1,0 +1,39 @@
+{
+  "url": "https://www.terracenetworks.com/blog/2026-02-11-telnet-routing",
+  "summary": {
+    "summary": "文章针对“美国主要 ISP 开始大规模过滤 Telnet 导致全球 Telnet 流量断崖式下跌”的报告提出质疑，并用 Terrace 自身传感器数据、其他公开观测数据与 RIPE Atlas 测量进行交叉验证。作者认为 GreyNoise 报告的关键结论存在基础性错误：观测到的会话骤降更可能源于扫描行为高度相关（由少数噪声源/事件驱动）或数据侧问题，而非核心网络运营商实施了新的 Telnet 封锁。文章还指出截至撰写时仍可从“受影响 AS”对其服务器成功进行 Telnet traceroute，进一步反证网络层面普遍过滤的说法。",
+    "core_value": "核心价值在于纠正将“观测到的扫描/会话变化”直接归因于“ISP 级过滤”的因果推断错误，强调需要多数据源与路由测量交叉验证。它为安全情报/互联网测量提供了方法论警示：高相关扫描流量会制造“全球性事件”的假象。",
+    "tech_stack": [
+      "Telnet",
+      "TCP三次握手验证",
+      "端口23扫描观测/网络传感器",
+      "自治系统(AS)分析",
+      "RIPE Atlas",
+      "Traceroute",
+      "GreyNoise数据(对比)",
+      "GNU Inetutils CVE(背景事件)",
+      "互联网测量/流量分析"
+    ],
+    "recommendation": "值得关注在于它展示了如何用多源观测与主动测量（RIPE Atlas、traceroute、握手成功率过滤）去验证安全报告的因果结论，避免“把扫描数据当作网络政策变化”的误判。对做威胁情报、互联网测量、运营商安全沟通的人都有直接参考价值。",
+    "score": 84.0,
+    "_source_item": {
+      "title": "Reports of Telnet’s Death Have Been Greatly Exaggerated",
+      "content": "You may have seen the recent\nnews\nthat Telnet traffic from major US ISPs dropped precipitously around the time that a\nCVE against GNU Inetutils\nwas announced. Because this report has led to intense discussion around the role of core network infrastructure providers and implications for the security of network services globally, we at Terrace felt it was important to share our results and correct the record. After analyzing both our internal and open data, we believe there are critical errors that undermine the basic findings of the report.\nThe original report shows the number of Telnet sessions observed from GreyNoise across many source autonomous systems (ASes) by day. Their data show a dramatic shift in observed network traffic:\na sudden, sustained collapse in global telnet traffic — not a gradual decline, not scanner attrition, not a data pipeline problem, but a step function. One hour, ~74,000 sessions. The next, ~22,000. By the following hour, we were down to ~11,000 and the floor held. (\nLink\n)\nWe cross-checked this data against traffic observed by Terrace, other open observation data, and measurements of underlying routing infrastructure through RIPE Atlas. In sum, our results show that there is no new filtering of Telnet being performed by core ISPs. To be clear, we successfully performed Telnet traceroutes from reportedly-affected ASes to our servers as of today at 18:47 UTC.\nEvaluating Telnet Scanning\nNaturally, seeing such a dramatic and coordinated drop in traffic (from 10s of thousands down to zero) would make you suspect that the network is the common factor. As we describe below, the fundamental flaw of this approach is that sessions can be highly correlated: thousands of scans from disparate networks can be directly tied to individual noisy actions.\nAt Terrace we use artificial intelligence to detect trends from our global deployment of network sensors in real-time, so when we saw this our first thought was “how could we have missed this?” We went to the data, and as far as we can tell, the answer is that\nwe didn’t\n.\nWe cross-checked ASes reported by GreyNoise against port 23 scanning data from Terrace. Of course, we filtered these to only incoming traffic that successfully completed the three-way TCP handshake to factor out IP spoofing. Here are those results:",
+      "description": "",
+      "id": null,
+      "short_id": null,
+      "url": "https://www.terracenetworks.com/blog/2026-02-11-telnet-routing",
+      "score": "16",
+      "tags": "networking",
+      "domain": "terracenetworks.com",
+      "author": "gerikson",
+      "author_url": "gerikson",
+      "time": "7 hours ago",
+      "comments_text": "no comments",
+      "comments_url": "no comments",
+      "description_hint": null,
+      "source": "Lobsters"
+    }
+  },
+  "cached_at": "2026-02-12T05:06:13.758623"
+}

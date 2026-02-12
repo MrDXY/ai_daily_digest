@@ -1,0 +1,10 @@
+{
+  "url": "https://www.cve.org/CVERecord?id=CVE-2026-20841",
+  "payload": {
+    "title": "Windows Notepad App Remote Code Execution Vulnerability",
+    "content": "close notification button",
+    "description": "",
+    "url": "https://www.cve.org/CVERecord?id=CVE-2026-20841"
+  },
+  "cached_at": "2026-02-12T05:02:08.374779"
+}

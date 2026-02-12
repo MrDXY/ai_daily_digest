@@ -1,0 +1,10 @@
+{
+  "url": "https://www.kraxel.org/blog/2026/01/thank-you-ai/",
+  "payload": {
+    "title": "End of an era for me: no more self-hosted git",
+    "content": "Ok, it is over.  End of an era for me.  No more self-hosted git.  I\nhad a public git server running since 2011, and a public cvs server\nbefore that.  AI scrapers have hammered the poor, little server to\ndeath by flooding the cgit frontend with tons of pointless²\nrequests.  Actually a few months ago already.\nNow I finally decided to not try rebuild the server, be it with or\nwithout cgit web frontend.  I don't feel like taking up the fight\nwith the scrapers in my spare time, I leave that to people who are\nin a better position to do so.  Most repositories had mirrors on one\nor two of the large gitforges already.  Those are the primary\nrepositories now.  Go look\nat\ngitlab\nand\ngithub\n.\nLast week I've fixed all (I hope) dangeling links to the cgit\nrepsitories to point to the forges instead.\nNow I'm down to one self-hosted service, which is the webserver\nhosting mainly this blog and a few more little things.  In 2018 I've\nmigrated the blog from wordpress to jekyll, so it is all static\npages.  Taking this out by AI scrapers overloading the machine should\nbe next to impossible, and so far this has hold up.\nNevertheless AI scrapers already managed to trigger one outage.\nApparently millions of 404 answers where not enough to convince the\nbots that there is no cgit service (any more).  Apache had no\nproblems to deliver those, but the logs have filled up the disk so\nfast that logrotate didn't manage to keep things under control with\nthe default configuration.  Fixed config.  Knook wood.\n¹ Title inspired by\nthe\n2025\nedition of Security Nightmares\n.  Fun watching if you speak\ngerman.\n² Most inefficient way to get the complete repo.  Just clone it, ok?",
+    "description": "",
+    "url": "https://www.kraxel.org/blog/2026/01/thank-you-ai/"
+  },
+  "cached_at": "2026-02-12T05:02:08.668461"
+}

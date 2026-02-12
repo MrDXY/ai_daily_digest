@@ -1,0 +1,20 @@
+{
+  "url": "https://www.threads.com/@qa_test_hq/post/DUkC_zjiGQh",
+  "summary": {
+    "summary": "这段内容讨论了 Hacker News 上关于“Vercel CEO 提议承担 Jmail 费用”的帖子，但正文主要是评论者的政治化揣测与动机质疑。评论者认为这可能是用约 4.5 万美元、被指“高溢价”的 AWS credits 换取公关效果，并与“曝光真相”叙事绑定。",
+    "core_value": "核心价值主要在于呈现社区对企业赞助/资助行为的动机审视与舆论反应，而非提供可复用的技术信息或方法论。",
+    "tech_stack": [
+      "AWS（云服务/credits）"
+    ],
+    "recommendation": "如果你关注科技公司赞助行为、公共叙事与社区舆论的互动，这类讨论可作为案例参考；但其信息密度与可验证性较低，需谨慎对待结论。",
+    "score": 24.0,
+    "_source_item": {
+      "title": "Vercel's CEO offers to cover expenses of 'Jmail'",
+      "content": "It’s weird that he’s covering this despite the fact that Netanyahu is most def in the files watching torture videos, but perhaps this is his way of getting ahead of that?\n$45k of heavily marked up AWS credits for good PR around exposing the truth about Epstine.",
+      "description": "",
+      "url": "https://www.threads.com/@qa_test_hq/post/DUkC_zjiGQh",
+      "source": "Hacker News"
+    }
+  },
+  "cached_at": "2026-02-12T05:03:55.404315"
+}

@@ -1,0 +1,36 @@
+{
+  "url": "https://libera.chat/news/new-and-upcoming-features-3",
+  "summary": {
+    "summary": "文章介绍了 Libera.Chat（基于 Solanum）近期上线与计划中的 IRCv3 扩展能力，核心前提是服务器间已支持传递 message tags，从而补齐多项 IRCv3 关键特性。已落地的能力包括 message-tags 的消息唯一 ID、改进后的 server-time、client tags（目前仅 +typing）、batch（用于 netsplit/netjoin 分组）、invite-notify 以及 echo-message 的服务消息回显修复。文末给出近期可能推进的特性路线：draft/multiline、labeled-response、bot mode、setname，并说明各自的工程与治理约束。",
+    "core_value": "通过补齐服务器间 message tags 传递，Libera.Chat 能提供更可靠的消息引用、跨客户端一致的时间排序、以及对 netsplit/netjoin 等复杂事件更友好的结构化呈现。它同时为客户端扩展（client tags、批处理、请求-响应关联）提供标准化能力，减少依赖非标准机制（如 CTCP）带来的兼容与安全问题。",
+    "tech_stack": [
+      "IRC",
+      "IRCv3",
+      "Solanum IRCd",
+      "Libera.Chat",
+      "IRCv3 capabilities（message-tags, server-time, batch, invite-notify, echo-message）",
+      "IRCv3 drafts（draft/multiline）"
+    ],
+    "recommendation": "如果你在做 IRC 客户端、BNC/代理、机器人或桥接系统，这些能力会直接影响消息一致性、事件建模与交互协议设计。Libera.Chat 作为大型网络的落地实践也为 IRCv3 生态提供了明确的兼容目标与后续演进方向。",
+    "score": 87.0,
+    "_source_item": {
+      "title": "New And Upcoming IRCv3 Features",
+      "content": "New And Upcoming IRCv3 Features\n11th February 2026\nby She\nIt’s been a while since we’ve had new features to announce,\nbut this set of features is particularly special, as it brings Libera.Chat\ncloser to the forefront of IRC development.\nTo check whether your IRC client supports these features,\nrefer either to your client’s documentation or to\nthis IRCv3 client support table\n.\nSolanum, the IRC server software Libera.Chat uses, has supported tagged\nmessages going to/from clients for years, but only recently gained the\nability to send messages containing tags between servers.\nThis is one of the core features of IRCv3, and we’re excited to be able to\nsupport it properly. In particular, not having this feature was a blocker\nfor the following features we now also support:\nIf your client requests the\nmessage-tags\ncapability,\neach message you receive will be tagged with a\nunique identifier\n.\nThis makes it possible for clients to unambiguously reference messages.\nNote that Libera.Chat’s message IDs are not cryptographic signatures of the\nmessages they are attached to. As a result, they cannot be used on their own\nto validate messages.\nLibera.Chat supported\nserver-time\nbefore today, but it was\nof limited use because the timestamp would reflect when the message was sent\nto you by the server you’re connected to. Now, the timestamp will reflect\nwhen the message was processed by the server its sender is connected to.\nAside from greatly improving message order consistency between clients,\nthis has the potential to revolutionise the popular IRC game of duck hunt\nby reducing the advantage provided by the long-standing\n“connect to the same server as the duck hunt bot” meta.\nClient tags are a way for clients to attach additional information to\nmessages or even send all-new kinds of messages without the server having\nto understand them. They can be thought of as an IRCv3 successor to CTCP.\nLibera.Chat allows client tags on a case-by-case basis and\nvalidates their values to prevent deviation from their specifications.\nCurrently, Libera.Chat supports just the\n+typing\ntag\nwhich allows clients to send optional typing notifications. We are also\nconsidering allowing the following tags when client support for them improves:\nPlease let us know if there are any other client tags that you would like\nLibera.Chat to support.\nbatch\nallows servers to create logical groups of messages. Right now,\nthe main use for this feature is nicer handling of netsplits and netjoins.\nIf your client requests this capability,\nQUIT\ns and\nJOIN\ns that\nhappen as a result of changes in server-to-server connections will be grouped\ninto a batch. This makes it possible to differentiate between\nmass\nJOIN\ns due to a server reconnecting and other forms of mass\nJOIN\ns,\nwhich in turn makes it possible for your client to handle a netjoin the same\nway it handles a netsplit.\nIt’s\nfinally\nhere. If your client requests the\ninvite-notify\ncapability, you will be informed whenever someone is\n/invite\nd to a channel\nyou’re in. If you’re a channel operator, this means you can keep channel mode\n+g\non and not worry that invites are being abused behind your back.\nThis is more of a bugfix than a feature.\nIf your client requests\necho-message\n, it will now correctly receive\necho messages when sending messages to services (e.g. NickServ, alis).\nWhile we don’t want to promise anything that isn’t nearly ready for\ndeployment, here are a few notable IRCv3 extensions that staff have\nat least some interest in implementing, in descending order of likelihood to\nbe supported by Libera.Chat in the near future:\nThe\ndraft/multiline\nbatch type makes it possible for clients\nto logically group messages together into a single long (possibly multi-line)\nmessage. The module that implements it requires further testing, but support\nfor this could potentially be deployed soon.\nlabeled-response\nmakes it much easier for clients to\nalways associate particular automatic replies from the server with\nparticular requests. Eventual support for this extension was a big part of the\nmotivation for adding\nbatch\nsupport now. However, there’s still more\ndevelopment work that needs to be done before we can support this feature.\nBot mode\nwould be nice to have in principle, but there remain\nsome challenges to resolve around integration with services and getting bots\nto use it. Further internal staff discussion is needed.\nsetname\nwould also be nice to have, but we would need to develop\na way to prevent one-to-one bridges from using the command. Otherwise, users\nwould be able to override realnames set by bridge, which should include\ninformation about the remote user’s account\nper our guidelines\n.\nAdditionally, the fallback behaviour has the potential of being quite noisy,\nand several notable clients (e.g. ZNC as a client) do not support it.\nOnce client support improves, staff may consider adding support for it once\nwe figure out how best to implement the restrictions on bridges.",
+      "description": "",
+      "id": null,
+      "short_id": null,
+      "url": "https://libera.chat/news/new-and-upcoming-features-3",
+      "score": "16",
+      "tags": "culture",
+      "domain": "libera.chat",
+      "author": "eBPF",
+      "author_url": "eBPF",
+      "time": "6 hours ago",
+      "comments_text": "9 comments",
+      "comments_url": "9 comments",
+      "description_hint": null,
+      "source": "Lobsters"
+    }
+  },
+  "cached_at": "2026-02-12T05:06:49.944751"
+}

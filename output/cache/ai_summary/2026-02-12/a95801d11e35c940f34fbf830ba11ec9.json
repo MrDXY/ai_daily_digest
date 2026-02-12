@@ -1,0 +1,25 @@
+{
+  "url": "https://symmetrybreak.ing/blog/claude-code-is-being-dumbed-down/",
+  "summary": {
+    "summary": "文章讨论 Claude Code 2.1.20 起默认将“读了哪些文件/搜了哪些模式”改为仅显示“Read N files / Searched for N patterns”的汇总行，导致用户无法获知具体文件路径与搜索模式，透明度与可控性显著下降。社区在多个 GitHub issue 中集中要求“回滚或提供开关”，但官方主要引导用户改用 verbose mode，而 verbose mode 又带来过量输出与新的可用性问题，促使部分用户锁定在 2.1.19 版本。",
+    "core_value": "核心价值在于揭示 AI 编程工具在“降噪简化”与“可审计透明”之间的产品取舍风险：隐藏关键上下文会削弱用户信任与调试效率。文章也提供了一个可操作的产品建议方向：用细粒度配置开关替代“全量 verbose”这种粗暴方案。",
+    "tech_stack": [
+      "Claude Code",
+      "CLI/终端工具",
+      "GitHub Issues",
+      "多代理(Sub-agents)编排",
+      "Verbose/调试日志机制",
+      "代码搜索/文件读取(IDE/Agent工具常见能力)"
+    ],
+    "recommendation": "值得关注，因为它反映了 AI 开发者工具在可观测性（哪些文件被读、哪些模式被搜）上的关键设计原则与用户期望，直接影响安全、合规与工程效率。对构建/选型 LLM 编程助手的人来说，这是关于“默认日志粒度、可配置性、用户信任”的典型案例。",
+    "score": 74.0,
+    "_source_item": {
+      "title": "Claude Code is being dumbed down?",
+      "content": "Version 2.1.20 of Claude Code shipped a change that replaced every file read and every search pattern with a single, useless summary line.\nWhere you used to see:\nYou now get:\nThat’s it.\n“Read 3 files.” Which files? Doesn’t matter.\n“Searched for 1 pattern.” What pattern? Who cares.\nYou’re paying $200 a month for a tool that now hides what it’s doing with your codebase by default.\nAcross\nmultiple GitHub issues\nopened for this, all comments are pretty much saying the same thing: give us back the file paths, or at minimum, give us a toggle.\nThe response from Anthropic:\nFor the majority of users, this change is a nice simplification that reduces noise.\nWhat majority? The change just shipped and the only response it got is people complaining.\nThen when pressed, the fix offered wasn’t to revert or add a toggle. It was: “just use verbose mode.”\nFucking\nverbose mode\n.\nA big ‘ole dump of thinking traces, hook output, full subagent transcripts, and entire file contents into your terminal. People explained, repeatedly, that they wanted one specific thing: file paths and search patterns inline. Not a firehose of debug output.\nThe developer’s response to that?\nI want to hear folks’ feedback on what’s missing from verbose mode to make it the right approach for your use case.\nRead that again. Thirty people say “revert the change or give us a toggle.” The answer is “let me make verbose mode work for you instead.”\nAs one commenter put it:\nIf you are going to display something like ‘Searched for 13 patterns, read 2 files’ there is nothing I can do with that information. You might as well not display it at all.\nSeveral versions later, the “fix” is to keep making verbose mode less and less verbose by removing thinking traces and hook output so it becomes a tolerable way to get your file paths back. But verbose mode still dumps full sub-agent output onto your screen, among other things.\nBefore, when Claude spawned multiple sub-agents you’d see a compact line-by-line stream of what each one was doing, just enough to glance at. Now you get walls of text from multiple agents at once. So what’s the plan? Keep stripping things out of verbose mode one by one until it’s no longer verbose? Where does it end? At some point you’ve just reinvented a config toggle with extra steps.\nAnd the people who were using verbose mode for thinking and hooks now need to press Ctrl+O to get what they had by default. So instead of fixing one problem, you created two.\nPeople are pinning themselves to version 2.1.19 and in the meantime the fix everyone is asking for, a single boolean config flag, would take less effort to implement than all the verbose mode surgery that’s been done instead.\nAnthropic during the Super Bowl: we’d never disrespect our users.\nAnthropic on GitHub: have you tried verbose mode?",
+      "description": "",
+      "url": "https://symmetrybreak.ing/blog/claude-code-is-being-dumbed-down/",
+      "source": "Hacker News"
+    }
+  },
+  "cached_at": "2026-02-12T05:02:59.242895"
+}

@@ -1,0 +1,34 @@
+{
+  "url": "https://github.com/github/gh-aw",
+  "summary": {
+    "summary": "GitHub Agentic Workflows（gh-aw）允许开发者用自然语言的 Markdown 编写“代理式工作流”，并在 GitHub Actions 中运行，让 AI 代替人执行仓库内的自动化任务。项目强调从设计层面内置多重安全防护（默认只读、受控写入、沙箱与网络隔离等），并提供文档、示例与配套组件以便落地使用。整体定位是把“AI 代理能力”以可审计、可治理的方式产品化到 CI/CD 与仓库运维流程中。",
+    "core_value": "将 AI 代理的任务编排与执行引入 GitHub Actions，使仓库维护、自动化操作可以用自然语言快速定义并运行。通过默认最小权限与多层 Guardrails，降低 AI 自动化在代码与供应链层面的安全风险。",
+    "tech_stack": [
+      "GitHub Actions",
+      "Markdown",
+      "AI Agent/Agentic Workflows",
+      "Sandboxed Execution",
+      "Network Egress Control",
+      "Supply Chain Security (SHA-pinned dependencies)",
+      "Allow-listing",
+      "Compile-time Validation",
+      "MCP (Model Context Protocol)",
+      "HTTP Gateway"
+    ],
+    "recommendation": "值得关注在于它把“AI 代理 + CI”变成可复用的工作流范式，并把安全治理（权限、网络、依赖、审计与审批）作为一等公民来设计。对希望在团队内安全引入 AI 自动化、减少重复仓库运维工作的组织具有直接参考与落地价值。",
+    "score": 86.0,
+    "_source_item": {
+      "title": "github /gh-aw",
+      "content": "readme: GitHub Agentic WorkflowsWrite agentic workflows in natural language markdown, and run them in GitHub Actions.ContentsQuick StartOverviewGuardrailsDocumentationContributingShare FeedbackPeli's Agent FactoryRelated ProjectsQuick StartReady to get your first agentic workflow running? Follow our step-by-stepQuick Start Guideto install the extension, add a sample workflow, and see it in action.OverviewLearn about the concepts behind agentic workflows, explore available workflow types, and understand how AI can automate your repository tasks. SeeHow It Works.GuardrailsGuardrails, safety and security are foundational to GitHub Agentic Workflows. Workflows run with read-only permissions by default, with write operations only allowed through sanitizedsafe-outputs. The system implements multiple layers of protection including sandboxed execution, input sanitization, network isolation, supply chain security (SHA-pinned dependencies), tool allow-listing, and compile-time validation. Access can be gated to team members only, with human approval gates for critical operations, ensuring AI agents operate safely within controlled boundaries. See theSecurity Architecturefor comprehensive details on threat modeling, implementation guidelines, and best practices.Using agentic workflows in your repository requires careful attention to security considerations and careful human supervision, and even then things can still go wrong. Use it with caution, and at your own risk.DocumentationFor complete documentation, examples, and guides, see theDocumentation.ContributingFor development setup and contribution guidelines, seeCONTRIBUTING.md.Share FeedbackWe welcome your feedback on GitHub Agentic Workflows! Please file bugs and feature requests as issues in this repository, and share your thoughts in theGitHub Next Discord.Peli's Agent FactorySee thePeli's Agent Factoryfor a guided tour through many uses of agentic workflows.Related ProjectsGitHub Agentic Workflows is supported by companion projects that provide additional security and integration capabilities:Agent Workflow Firewall (AWF)- Network egress control for AI agents, providing domain-based access controls and activity logging for secure workflow executionMCP Gateway- Routes Model Context Protocol (MCP) server calls through a unified HTTP gateway for centralized access management",
+      "description": "GitHub Agentic Workflows",
+      "url": "https://github.com/github/gh-aw",
+      "language": "Go",
+      "stars": "1,807",
+      "forks": "125",
+      "stars_today": "390 stars today",
+      "readme": "GitHub Agentic WorkflowsWrite agentic workflows in natural language markdown, and run them in GitHub Actions.ContentsQuick StartOverviewGuardrailsDocumentationContributingShare FeedbackPeli's Agent FactoryRelated ProjectsQuick StartReady to get your first agentic workflow running? Follow our step-by-stepQuick Start Guideto install the extension, add a sample workflow, and see it in action.OverviewLearn about the concepts behind agentic workflows, explore available workflow types, and understand how AI can automate your repository tasks. SeeHow It Works.GuardrailsGuardrails, safety and security are foundational to GitHub Agentic Workflows. Workflows run with read-only permissions by default, with write operations only allowed through sanitizedsafe-outputs. The system implements multiple layers of protection including sandboxed execution, input sanitization, network isolation, supply chain security (SHA-pinned dependencies), tool allow-listing, and compile-time validation. Access can be gated to team members only, with human approval gates for critical operations, ensuring AI agents operate safely within controlled boundaries. See theSecurity Architecturefor comprehensive details on threat modeling, implementation guidelines, and best practices.Using agentic workflows in your repository requires careful attention to security considerations and careful human supervision, and even then things can still go wrong. Use it with caution, and at your own risk.DocumentationFor complete documentation, examples, and guides, see theDocumentation.ContributingFor development setup and contribution guidelines, seeCONTRIBUTING.md.Share FeedbackWe welcome your feedback on GitHub Agentic Workflows! Please file bugs and feature requests as issues in this repository, and share your thoughts in theGitHub Next Discord.Peli's Agent FactorySee thePeli's Agent Factoryfor a guided tour through many uses of agentic workflows.Related ProjectsGitHub Agentic Workflows is supported by companion projects that provide additional security and integration capabilities:Agent Workflow Firewall (AWF)- Network egress control for AI agents, providing domain-based access controls and activity logging for secure workflow executionMCP Gateway- Routes Model Context Protocol (MCP) server calls through a unified HTTP gateway for centralized access management",
+      "source": "GitHub Trending"
+    }
+  },
+  "cached_at": "2026-02-12T04:58:34.862642"
+}

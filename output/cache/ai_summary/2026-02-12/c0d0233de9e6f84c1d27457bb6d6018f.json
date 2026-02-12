@@ -1,0 +1,36 @@
+{
+  "url": "https://maplant.com/2026-02-09-I-Wrote-a-Scheme-in-2025.html",
+  "summary": {
+    "summary": "作者宣布其用 Rust 编写的 Scheme 实现 scheme-rs 达到 0.1.0 首个版本，并通过 R6RS 测试套件中的 2258 项测试，认为已具备稳定发布条件。项目相较一年前的版本从“仅异步”演进为同时支持同步与异步，并可在两种上下文中复用。文章同时列出当前短板（GC、性能、R6RS 覆盖、文档与调试）以及基于 scheme-rs 构建更强类型新语言（可能走 Calculus of Constructions）的后续计划。",
+    "core_value": "scheme-rs 提供了一个较为严肃、以标准测试套件验证为导向的 Scheme（R6RS）实现，并在 Rust 生态中兼顾同步/异步使用场景。它降低了在现代系统语言与异步环境中嵌入/实验 Scheme 的门槛，同时为进一步构建强类型语言打下运行时与实现基础。",
+    "tech_stack": [
+      "Rust",
+      "Scheme",
+      "R6RS",
+      "Async/Await",
+      "Garbage Collection",
+      "Test Suite/Conformance Testing"
+    ],
+    "recommendation": "如果你关注语言实现、Rust 生态中的解释器/运行时、或希望在工程化约束下做标准兼容与异步集成，scheme-rs 的阶段性成果与架构取舍（sync+async）很有参考价值。其明确的未完成清单与“在其上构建新语言”的路线也提供了持续跟进与参与贡献的空间。",
+    "score": 78.0,
+    "_source_item": {
+      "title": "I Wrote a Scheme in 2025",
+      "content": "I Wrote a Scheme in 2025\nby Matthew Plant\nOne year minus one week ago to the day I\npublished an article\nannouncing the new Scheme implementation I was writing,\nscheme-rs\n.\nToday I am excited to announce that\nscheme-rs\nhas reached its first version,\n0.1.0\n. You can check it out at it’s website (\nscheme-rs.org\n, which should be\nupdated to\nscheme.rs\nat some point when DNS propagation finishes) or its\ngithub page\n.\nAlthough there’s much more work to do (and I will talk about that further down\nthe page), after reaching the milestone of completing\n2258\ntests in the R6RS\ntest suite, I’ve decided that\nscheme-rs\nis stable enough to commit to a first\nrelease.\nIt’s been a pretty amazing journey, one that I’m excited to continue on.\nChanges since I initially announced scheme-rs last year:\nThere have been some changes since I initially announced scheme-rs. The biggest\nis that it is no longer exclusively async, and now supports sync as well.\nThis change was inevitable; only supporting async would really hamper adoption\n(or more importantly my personal use cases for the project). But I’m really\nhappy that I was able to implement this change without hamstringing async\nsupport at all. In fact, it is even possible to use scheme-rs in both async and\nsync contexts.\nThings that are not finished\nThere are quite a few things that are not quite complete, and I will list them\nhere:\nThe garbage collector has quite a bit of room for improvement.\nPerformance in general is Ok but could be made much better.\nThere are a lot of missing procedures and syntax from R6RS but also just in\ngeneral, for example I’d really like to add pattern matching.\nThere’s always more documentation that can be added.\nDebugging could be greatly improved.\nBut more importantly, I’m very excited to start working on the new language I am\nbuilding on top of\nscheme-rs\n. I mentioned that it would be strongly typed, but\nnow I think I might want to use calculus of construction. The possibilities are\ntruly endless!\nAn aside on how scheme-rs came to be:\nIn August of last year I had just lost my job. I wasn’t sure exactly what to do.\nI looked out on the landscape of software engineering jobs and became\nincreasingly uncertain of my place in it. I had been unsatisfied with work for a\nnumber of years at that point, and it felt like I had lost the differentiating\nfactor that made me worth hiring in the first place. The idea of getting a job\nthat was interesting, one that challenged me, seemed to be completely out of\nreach.\nI decided that what I would do is look inward. I would try to rediscover where\nmy original love for computer science came from. I had this dinky little project\nthat I had been working on and off on for a while with no clear vision. I\ndecided that I would spend my free time dedicated to that project. I would do\nresearch and focus on doing things correctly and with a strong backing from\nacademics. I’d apply for a few jobs, but if those fell through I’d apply for\ngrad school instead.\nI’d buy a printer and read papers.\nThat dinky little project was\nscheme-rs\n, and it’s hard to describe just how\nmuch it changed my life. I feel much more confident in my ability as a software\nengineer. I no longer think that a PhD is something that is meant for people\nmuch smarter than me. And more miraculously it directly lead me to finding a job\nthat I absolutely love.\nscheme-rs\nis not particularly special in this regard. It was simply something\nthat challenged me. And if you have a brain at all like mine, I highly\nrecommend you find a project that challenges you like\nscheme-rs\nchallenged me.\nIf you like being challenged and enjoy functional programming and Rust as much\nas I do, check out\nthe careers page at OneChronos!",
+      "description": "",
+      "id": null,
+      "short_id": null,
+      "url": "https://maplant.com/2026-02-09-I-Wrote-a-Scheme-in-2025.html",
+      "score": "76",
+      "tags": "lisp",
+      "domain": "maplant.com",
+      "author": "mplant",
+      "author_url": "mplant",
+      "time": "36 hours ago",
+      "comments_text": "22 comments",
+      "comments_url": "22 comments",
+      "description_hint": null,
+      "source": "Lobsters"
+    }
+  },
+  "cached_at": "2026-02-12T05:06:49.945061"
+}

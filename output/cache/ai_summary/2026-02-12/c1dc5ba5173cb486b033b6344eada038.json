@@ -1,0 +1,29 @@
+{
+  "url": "https://github.com/0WD0/majutsu",
+  "summary": {
+    "summary": "当前输入内容仅包含标题“Majutsu, Magit for jujutsu”，来源为 Lobsters，但正文被“ You can’t perform that action at this time.”所替代，缺少可分析的实质信息。基于现有线索只能推测其主题可能是为 jujutsu（jj）版本控制系统提供类似 Magit 的交互式界面/工作流，但无法确认具体功能与实现细节。",
+    "core_value": "在信息完整的情况下，该项目可能旨在降低使用 jujutsu 的门槛，提供类似 Magit 的高效交互式操作体验，从而提升日常版本控制效率。由于正文缺失，核心价值与问题定义无法被验证。",
+    "tech_stack": [],
+    "recommendation": "建议补充原文/项目主页（如 Git 仓库、README 或 Lobsters 讨论链接）后再评估；仅从标题看，如果你在使用 jujutsu 或关注新一代 VCS 工作流，它可能值得进一步跟进。",
+    "score": 80.0,
+    "_source_item": {
+      "title": "Majutsu, Magit for jujutsu",
+      "content": "You can’t perform that action at this time.",
+      "description": "",
+      "id": null,
+      "short_id": null,
+      "url": "https://github.com/0WD0/majutsu",
+      "score": "40",
+      "tags": "emacs",
+      "domain": "github.com/0wd0",
+      "author": "weaksauce",
+      "author_url": "weaksauce",
+      "time": "10 hours ago",
+      "comments_text": "4 comments",
+      "comments_url": "4 comments",
+      "description_hint": null,
+      "source": "Lobsters"
+    }
+  },
+  "cached_at": "2026-02-12T05:06:13.756893"
+}

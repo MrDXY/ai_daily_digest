@@ -1,0 +1,41 @@
+{
+  "url": "https://go.dev/blog/go1.26",
+  "summary": {
+    "summary": "Go 1.26 正式发布，带来语言层面的两项重要改进：new 现在可接受表达式以指定初始值，以及泛型类型允许在自身类型参数列表中引用自身。与此同时，运行时与工具链获得显著增强，包括默认启用 Green Tea 垃圾回收器、降低 cgo 开销、更多切片栈上分配，以及基于 Go analysis 框架重写的 go fix（含多种 modernizers 与 inline 分析器）。",
+    "core_value": "该版本通过语法/类型系统增强与运行时、编译器、工具链优化，降低开发与迁移成本并提升性能与可维护性。尤其是默认启用的新 GC、cgo 降开销与更智能的分配策略，直接改善生产环境吞吐与延迟表现。",
+    "tech_stack": [
+      "Go",
+      "Go runtime/GC",
+      "Go compiler/linker",
+      "cgo",
+      "Go analysis framework",
+      "go fix",
+      "Go standard library",
+      "crypto/hpke",
+      "crypto/mlkem/mlkemtest",
+      "testing/cryptotest",
+      "GODEBUG"
+    ],
+    "recommendation": "值得关注的原因在于它同时覆盖“语言能力提升 + 性能/运行时改进 + 工具链自动化迁移”三条主线，能让现有 Go 项目以较低风险获得性能收益并更快采用新特性。新增密码学与测试相关包、以及可 opt-in 的实验特性，也为后续版本演进提供了明确方向。",
+    "score": 88.0,
+    "_source_item": {
+      "title": "Go 1.26 is released",
+      "content": "Today the Go team is pleased to release Go 1.26.\nYou can find its binary archives and installers on the\ndownload page\n.\nLanguage changes\n¶\nGo 1.26 introduces two significant refinements to the language\nsyntax and type system\n.\nFirst, the built-in\nnew\nfunction, which creates a new variable, now allows its operand to be an\nexpression, specifying the initial value of the variable.\nA simple example of this change means that code such as this:\nx := int64(300)\nptr := &x\nCan be simplified to:\nptr := new(int64(300))\nSecond, generic types may now refer to themselves in their own type parameter list. This change\nsimplifies the implementation of complex data structures and interfaces.\nPerformance improvements\n¶\nThe previously experimental\nGreen Tea garbage collector\nis now enabled by default.\nThe baseline\ncgo overhead has been reduced\nby approximately 30%.\nThe compiler can now\nallocate the backing store\nfor\nslices on the stack in more situations, which improves performance.\nThe\ngo fix\ncommand has been completely rewritten to use the\nGo analysis framework\n, and now includes a\ncouple dozen “\nmodernizers\n”, analyzers\nthat suggest safe fixes to help your code take advantage of newer features of the language\nand standard library. It also includes the\ninline\nanalyzer\n, which\nattempts to inline all calls to each function annotated with a\n//go:fix inline\ndirective.\nTwo upcoming blog posts will address these features in more detail.\nMore improvements and changes\n¶\nGo 1.26 introduces many improvements over Go 1.25 across\nits\ntools\n, the\nruntime\n,\ncompiler\n,\nlinker\n,\nand the\nstandard library\n.\nThis includes the addition of three new packages:\ncrypto/hpke\n,\ncrypto/mlkem/mlkemtest\n, and\ntesting/cryptotest\n.\nThere are\nport-specific\nchanges\nand\nGODEBUG\nsettings\nupdates.\nSome of the additions in Go 1.26 are in an experimental stage\nand become exposed only when you explicitly opt in. Notably:\nThese experiments are all expected to be generally available in a\nfuture version of Go. We encourage you to try them out ahead of time.\nWe really value your feedback!\nPlease refer to the\nGo 1.26 Release Notes\nfor the complete list\nof additions, changes, and improvements in Go 1.26.\nOver the next few weeks, follow-up blog posts will cover some of the topics\nrelevant to Go 1.26 in more detail. Check back later to read those posts.\nThanks to everyone who contributed to this release by writing code, filing bugs,\ntrying out experimental additions, sharing feedback, and testing the release candidates.\nYour efforts helped make Go 1.26 as stable as possible.\nAs always, if you notice any problems, please\nfile an issue\n.\nWe hope you enjoy using the new release!",
+      "description": "",
+      "id": null,
+      "short_id": null,
+      "url": "https://go.dev/blog/go1.26",
+      "score": "98",
+      "tags": "go",
+      "domain": "go.dev",
+      "author": "achill",
+      "author_url": "achill",
+      "time": "32 hours ago",
+      "comments_text": "18 comments",
+      "comments_url": "18 comments",
+      "description_hint": null,
+      "source": "Lobsters"
+    }
+  },
+  "cached_at": "2026-02-12T05:06:49.944418"
+}
