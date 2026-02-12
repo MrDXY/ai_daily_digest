@@ -29,7 +29,7 @@ class TerminalDisplay:
 
     def __init__(
         self,
-        score_threshold: float = 8.0,
+        score_threshold: float = 80.0,
         show_low_score: bool = False,
     ):
         self.console = Console()
@@ -86,13 +86,13 @@ class TerminalDisplay:
     def show_article(self, article: Article, index: int = 0) -> None:
         """显示单篇文章"""
         # 评分颜色
-        if article.score >= 9:
+        if article.score >= 90:
             score_style = "bold green"
             score_emoji = "🔥"
-        elif article.score >= 8:
+        elif article.score >= 80:
             score_style = "bold yellow"
             score_emoji = "⭐"
-        elif article.score >= 6:
+        elif article.score >= 60:
             score_style = "cyan"
             score_emoji = "📌"
         else:
@@ -104,7 +104,7 @@ class TerminalDisplay:
 
         # 评分行
         content.append(f"{score_emoji} 评分: ", style="bold")
-        content.append(f"{article.score}/10", style=score_style)
+        content.append(f"{article.score}/100", style=score_style)
         if article.stars:
             content.append(f"  ⭐ {article.stars} stars", style="yellow")
         if article.language:
@@ -160,8 +160,8 @@ class TerminalDisplay:
         )
         self.console.print()
 
-        # 按评分排序
-        high_quality.sort(key=lambda x: x.score, reverse=True)
+        # 按价值与受众排序
+        high_quality = self._sort_articles(high_quality)
 
         for i, article in enumerate(high_quality, 1):
             self.show_article(article, i)
@@ -226,6 +226,7 @@ class TerminalDisplay:
 
     def show_articles_table(self, articles: list[Article]) -> None:
         """以表格形式显示文章列表"""
+        articles = self._sort_articles(articles)
         table = Table(
             title="📋 文章列表",
             show_header=True,
@@ -240,9 +241,9 @@ class TerminalDisplay:
 
         for i, article in enumerate(articles, 1):
             # 评分样式
-            if article.score >= 8:
+            if article.score >= 80:
                 score_str = f"[bold green]{article.score:.1f}[/bold green]"
-            elif article.score >= 6:
+            elif article.score >= 60:
                 score_str = f"[yellow]{article.score:.1f}[/yellow]"
             else:
                 score_str = f"[dim]{article.score:.1f}[/dim]"
@@ -258,3 +259,60 @@ class TerminalDisplay:
             )
 
         self.console.print(table)
+
+    def _sort_articles(self, articles: list[Article]) -> list[Article]:
+        """按价值优先，再按受众规模排序"""
+        return sorted(
+            articles,
+            key=lambda a: (
+                -(a.score or 0),
+                -self._get_audience_size(a),
+                a.title or "",
+            ),
+        )
+
+    def _get_audience_size(self, article: Article) -> int:
+        """估算受众规模（stars / metadata 中的热度字段）"""
+        if article.stars:
+            return int(article.stars)
+
+        candidates = [
+            "stars",
+            "points",
+            "score",
+            "votes",
+            "upvotes",
+            "comments",
+            "replies",
+            "likes",
+            "heat",
+            "views",
+        ]
+
+        for key in candidates:
+            value = article.metadata.get(key) if article.metadata else None
+            parsed = self._parse_numeric(value)
+            if parsed is not None:
+                return parsed
+
+        return 0
+
+    def _parse_numeric(self, value):
+        if value is None:
+            return None
+
+        try:
+            if isinstance(value, (int, float)):
+                return int(value)
+
+            if isinstance(value, str):
+                v = value.strip().lower().replace(",", "")
+                if v.endswith("k"):
+                    return int(float(v[:-1]) * 1000)
+                if v.endswith("m"):
+                    return int(float(v[:-1]) * 1000000)
+                return int(float(v))
+        except Exception:
+            return None
+
+        return None

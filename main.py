@@ -75,6 +75,12 @@ class DailyDigestApp:
         # 加载配置
         self.config = load_config(self.config_path)
 
+        # 重新初始化显示器（使用配置中的评分阈值）
+        self.display = TerminalDisplay(
+            score_threshold=float(self.config.digest.score_threshold),
+            show_low_score=self.config.output.terminal.get("show_low_score", False),
+        )
+
         # 覆盖 AI provider
         if self.provider_override:
             self.config.ai.default_provider = self.provider_override
@@ -90,20 +96,12 @@ class DailyDigestApp:
             self.display.show_warning("No tasks to process")
             return DigestReport(date=datetime.now().strftime("%Y-%m-%d"))
 
-        # 获取缓存配置
-        cache_dir = get_cache_dir(self.config)
-        cache_enabled = self.config.crawler.cache.enabled
-
         # 使用 FetchManager 进行抓取和处理（保持 manager 可用于二次爬取）
+        errors: list[str] = []
+
         async with FetchManager(
             self.config.crawler,
-            cache_dir=cache_dir,
-            cache_enabled=cache_enabled,
         ) as fetch_manager:
-            # 清理旧缓存
-            keep_days = self.config.crawler.cache.keep_days
-            fetch_manager.clear_old_cache(keep_days)
-
             # 执行抓取
             self.display.show_info("Starting fetch...")
             results = await self._execute_fetch_with_manager(tasks, fetch_manager)
@@ -113,13 +111,8 @@ class DailyDigestApp:
             failed_count = len(results) - success_count
             self.display.show_fetch_result(success_count, failed_count, len(results))
 
-            # 显示缓存统计
-            cache_stats = fetch_manager.get_stats().get("cache", {})
-            if cache_stats.get("enabled"):
-                self.display.show_info(
-                    f"Cache: {cache_stats.get('total_files', 0)} files, "
-                    f"{cache_stats.get('total_size_mb', 0)} MB"
-                )
+            # 记录抓取失败
+            errors.extend(self._collect_fetch_errors(results))
 
             # 处理和摘要
             if self.dry_run:
@@ -127,7 +120,8 @@ class DailyDigestApp:
                 articles = self._create_mock_articles(results)
             else:
                 self.display.show_info("Processing and summarizing...")
-                articles = await self._process_results(results, fetch_manager)
+                articles, pipeline_errors = await self._process_results(results, fetch_manager)
+                errors.extend(pipeline_errors)
 
         # 生成报告
         self.display.show_info("Generating report...")
@@ -137,12 +131,12 @@ class DailyDigestApp:
         report = await generator.generate(
             articles=articles,
             total_fetched=len(tasks),
-            errors=[],
+            errors=errors,
             processing_time=processing_time,
         )
 
-        # 显示高质量项目
-        self.display.show_high_quality_articles(articles)
+        # 显示高质量项目（使用去重后的报告结果）
+        self.display.show_high_quality_articles(report.articles)
 
         # 显示摘要
         self.display.show_report_summary(report)
@@ -252,9 +246,10 @@ class DailyDigestApp:
         self,
         results: list[FetchResult],
         fetch_manager: Optional['FetchManager'] = None,
-    ) -> list[Article]:
+    ) -> tuple[list[Article], list[str]]:
         """处理抓取结果"""
         articles = []
+        errors: list[str] = []
 
         async with ProcessingPipeline(self.config) as pipeline:
             # 设置二次爬取回调（如果有 fetch_manager）
@@ -305,7 +300,24 @@ class DailyDigestApp:
 
                     progress.update(task_id, advance=1)
 
-        return articles
+            errors.extend(pipeline.get_errors())
+
+        return articles, errors
+
+    def _collect_fetch_errors(self, results: list[FetchResult]) -> list[str]:
+        """收集抓取失败错误信息"""
+        errors: list[str] = []
+        for result in results:
+            if result.status == FetchStatus.SUCCESS:
+                continue
+
+            status_code = result.status_code or "N/A"
+            error_message = result.error_message or "Unknown error"
+            errors.append(
+                f"抓取失败: {result.url} | HTTP {status_code} | {error_message}"
+            )
+
+        return errors
 
     def _create_mock_articles(
         self,
@@ -359,7 +371,7 @@ class DailyDigestApp:
                         core_value="[Dry Run] 模拟核心价值",
                         tech_stack=["Python", "Mock"],
                         recommendation="[Dry Run] 模拟推荐理由",
-                        score=5.0 + (i % 5),  # 模拟 5-9 分
+                        score=50.0 + (i % 5) * 10,  # 模拟 50-90 分
                         language=item.get("language"),
                     )
                     articles.append(article)

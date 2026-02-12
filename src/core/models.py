@@ -14,6 +14,14 @@ class FetchMethod(str, Enum):
     """抓取方式"""
     LIGHT = "light"      # curl_cffi
     HEAVY = "heavy"      # Playwright
+    CRAWL4AI = "crawl4ai"  # Crawl4AI
+    UNKNOWN = "unknown"
+
+
+class FetchPageType(str, Enum):
+    """页面类型"""
+    LIST = "list"          # 目录/列表页
+    CONTENT = "content"    # 内容页
     UNKNOWN = "unknown"
 
 
@@ -51,6 +59,7 @@ class FetchResult(BaseModel):
     url: str = Field(..., description="实际抓取的 URL")
     status: FetchStatus = Field(default=FetchStatus.PENDING)
     method: FetchMethod = Field(default=FetchMethod.UNKNOWN)
+    page_type: FetchPageType = Field(default=FetchPageType.UNKNOWN)
 
     # 内容
     html: Optional[str] = Field(default=None, description="原始 HTML")
@@ -87,7 +96,7 @@ class Article(BaseModel):
     core_value: str = Field(..., description="核心价值")
     tech_stack: list[str] = Field(default_factory=list, description="技术栈")
     recommendation: str = Field(..., description="推荐理由")
-    score: float = Field(..., ge=0, le=10, description="评分 (0-10)")
+    score: float = Field(..., ge=0, le=100, description="评分 (0-100)")
 
     # 额外信息
     language: Optional[str] = None
@@ -100,8 +109,8 @@ class Article(BaseModel):
 
     @property
     def is_high_quality(self) -> bool:
-        """是否为高质量项目 (评分 >= 8)"""
-        return self.score >= 8.0
+        """是否为高质量项目 (评分 >= 80)"""
+        return self.score >= 80.0
 
     def to_markdown(self) -> str:
         """转换为 Markdown 格式"""
@@ -110,7 +119,7 @@ class Article(BaseModel):
 
         return f"""### [{self.title}]({self.url}) {stars_display}
 
-**评分**: {'⭐' * int(self.score)} ({self.score}/10)
+    **评分**: {'⭐' * int(self.score // 10)} ({self.score}/100)
 
 **核心价值**: {self.core_value}
 
@@ -133,7 +142,7 @@ class DigestReport(BaseModel):
     high_quality_count: int = Field(default=0, description="高质量项目数")
 
     articles: list[Article] = Field(default_factory=list)
-    errors: list[dict[str, Any]] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)
 
     # 统计信息
     sources: dict[str, int] = Field(default_factory=dict, description="各来源文章数")
@@ -142,10 +151,11 @@ class DigestReport(BaseModel):
     # 元信息
     generated_at: datetime = Field(default_factory=datetime.now)
     processing_time_seconds: float = Field(default=0.0)
+    score_threshold: float = Field(default=80.0, description="高质量评分阈值")
 
     def get_high_quality_articles(self) -> list[Article]:
         """获取高质量文章列表"""
-        return [a for a in self.articles if a.is_high_quality]
+        return [a for a in self.articles if a.score >= self.score_threshold]
 
     def calculate_stats(self) -> None:
         """计算统计信息"""

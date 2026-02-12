@@ -21,7 +21,7 @@ from ..core.exceptions import FetchException
 from .base import BaseFetcher
 from .light_fetcher import LightFetcher
 from .heavy_fetcher import HeavyFetcher
-from .cache import PageCache
+from .crawl4ai_fetcher import Crawl4AIFetcher
 
 
 logger = logging.getLogger(__name__)
@@ -35,19 +35,15 @@ class FetchManager:
     1. 优先使用 LightFetcher (curl_cffi) 快速抓取
     2. 如果失败或内容不完整，自动回退到 HeavyFetcher (Playwright)
     3. 支持重试机制和并发控制
-    4. 支持页面缓存，每天只爬取一次
+    4. 仅负责抓取，不做页面 HTML 缓存
     """
 
     def __init__(self, config: CrawlerConfig, cache_dir: Optional[Path] = None, cache_enabled: bool = True):
         self.config = config
         self._light_fetcher: Optional[LightFetcher] = None
         self._heavy_fetcher: Optional[HeavyFetcher] = None
+        self._crawl4ai_fetcher: Optional[Crawl4AIFetcher] = None
         self._semaphore: Optional[asyncio.Semaphore] = None
-
-        # 初始化缓存
-        if cache_dir is None:
-            cache_dir = Path(__file__).parent.parent.parent / "output" / "cache"
-        self._cache = PageCache(cache_dir, enabled=cache_enabled)
 
     async def __aenter__(self):
         await self._init_fetchers()
@@ -62,10 +58,12 @@ class FetchManager:
             "timeout": self.config.timeout,
             "user_agents": self.config.user_agents,
             "playwright": self.config.playwright,
+            "crawl4ai": self.config.crawl4ai,
         }
 
         self._light_fetcher = LightFetcher(fetcher_config)
         self._heavy_fetcher = HeavyFetcher(fetcher_config)
+        self._crawl4ai_fetcher = Crawl4AIFetcher(fetcher_config)
         self._semaphore = asyncio.Semaphore(self.config.concurrency)
 
     async def close(self) -> None:
@@ -74,10 +72,12 @@ class FetchManager:
             await self._light_fetcher.close()
         if self._heavy_fetcher:
             await self._heavy_fetcher.close()
+        if self._crawl4ai_fetcher:
+            await self._crawl4ai_fetcher.close()
 
     async def fetch(self, task: FetchTask) -> FetchResult:
         """
-        执行抓取（带并发控制和缓存）
+        执行抓取（带并发控制）
 
         Args:
             task: 抓取任务
@@ -85,21 +85,8 @@ class FetchManager:
         Returns:
             FetchResult: 抓取结果
         """
-        # 先检查缓存
-        cached_result = self._cache.get(task.url)
-        if cached_result is not None:
-            # 更新 task_id 以匹配当前任务
-            cached_result.task_id = task.id
-            logger.info(f"[{task.id}] Using cached result for {task.url}")
-            return cached_result
-
         async with self._semaphore:
             result = await self._fetch_with_fallback(task)
-
-            # 缓存成功的结果
-            if result.status == FetchStatus.SUCCESS:
-                self._cache.set(task.url, result)
-
             return result
 
     async def _fetch_with_fallback(self, task: FetchTask) -> FetchResult:
@@ -111,8 +98,45 @@ class FetchManager:
         3. 如果失败，回退到重量抓取
         """
         site_config = task.site_config.get("fetch", {})
+        fetcher_choice = (site_config.get("method") or self.config.fetcher or "auto").lower()
         prefer_light = site_config.get("prefer_light", True)
         requires_js = site_config.get("requires_js", False)
+
+        if fetcher_choice in {"crawl4ai", "c4ai"}:
+            logger.info(f"[{task.id}] Using Crawl4AI fetcher")
+            result = await self._fetch_with_retry(
+                self._crawl4ai_fetcher, task, "crawl4ai"
+            )
+            if result.status != FetchStatus.SUCCESS:
+                error_message = (result.error_message or "").lower()
+                if "crawl4ai is not installed" in error_message or "crawl4ai import failed" in error_message:
+                    logger.warning(
+                        f"[{task.id}] Crawl4AI unavailable, falling back to light fetcher"
+                    )
+                    result = await self._fetch_with_retry(
+                        self._light_fetcher, task, "light"
+                    )
+                    if self._should_fallback(result, task):
+                        logger.info(
+                            f"[{task.id}] Light fetcher failed or incomplete, "
+                            f"falling back to heavy fetcher"
+                        )
+                        result = await self._fetch_with_retry(
+                            self._heavy_fetcher, task, "heavy"
+                        )
+            return result
+
+        if fetcher_choice == "light":
+            logger.info(f"[{task.id}] Using light fetcher")
+            return await self._fetch_with_retry(
+                self._light_fetcher, task, "light"
+            )
+
+        if fetcher_choice == "heavy":
+            logger.info(f"[{task.id}] Using heavy fetcher")
+            return await self._fetch_with_retry(
+                self._heavy_fetcher, task, "heavy"
+            )
 
         # 如果需要 JS 渲染，直接使用重量抓取
         if requires_js:
@@ -168,6 +192,13 @@ class FetchManager:
                     return result
 
                 last_result = result
+                logger.warning(
+                    "[%s] Fetch failed with %s (attempt %s): %s",
+                    task.id,
+                    fetcher_type,
+                    attempt + 1,
+                    result.error_message or "unknown error",
+                )
 
                 # 某些错误不值得重试
                 if self._is_permanent_error(result):
@@ -286,22 +317,4 @@ class FetchManager:
             "concurrency": self.config.concurrency,
             "timeout": self.config.timeout,
             "max_retries": self.config.max_retries,
-            "cache": self._cache.get_stats(),
         }
-
-    def clear_old_cache(self, keep_days: int = 7) -> int:
-        """
-        清理旧的缓存
-
-        Args:
-            keep_days: 保留最近几天的缓存
-
-        Returns:
-            删除的文件数量
-        """
-        return self._cache.clear_old(keep_days)
-
-    @property
-    def cache(self) -> PageCache:
-        """获取缓存管理器实例"""
-        return self._cache

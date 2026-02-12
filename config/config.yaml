@@ -19,6 +19,10 @@ crawler:
   max_retries: 3
   # 重试间隔 (秒)
   retry_delay: 2
+  # 抓取方式: auto | light | heavy | crawl4ai
+  fetcher: "auto"
+  # 目录页爬取深度
+  list_depth: 1
   # 页面缓存配置
   cache:
     # 是否启用缓存
@@ -35,6 +39,9 @@ crawler:
   playwright:
     headless: true
     slow_mo: 100  # 毫秒，模拟人类操作
+  # Crawl4AI 配置
+  crawl4ai:
+    headless: true
 
 # AI 模型配置 (支持多种后端)
 ai:
@@ -78,7 +85,7 @@ ai:
 # 脱水配置
 digest:
   # 评分阈值 (终端只显示高于此分数的项目)
-  score_threshold: 8
+  score_threshold: 80
   # 批量处理大小
   batch_size: 10
   # 摘要最大长度
@@ -100,11 +107,11 @@ output:
 # 目标网站列表
 sites:
   - name: "github_trending"
-    enabled: false
+    enabled: true
     config_file: "sites/github_trending.yaml"
 
   - name: "hacker_news"
-    enabled: false
+    enabled: true
     config_file: "sites/hacker_news.yaml"
 
   - name: "Lobsters"

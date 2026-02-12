@@ -7,9 +7,9 @@ site:
 # 抓取策略
 fetch:
   # 优先使用轻量抓取
-  prefer_light: true
+  prefer_light: false
   # 需要 JS 渲染
-  requires_js: true
+  requires_js: false
   # 额外等待时间 (Playwright)
   wait_for: 2000
 

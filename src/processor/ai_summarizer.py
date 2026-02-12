@@ -37,11 +37,17 @@ DIGEST_PROMPT = """你是一个专业的技术内容分析师。请分析以下�
 2. **core_value**: 这个项目/文章的核心价值是什么？解决了什么问题？（1-2 句话）
 3. **tech_stack**: 涉及的主要技术栈（列表形式，如 ["Python", "FastAPI", "PostgreSQL"]）
 4. **recommendation**: 推荐理由，为什么值得关注？（1-2 句话）
-5. **score**: 综合评分 (0-10)，评分标准：
-   - 创新性 (0-3分): 是否有新颖的想法或方法
-   - 实用性 (0-3分): 是否能解决实际问题
-   - 技术深度 (0-2分): 技术实现的复杂度和质量
-   - 社区热度 (0-2分): 关注度、star 数、讨论热度
+5. **score**: 综合评分 (0-100)，评分标准（共 10 个维度，总分 100 分）：
+    - 创新性 (0-12分): 是否有新颖的想法或独到观点
+    - 价值密度 (0-12分): 信息含量/结论密度是否高
+    - 可信度 (0-12分): 论据充分、引用可靠、逻辑自洽
+    - 可验证性 (0-10分): 结论是否可复现/可验证
+    - 实用性 (0-10分): 是否能指导实践或产生可操作启发
+    - 清晰度 (0-10分): 表达结构清楚、要点明确
+    - 时效性 (0-8分): 与当前趋势/技术演进的相关度
+    - 影响力 (0-8分): 对行业/社区/读者的影响潜力
+    - 普适性/适用范围 (0-8分): 跨场景可迁移/可借鉴程度
+    - 可扩展性/延展性 (0-10分): 是否提供可持续探索的方向或后续空间
 
 ## 输出格式
 请直接输出 JSON，不要包含其他内容：
@@ -51,7 +57,7 @@ DIGEST_PROMPT = """你是一个专业的技术内容分析师。请分析以下�
   "core_value": "...",
   "tech_stack": ["...", "..."],
   "recommendation": "...",
-  "score": 8.5
+    "score": 86
 }}
 ```
 """
@@ -165,13 +171,16 @@ class AISummarizer:
             required_fields = ["summary", "core_value", "tech_stack", "recommendation", "score"]
             for field in required_fields:
                 if field not in result:
-                    result[field] = "" if field != "score" else 5.0
+                    result[field] = "" if field != "score" else 50.0
                     if field == "tech_stack":
                         result[field] = []
 
             # 确保 score 是数字
-            result["score"] = float(result.get("score", 5.0))
-            result["score"] = max(0, min(10, result["score"]))  # 限制在 0-10
+            score = float(result.get("score", 50.0))
+            # 兼容旧的 0-10 评分
+            if 0 <= score <= 10:
+                score *= 10
+            result["score"] = max(0, min(100, score))  # 限制在 0-100
 
             return result
 
@@ -183,7 +192,7 @@ class AISummarizer:
                 "core_value": "Unable to extract",
                 "tech_stack": [],
                 "recommendation": "Unable to extract",
-                "score": 5.0,
+                "score": 50.0,
             }
 
     async def summarize_batch(

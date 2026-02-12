@@ -28,9 +28,12 @@ class CrawlerConfig(BaseModel):
     timeout: int = 30
     max_retries: int = 3
     retry_delay: int = 2
+    fetcher: str = "auto"
+    list_depth: int = 1
     cache: CacheConfig = Field(default_factory=CacheConfig)
     user_agents: list[str] = Field(default_factory=list)
     playwright: dict[str, Any] = Field(default_factory=dict)
+    crawl4ai: dict[str, Any] = Field(default_factory=dict)
 
 
 class ClaudeConfig(BaseModel):
@@ -80,7 +83,7 @@ class AIConfig(BaseModel):
 
 class DigestConfig(BaseModel):
     """脱水配置"""
-    score_threshold: int = 8
+    score_threshold: int = 80
     batch_size: int = 10
     max_summary_length: int = 500
 

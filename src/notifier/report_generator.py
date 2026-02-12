@@ -4,15 +4,22 @@
 """
 
 import json
+import logging
+import re
+from difflib import SequenceMatcher
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 import aiofiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from ..core.models import Article, DigestReport
 from ..core.config import AppConfig, get_output_dir
+
+
+logger = logging.getLogger(__name__)
 
 
 # Markdown 报告模板
@@ -39,14 +46,14 @@ REPORT_TEMPLATE = """# 🗞️ AI 内容脱水日报
 
 ---
 
-## 🌟 高质量项目 (评分 ≥ 8)
+## 🌟 高质量项目 (评分 ≥ {{ score_threshold }})
 
 {% for article in high_quality_articles %}
 ### {{ loop.index }}. [{{ article.title }}]({{ article.url }})
 
 {% if article.stars %}⭐ {{ article.stars }} stars {% endif %}{% if article.language %}| 🔤 {{ article.language }}{% endif %}
 
-**评分**: {{ "⭐" * (article.score | int) }} ({{ article.score }}/10)
+**评分**: {{ "⭐" * ((article.score / 10) | int) }} ({{ article.score }}/100)
 
 **核心价值**: {{ article.core_value }}
 
@@ -64,7 +71,7 @@ REPORT_TEMPLATE = """# 🗞️ AI 内容脱水日报
 ## 📚 其他项目
 
 {% for article in other_articles %}
-### {{ loop.index }}. [{{ article.title }}]({{ article.url }}) - {{ article.score }}/10
+### {{ loop.index }}. [{{ article.title }}]({{ article.url }}) - {{ article.score }}/100
 
 {{ article.summary }}
 
@@ -122,7 +129,7 @@ class ReportGenerator:
         self,
         articles: list[Article],
         total_fetched: int = 0,
-        errors: list[dict[str, Any]] = None,
+        errors: list[Any] = None,
         processing_time: float = 0.0,
     ) -> DigestReport:
         """
@@ -137,13 +144,18 @@ class ReportGenerator:
         Returns:
             DigestReport 对象
         """
+        # 先去重，再排序（价值高到低，受众小的靠后）
+        deduped_articles = self._deduplicate_articles(articles)
+        sorted_articles = self._sort_articles(deduped_articles)
+
         # 创建报告对象
         report = DigestReport(
             date=datetime.now().strftime("%Y-%m-%d"),
             total_fetched=total_fetched,
-            articles=articles,
+            articles=sorted_articles,
             errors=errors or [],
             processing_time_seconds=processing_time,
+            score_threshold=float(self.config.digest.score_threshold),
         )
 
         # 计算统计信息
@@ -172,6 +184,7 @@ class ReportGenerator:
             report=report,
             high_quality_articles=high_quality,
             other_articles=other,
+            score_threshold=report.score_threshold,
         )
 
         # 生成文件名
@@ -185,6 +198,187 @@ class ReportGenerator:
             await f.write(content)
 
         return filepath
+
+    def _sort_articles(self, articles: list[Article]) -> list[Article]:
+        """按价值优先，再按受众规模排序"""
+        return sorted(
+            articles,
+            key=lambda a: (
+                -(a.score or 0),
+                -self._get_audience_size(a),
+                a.title or "",
+            ),
+        )
+
+    def _deduplicate_articles(self, articles: list[Article]) -> list[Article]:
+        """基于标题与摘要相似度去重（跨站点）"""
+        if not articles:
+            return []
+
+        # 先按评分排序，确保保留质量更高的版本
+        candidates = sorted(
+            articles,
+            key=lambda a: (-(a.score or 0), -(len(a.summary or "")), a.title or ""),
+        )
+
+        kept: list[Article] = []
+        kept_cache: list[dict[str, Any]] = []
+        seen_urls: set[str] = set()
+
+        for article in candidates:
+            canonical_url = self._canonicalize_url(article.url or "")
+            if canonical_url and canonical_url in seen_urls:
+                continue
+
+            title_norm = self._normalize_text(article.title or "")
+            text_norm = self._normalize_text(self._build_similarity_text(article))
+            text_tokens = self._tokenize(text_norm)
+
+            if self._is_duplicate(title_norm, text_norm, text_tokens, kept_cache):
+                continue
+
+            kept.append(article)
+            if canonical_url:
+                seen_urls.add(canonical_url)
+            kept_cache.append(
+                {
+                    "title_norm": title_norm,
+                    "text_norm": text_norm,
+                    "tokens": text_tokens,
+                }
+            )
+
+        removed = len(articles) - len(kept)
+        if removed > 0:
+            logger.info(f"Deduplicated {removed} similar articles")
+
+        return kept
+
+    def _is_duplicate(
+        self,
+        title_norm: str,
+        text_norm: str,
+        text_tokens: list[str],
+        kept_cache: list[dict[str, Any]],
+    ) -> bool:
+        """判断是否与已保留内容语义相似"""
+        for cached in kept_cache:
+            title_ratio = self._sequence_ratio(title_norm, cached["title_norm"])
+            text_ratio = self._sequence_ratio(text_norm, cached["text_norm"])
+            jaccard = self._jaccard_similarity(text_tokens, cached["tokens"])
+
+            if (title_ratio >= 0.92 and text_ratio >= 0.86) or text_ratio >= 0.92 or jaccard >= 0.84:
+                return True
+
+        return False
+
+    def _build_similarity_text(self, article: Article) -> str:
+        """组合用于相似度判断的文本"""
+        return "\n".join(
+            part
+            for part in [article.title, article.summary, article.core_value]
+            if part
+        )
+
+    def _normalize_text(self, text: str) -> str:
+        """清洗并规范化文本"""
+        tokens = self._tokenize(text)
+        return " ".join(tokens)
+
+    def _tokenize(self, text: str) -> list[str]:
+        """简单分词并去除噪声"""
+        tokens = re.findall(r"[a-z0-9]+|[\u4e00-\u9fff]+", text.lower())
+        cleaned: list[str] = []
+        for token in tokens:
+            if token.isascii():
+                if len(token) > 1:
+                    cleaned.append(token)
+            else:
+                cleaned.append(token)
+
+        return cleaned
+
+    def _sequence_ratio(self, a: str, b: str) -> float:
+        if not a or not b:
+            return 0.0
+        return SequenceMatcher(None, a, b).ratio()
+
+    def _jaccard_similarity(self, a: list[str], b: list[str]) -> float:
+        if not a or not b:
+            return 0.0
+        a_set = set(a)
+        b_set = set(b)
+        if not a_set or not b_set:
+            return 0.0
+        return len(a_set & b_set) / len(a_set | b_set)
+
+    def _canonicalize_url(self, url: str) -> str:
+        if not url:
+            return ""
+        try:
+            parsed = urlparse(url)
+            if not parsed.scheme or not parsed.netloc:
+                return url
+
+            query = parse_qsl(parsed.query, keep_blank_values=True)
+            filtered = [
+                (k, v)
+                for k, v in query
+                if not k.lower().startswith("utm_")
+            ]
+            normalized_query = urlencode(filtered, doseq=True)
+            path = parsed.path.rstrip("/")
+            return urlunparse(
+                (parsed.scheme, parsed.netloc, path, "", normalized_query, "")
+            )
+        except Exception:
+            return url
+
+    def _get_audience_size(self, article: Article) -> int:
+        """估算受众规模（stars / metadata 中的热度字段）"""
+        if article.stars:
+            return int(article.stars)
+
+        candidates = [
+            "stars",
+            "points",
+            "score",
+            "votes",
+            "upvotes",
+            "comments",
+            "replies",
+            "likes",
+            "heat",
+            "views",
+        ]
+
+        for key in candidates:
+            value = article.metadata.get(key) if article.metadata else None
+            parsed = self._parse_numeric(value)
+            if parsed is not None:
+                return parsed
+
+        return 0
+
+    def _parse_numeric(self, value: Any) -> Optional[int]:
+        if value is None:
+            return None
+
+        try:
+            if isinstance(value, (int, float)):
+                return int(value)
+
+            if isinstance(value, str):
+                v = value.strip().lower().replace(",", "")
+                if v.endswith("k"):
+                    return int(float(v[:-1]) * 1000)
+                if v.endswith("m"):
+                    return int(float(v[:-1]) * 1000000)
+                return int(float(v))
+        except Exception:
+            return None
+
+        return None
 
     async def _generate_json(self, report: DigestReport) -> Path:
         """生成 JSON 数据"""
@@ -280,7 +474,7 @@ class ReportGenerator:
             html += f"""
             <div class="article">
                 <h3>{i}. <a href="{article.url}">{article.title}</a></h3>
-                <p class="score">评分: {article.score}/10</p>
+                <p class="score">评分: {article.score}/100</p>
                 <p><strong>核心价值:</strong> {article.core_value}</p>
                 <p class="tech-stack">技术栈: {tech_str}</p>
                 <p>{article.summary}</p>

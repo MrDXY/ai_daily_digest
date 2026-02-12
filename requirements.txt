@@ -6,6 +6,7 @@
 curl_cffi>=0.7.0              # 轻量级抓取，支持 impersonate
 playwright>=1.40.0            # 重量级抓取，JS渲染
 playwright-stealth>=1.0.6     # 绕过检测
+crawl4ai>=0.4.0               # Crawl4AI 爬取
 
 # === 解析层 ===
 beautifulsoup4>=4.12.0        # HTML解析

@@ -4,7 +4,7 @@ site:
   type: "structured"
 
 fetch:
-  prefer_light: true
+  prefer_light: false
   requires_js: false
   wait_for: 500
 
@@ -30,9 +30,6 @@ detail_parser:
   enabled: true
   max_details: 20
   use_readability: true
-  content_selectors:
-    title: "h1, header h1, .story .details span.link a.u-url"
-    content: ".comment_text, .story_text, .markdown, article"
 
 cleaning:
   remove_tags: ["script", "style", "nav", "footer", "aside", "form"]

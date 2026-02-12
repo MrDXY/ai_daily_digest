@@ -307,10 +307,16 @@ class ConfigGenerator:
         # 4. 清理 AI 响应（移除可能的 markdown 代码块）
         config_content = self._clean_ai_response(response)
 
-        # 5. 验证 YAML 格式
+        # 5. 验证 YAML 格式并过滤多余字段
         try:
-            yaml.safe_load(config_content)
-            logger.info("YAML 格式验证通过")
+            parsed = yaml.safe_load(config_content)
+            filtered = self._filter_config_dict(parsed)
+            config_content = yaml.safe_dump(
+                filtered,
+                allow_unicode=True,
+                sort_keys=False,
+            )
+            logger.info("YAML 格式验证通过，并已过滤多余字段")
         except yaml.YAMLError as e:
             logger.warning(f"YAML 格式警告: {e}")
 
@@ -355,6 +361,61 @@ class ConfigGenerator:
             response = response[:-3]
 
         return response.strip()
+
+    def _filter_config_dict(self, data: dict) -> dict:
+        """过滤 AI 输出中的多余字段，仅保留程序可解析的配置"""
+        if not isinstance(data, dict):
+            return {}
+
+        def pick(source: dict, keys: list[str]) -> dict:
+            return {k: source[k] for k in keys if k in source}
+
+        site = data.get("site") or {}
+        fetch = data.get("fetch") or {}
+        list_parser = data.get("list_parser") or {}
+        detail_parser = data.get("detail_parser") or {}
+        cleaning = data.get("cleaning") or {}
+
+        if not isinstance(site, dict):
+            site = {}
+        if not isinstance(fetch, dict):
+            fetch = {}
+        if not isinstance(list_parser, dict):
+            list_parser = {}
+        if not isinstance(detail_parser, dict):
+            detail_parser = {}
+        if not isinstance(cleaning, dict):
+            cleaning = {}
+
+        selectors = list_parser.get("selectors", {})
+        if not isinstance(selectors, dict):
+            selectors = {}
+
+        content_selectors = detail_parser.get("content_selectors", {})
+        if not isinstance(content_selectors, dict):
+            content_selectors = {}
+
+        filtered = {
+            "site": pick(site, ["name", "url", "type"]),
+            "fetch": pick(fetch, ["prefer_light", "requires_js", "wait_for"]),
+            "list_parser": {
+                **pick(list_parser, ["container", "url_prefix"]),
+                "selectors": selectors,
+            },
+            "detail_parser": {
+                **pick(detail_parser, ["enabled", "max_details", "use_readability"]),
+                "content_selectors": content_selectors,
+            },
+            "cleaning": pick(cleaning, ["remove_tags", "extract_text"]),
+        }
+
+        # 清理空的 section
+        filtered = {
+            k: v for k, v in filtered.items()
+            if isinstance(v, dict) and v
+        }
+
+        return filtered
 
     async def close(self):
         """关闭资源"""

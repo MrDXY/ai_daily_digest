@@ -6,7 +6,7 @@ site:
 
 # 抓取策略
 fetch:
-  prefer_light: true
+  prefer_light: false
   requires_js: false
   wait_for: 1000
 
@@ -18,13 +18,6 @@ list_parser:
     title: "span.titleline > a"
     url: "span.titleline > a"
   url_prefix: ""
-
-# 额外处理逻辑
-post_process:
-  # 需要关联下一行获取分数
-  merge_rows: true
-  score_selector: "span.score"
-  comments_selector: "a:contains('comments')"
 
 # 文章详情抓取
 detail_parser:

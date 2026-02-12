@@ -8,7 +8,14 @@ import time
 from typing import Any, Optional
 
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page
-from playwright_stealth.stealth import Stealth
+
+try:
+    from playwright_stealth import stealth_async
+except ImportError:  # playwright-stealth>=1.0.6
+    from playwright_stealth import Stealth
+
+    async def stealth_async(page: Page) -> None:
+        await Stealth().apply_stealth_async(page)
 
 from ..core.models import FetchTask, FetchResult, FetchMethod
 from ..core.exceptions import FetchException
@@ -95,8 +102,7 @@ class HeavyFetcher(BaseFetcher):
             page = await context.new_page()
 
             # 应用 stealth 插件
-            stealth = Stealth()
-            await stealth.apply_stealth_async(page)
+            await stealth_async(page)
 
             # 设置额外的反检测脚本
             await self._inject_anti_detection(page)
