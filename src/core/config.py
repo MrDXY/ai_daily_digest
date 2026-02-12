@@ -203,6 +203,26 @@ def get_output_dir(app_config: AppConfig) -> Path:
     return path
 
 
+def get_report_dir(app_config: AppConfig) -> Path:
+    """获取报告目录路径"""
+    output_dir = get_output_dir(app_config)
+    report_dir = output_dir / "report"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    return report_dir
+
+
+def get_report_date_dir(app_config: AppConfig, date_str: str) -> Path:
+    """获取指定日期报告目录路径（YYYY/MM/DD）"""
+    report_dir = get_report_dir(app_config)
+    parts = (date_str or "").split("-")
+    if len(parts) != 3:
+        return report_dir
+    year, month, day = parts
+    date_dir = report_dir / year / month / day
+    date_dir.mkdir(parents=True, exist_ok=True)
+    return date_dir
+
+
 def get_cache_dir(app_config: AppConfig) -> Path:
     """获取缓存目录路径"""
     cache_dir = app_config.crawler.cache.cache_dir

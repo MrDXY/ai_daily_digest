@@ -16,7 +16,7 @@ import aiofiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from ..core.models import Article, DigestReport
-from ..core.config import AppConfig, get_output_dir
+from ..core.config import AppConfig, get_report_date_dir
 
 
 logger = logging.getLogger(__name__)
@@ -113,8 +113,6 @@ class ReportGenerator:
 
     def __init__(self, config: AppConfig):
         self.config = config
-        self.output_dir = get_output_dir(config)
-
         # 初始化 Jinja2 环境
         template_dir = Path(__file__).parent.parent.parent / "templates"
         if template_dir.exists():
@@ -191,7 +189,8 @@ class ReportGenerator:
         filename = self.config.output.report_filename.format(
             date=report.date
         )
-        filepath = self.output_dir / filename
+        output_dir = get_report_date_dir(self.config, report.date)
+        filepath = output_dir / filename
 
         # 写入文件
         async with aiofiles.open(filepath, "w", encoding="utf-8") as f:
@@ -383,7 +382,8 @@ class ReportGenerator:
     async def _generate_json(self, report: DigestReport) -> Path:
         """生成 JSON 数据"""
         filename = f"daily_report_{report.date}.json"
-        filepath = self.output_dir / filename
+        output_dir = get_report_date_dir(self.config, report.date)
+        filepath = output_dir / filename
 
         # 转换为可序列化的字典
         data = {

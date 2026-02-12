@@ -50,4 +50,4 @@ jobs:
           base: "main"
           delete-branch: true
           add-paths: |
-            output/**
+            output/report/**

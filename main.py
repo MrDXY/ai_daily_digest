@@ -22,7 +22,7 @@ from typing import Optional
 # 添加项目根目录到路径
 sys.path.insert(0, str(Path(__file__).parent))
 
-from src.core.config import load_config, AppConfig, get_output_dir, get_cache_dir
+from src.core.config import load_config, AppConfig, get_report_date_dir, get_cache_dir
 from src.core.models import FetchTask, FetchResult, FetchStatus, Article, DigestReport
 from src.core.exceptions import DigestException
 from src.crawler import FetchManager
@@ -142,8 +142,8 @@ class DailyDigestApp:
         self.display.show_report_summary(report)
 
         # 显示完成信息
-        output_dir = get_output_dir(self.config)
-        report_path = output_dir / self.config.output.report_filename.format(
+        report_dir = get_report_date_dir(self.config, report.date)
+        report_path = report_dir / self.config.output.report_filename.format(
             date=report.date
         )
         self.display.show_completion(str(report_path))
