@@ -111,9 +111,9 @@ sites:
     config_file: "sites/github_trending.yaml"
 
   - name: "hacker_news"
-    enabled: false
+    enabled: true
     config_file: "sites/hacker_news.yaml"
 
   - name: "Lobsters"
-    enabled: false
+    enabled: true
     config_file: "sites/lobsters.yaml"
