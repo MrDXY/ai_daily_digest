@@ -103,7 +103,7 @@ digest:
   # Azure embedding 部署名 (为空则使用 ai.azure_openai.deployment_name)
   semantic_embedding_deployment: ""
   # 语义相似度阈值
-  semantic_threshold: 0.80
+  semantic_threshold: 0.95
   # 语义比对最大文本长度
   semantic_max_text_length: 1200
 
