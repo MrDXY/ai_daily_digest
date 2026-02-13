@@ -19,6 +19,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
+from notifier.readme_updater import update_readme, ReadmeUpdater
+
 # 添加项目根目录到路径
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -64,6 +66,7 @@ class DailyDigestApp:
 
         self.config: Optional[AppConfig] = None
         self.display = TerminalDisplay()
+        self.updater = ReadmeUpdater(readme_path="README.md", report_dir="output/report")
 
     async def run(self) -> DigestReport:
         """运行完整的日报生成流程"""
@@ -147,6 +150,9 @@ class DailyDigestApp:
             date=report.date
         )
         self.display.show_completion(str(report_path))
+
+        print("正在更新 README 索引...")
+        self.updater.update()
 
         return report
 

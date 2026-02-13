@@ -141,6 +141,40 @@ ai_daily_digest/
 
 所有报告按日期分层存放在 [output/report](output/report)，结构为 YYYY/MM/DD。
 
+<!-- DIGEST_START -->
+
+### 🚀 最近一周内容脱水 (Weekly Digest)
+
+<details open>
+  <summary><b>📅 2026-02-12 重点速览 (点击展开)</b></summary>
+  <blockquote style='margin-top: 10px;'>
+
+(评分 ≥ 80.0)
+
+
+#### 1. [microsoft /PowerToys](https://github.com/microsoft/PowerToys)
+
+⭐ 129472 stars | 🔤 C#
+
+**评分**: ⭐⭐⭐⭐⭐⭐⭐⭐⭐ (90.0/100)
+
+**核心价值**: 以“系统级工具箱”的方式解决 Windows 日常操作中高频但分散的效率痛点（窗口管理、剪贴板增强、文件批处理、快捷命令等），显著降低重复操作成本。通过开源与持续发布，使个人用户与企业都能获得可配置、可治理的生产力增强方案。
+
+**技术栈**: Windows, .NET, C#, WinUI/Windows UI, MSIX, WinGet, PowerShell, GitHub Actions/CI, ADMX/GPO(企业策略)
+
+**摘要**: Microsoft PowerToys 是微软官方开源的 Windows 增强工具集，提供 25+ 个小工具以提升生产力与系统可定制性（如窗口布局、快捷启动、批量重命名、取色、文本提取等）。项目通过统一的设置与持续迭代，把分散的“效率插件”能力整合为一套可维护、可部署的系统级工具。近期 0.97.x 版本重点修复稳定性问题，并在 Command Palette、Cursor Wrap、Advanced Paste 等模块持续增强体验与企业可管控性。
+
+**推荐理由**: 工具覆盖面广且贴近真实工作流，安装渠道完善（GitHub/MS Store/WinGet）并保持高频迭代，适合直接落地提升效率。对开发者与企业管理员也有价值：扩展生态（如 Command Palette 扩展）、策略管控（ADMX/GPO）与开源实现便于二次开发与审计。
+
+  <p align='right'><a href='output/report/2026/02/12/daily_report_2026-02-12.md'>🔍 查看完整报告详情</a></p>
+  </blockquote>
+</details>
+
+
+> 💡 更多历史数据请查看 [output/report](./output/report) 目录。
+
+<!-- DIGEST_END -->
+
 ---
 
 ## 🌟 特性一览
