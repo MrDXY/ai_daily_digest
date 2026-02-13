@@ -114,7 +114,7 @@ class HeavyFetcher(BaseFetcher):
             # 导航到目标页面
             response = await page.goto(
                 task.url,
-                wait_until="networkidle",
+                wait_until="domcontentloaded",
                 timeout=self.timeout * 1000,
             )
 
@@ -262,7 +262,7 @@ class HeavyFetcher(BaseFetcher):
 
             response = await page.goto(
                 task.url,
-                wait_until="networkidle",
+                wait_until="domcontentloaded",
                 timeout=self.timeout * 1000,
             )
 
