@@ -92,6 +92,20 @@ digest:
   max_summary_length: 500
   # 最大爬取子页面数
   max_subpage_crawl: 30
+  # 语义去重开关
+  semantic_dedup_enabled: true
+  # 语义去重后端: fastembed | openai | azure_openai
+  semantic_backend: "fastembed"
+  # fastembed 模型
+  semantic_model: "BAAI/bge-small-en"
+  # OpenAI embedding 模型
+  semantic_embedding_model: "text-embedding-3-small"
+  # Azure embedding 部署名 (为空则使用 ai.azure_openai.deployment_name)
+  semantic_embedding_deployment: ""
+  # 语义相似度阈值
+  semantic_threshold: 0.80
+  # 语义比对最大文本长度
+  semantic_max_text_length: 1200
 
 # 输出配置
 output:
@@ -99,6 +113,10 @@ output:
   report_filename: "daily_report_{date}.md"
   # 是否生成 JSON 格式
   generate_json: true
+  # 跨日去重缓存目录 (相对于 output_dir)
+  dedup_history_dir: "dedup_cache"
+  # 跨日去重缓存文件名 (JSONL)
+  dedup_history_file: "dedup_history.jsonl"
   # 终端输出样式
   terminal:
     show_low_score: false

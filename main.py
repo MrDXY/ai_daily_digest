@@ -19,8 +19,6 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from notifier.readme_updater import update_readme, ReadmeUpdater
-
 # 添加项目根目录到路径
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -29,7 +27,7 @@ from src.core.models import FetchTask, FetchResult, FetchStatus, Article, Digest
 from src.core.exceptions import DigestException
 from src.crawler import FetchManager
 from src.processor import ProcessingPipeline, HTMLCleaner
-from src.notifier import ReportGenerator, TerminalDisplay
+from src.notifier import ReportGenerator, TerminalDisplay, ReadmeUpdater
 from src.generator import ConfigGenerator
 
 

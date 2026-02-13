@@ -86,6 +86,13 @@ class DigestConfig(BaseModel):
     score_threshold: int = 80
     batch_size: int = 10
     max_summary_length: int = 500
+    semantic_dedup_enabled: bool = True
+    semantic_backend: str = "fastembed"
+    semantic_model: str = "BAAI/bge-small-en"
+    semantic_embedding_model: str = "text-embedding-3-small"
+    semantic_embedding_deployment: str = ""
+    semantic_threshold: float = 0.86
+    semantic_max_text_length: int = 1200
 
 
 class OutputConfig(BaseModel):
@@ -93,6 +100,8 @@ class OutputConfig(BaseModel):
     report_filename: str = "daily_report_{date}.md"
     generate_json: bool = True
     terminal: dict[str, Any] = Field(default_factory=dict)
+    dedup_history_dir: str = "dedup_cache"
+    dedup_history_file: str = "dedup_history.jsonl"
 
 
 class SiteReference(BaseModel):

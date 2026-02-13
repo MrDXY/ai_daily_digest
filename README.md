@@ -131,7 +131,8 @@ ai_daily_digest/
 │   │   └── YYYY/MM/DD/           # 按日期分层
 │   │       ├── daily_report_*.md
 │   │       └── daily_report_*.json
-│   └── cache/                   # 抓取缓存
+│   ├── cache/                   # 抓取缓存
+│   └── dedup_cache/             # 跨日去重缓存
 └── templates/                   # 报告模板
 ```
 
@@ -232,6 +233,21 @@ sites:
     enabled: true
   - name: github_trending
     enabled: true
+```
+
+### 语义去重 (semantic dedup)
+
+语义去重使用 `fastembed` 生成向量并做余弦相似度比对，适合在 macOS/Linux 上本地运行。
+
+```yaml
+digest:
+  semantic_dedup_enabled: true
+  semantic_backend: "fastembed"  # fastembed | openai | azure_openai
+  semantic_model: "BAAI/bge-small-en"
+  semantic_embedding_model: "text-embedding-3-small"
+  semantic_embedding_deployment: ""  # Azure 为空则复用 ai.azure_openai.deployment_name
+  semantic_threshold: 0.86
+  semantic_max_text_length: 1200
 ```
 
 ### 站点配置示例 (config/sites/hacker_news.yaml)

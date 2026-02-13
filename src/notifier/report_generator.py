@@ -16,7 +16,8 @@ import aiofiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from ..core.models import Article, DigestReport
-from ..core.config import AppConfig, get_report_date_dir
+from ..core.config import AppConfig, get_report_date_dir, get_output_dir
+from ..core.semantic_similarity import SemanticSimilarity
 
 
 logger = logging.getLogger(__name__)
@@ -113,6 +114,27 @@ class ReportGenerator:
 
     def __init__(self, config: AppConfig):
         self.config = config
+        backend = self.config.digest.semantic_backend
+        if backend in ("fastembed", "sentence_transformers"):
+            model_name = self.config.digest.semantic_model
+        else:
+            model_name = self.config.digest.semantic_embedding_model
+
+        azure_config = self.config.ai.azure_openai
+        openai_config = self.config.ai.openai
+        deployment = self.config.digest.semantic_embedding_deployment or azure_config.deployment_name
+
+        self._semantic = SemanticSimilarity(
+            backend=backend,
+            model_name=model_name,
+            enabled=self.config.digest.semantic_dedup_enabled,
+            threshold=self.config.digest.semantic_threshold,
+            max_text_length=self.config.digest.semantic_max_text_length,
+            api_key=openai_config.api_key if backend == "openai" else azure_config.api_key,
+            api_base=azure_config.api_base if backend == "azure_openai" else "",
+            api_version=azure_config.api_version if backend == "azure_openai" else "",
+            deployment=deployment if backend == "azure_openai" else "",
+        )
         # 初始化 Jinja2 环境
         template_dir = Path(__file__).parent.parent.parent / "templates"
         if template_dir.exists():
@@ -142,13 +164,16 @@ class ReportGenerator:
         Returns:
             DigestReport 对象
         """
+        report_date = datetime.now().strftime("%Y-%m-%d")
+        history_cache = await self._load_dedup_history(report_date)
+
         # 先去重，再排序（价值高到低，受众小的靠后）
-        deduped_articles = self._deduplicate_articles(articles)
+        deduped_articles = await self._deduplicate_articles(articles, history_cache)
         sorted_articles = self._sort_articles(deduped_articles)
 
         # 创建报告对象
         report = DigestReport(
-            date=datetime.now().strftime("%Y-%m-%d"),
+            date=report_date,
             total_fetched=total_fetched,
             articles=sorted_articles,
             errors=errors or [],
@@ -164,6 +189,8 @@ class ReportGenerator:
 
         if self.config.output.generate_json:
             await self._generate_json(report)
+
+        await self._append_dedup_history(report_date, report.articles)
 
         return report
 
@@ -209,10 +236,16 @@ class ReportGenerator:
             ),
         )
 
-    def _deduplicate_articles(self, articles: list[Article]) -> list[Article]:
-        """基于标题与摘要相似度去重（跨站点）"""
+    async def _deduplicate_articles(
+        self,
+        articles: list[Article],
+        history_cache: Optional[list[dict[str, Any]]] = None,
+    ) -> list[Article]:
+        """基于标题与摘要相似度去重（跨站点 & 历史）"""
         if not articles:
             return []
+
+        history_cache = list(history_cache or [])
 
         # 先按评分排序，确保保留质量更高的版本
         candidates = sorted(
@@ -221,8 +254,12 @@ class ReportGenerator:
         )
 
         kept: list[Article] = []
-        kept_cache: list[dict[str, Any]] = []
-        seen_urls: set[str] = set()
+        kept_cache: list[dict[str, Any]] = list(history_cache)
+        seen_urls: set[str] = {
+            entry.get("canonical_url")
+            for entry in history_cache
+            if entry.get("canonical_url")
+        }
 
         for article in candidates:
             canonical_url = self._canonicalize_url(article.url or "")
@@ -231,9 +268,22 @@ class ReportGenerator:
 
             title_norm = self._normalize_text(article.title or "")
             text_norm = self._normalize_text(self._build_similarity_text(article))
+            summary_norm = self._normalize_text(article.summary or "")
             text_tokens = self._tokenize(text_norm)
+            summary_tokens = self._tokenize(summary_norm)
+            semantic_text = self._build_semantic_text(article)
+            semantic_embedding = await self._semantic.embed(semantic_text)
 
-            if self._is_duplicate(title_norm, text_norm, text_tokens, kept_cache):
+            if await self._is_duplicate(
+                title_norm,
+                text_norm,
+                summary_norm,
+                text_tokens,
+                summary_tokens,
+                semantic_text,
+                semantic_embedding,
+                kept_cache,
+            ):
                 continue
 
             kept.append(article)
@@ -243,7 +293,12 @@ class ReportGenerator:
                 {
                     "title_norm": title_norm,
                     "text_norm": text_norm,
+                    "summary_norm": summary_norm,
                     "tokens": text_tokens,
+                    "summary_tokens": summary_tokens,
+                    "canonical_url": canonical_url,
+                    "semantic_text": semantic_text,
+                    "semantic_embedding": semantic_embedding,
                 }
             )
 
@@ -253,20 +308,49 @@ class ReportGenerator:
 
         return kept
 
-    def _is_duplicate(
+    async def _is_duplicate(
         self,
         title_norm: str,
         text_norm: str,
+        summary_norm: str,
         text_tokens: list[str],
+        summary_tokens: list[str],
+        semantic_text: str,
+        semantic_embedding: Optional[list[float]],
         kept_cache: list[dict[str, Any]],
     ) -> bool:
         """判断是否与已保留内容语义相似"""
         for cached in kept_cache:
             title_ratio = self._sequence_ratio(title_norm, cached["title_norm"])
             text_ratio = self._sequence_ratio(text_norm, cached["text_norm"])
+            summary_ratio = self._sequence_ratio(summary_norm, cached.get("summary_norm", ""))
             jaccard = self._jaccard_similarity(text_tokens, cached["tokens"])
+            summary_jaccard = self._jaccard_similarity(
+                summary_tokens,
+                cached.get("summary_tokens", []),
+            )
 
-            if (title_ratio >= 0.92 and text_ratio >= 0.86) or text_ratio >= 0.92 or jaccard >= 0.84:
+            if (
+                (title_ratio >= 0.92 and text_ratio >= 0.86)
+                or text_ratio >= 0.92
+                or jaccard >= 0.84
+            ):
+                return True
+
+            if (
+                (title_ratio >= 0.90 and summary_ratio >= 0.78)
+                or summary_ratio >= 0.88
+                or summary_jaccard >= 0.72
+            ):
+                return True
+
+            semantic_score = await self._semantic.similarity(
+                semantic_text,
+                cached.get("semantic_text", cached.get("text_norm", "")),
+                embedding=semantic_embedding,
+                other_embedding=cached.get("semantic_embedding"),
+            )
+            if semantic_score is not None and semantic_score >= self._semantic.threshold:
                 return True
 
         return False
@@ -276,6 +360,14 @@ class ReportGenerator:
         return "\n".join(
             part
             for part in [article.title, article.summary, article.core_value]
+            if part
+        )
+
+    def _build_semantic_text(self, article: Article) -> str:
+        """组合用于语义相似度判断的文本"""
+        return "\n".join(
+            part
+            for part in [article.title, article.summary, article.core_value, article.recommendation]
             if part
         )
 
@@ -420,6 +512,78 @@ class ReportGenerator:
             await f.write(json.dumps(data, ensure_ascii=False, indent=2))
 
         return filepath
+
+    def _get_dedup_history_path(self) -> Path:
+        output_dir = get_output_dir(self.config)
+        dedup_dir = output_dir / self.config.output.dedup_history_dir
+        dedup_dir.mkdir(parents=True, exist_ok=True)
+        return dedup_dir / self.config.output.dedup_history_file
+
+    async def _load_dedup_history(self, report_date: str) -> list[dict[str, Any]]:
+        history_path = self._get_dedup_history_path()
+        if not history_path.exists():
+            return []
+
+        entries: list[dict[str, Any]] = []
+        try:
+            async with aiofiles.open(history_path, "r", encoding="utf-8") as f:
+                async for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        item = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue
+
+                    if item.get("date") == report_date:
+                        continue
+
+                    entries.append(
+                        {
+                            "title_norm": item.get("title_norm", ""),
+                            "text_norm": item.get("text_norm", ""),
+                            "summary_norm": item.get("summary_norm", ""),
+                            "tokens": item.get("tokens", []),
+                            "summary_tokens": item.get("summary_tokens", []),
+                            "canonical_url": item.get("canonical_url", ""),
+                            "semantic_text": item.get("semantic_text", ""),
+                            "semantic_embedding": item.get("semantic_embedding"),
+                        }
+                    )
+        except Exception as exc:
+            logger.warning(f"Failed to load dedup history: {exc}")
+
+        return entries
+
+    async def _append_dedup_history(self, report_date: str, articles: list[Article]) -> None:
+        history_path = self._get_dedup_history_path()
+        if not articles:
+            return
+
+        try:
+            async with aiofiles.open(history_path, "a", encoding="utf-8") as f:
+                for article in articles:
+                    canonical_url = self._canonicalize_url(article.url or "")
+                    title_norm = self._normalize_text(article.title or "")
+                    text_norm = self._normalize_text(self._build_similarity_text(article))
+                    summary_norm = self._normalize_text(article.summary or "")
+                    semantic_text = self._build_semantic_text(article)
+                    semantic_embedding = await self._semantic.embed(semantic_text)
+                    entry = {
+                        "date": report_date,
+                        "canonical_url": canonical_url,
+                        "title_norm": title_norm,
+                        "text_norm": text_norm,
+                        "summary_norm": summary_norm,
+                        "tokens": self._tokenize(text_norm),
+                        "summary_tokens": self._tokenize(summary_norm),
+                        "semantic_text": semantic_text,
+                        "semantic_embedding": semantic_embedding,
+                    }
+                    await f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+        except Exception as exc:
+            logger.warning(f"Failed to append dedup history: {exc}")
 
     async def generate_summary_email(
         self,
