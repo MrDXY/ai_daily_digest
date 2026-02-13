@@ -284,6 +284,7 @@ class ReportGenerator:
                 semantic_embedding,
                 kept_cache,
             ):
+                logger.info(f"Deduplicating {article.url}, title={article.title}")
                 continue
 
             kept.append(article)
