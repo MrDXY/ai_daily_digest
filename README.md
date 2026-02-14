@@ -163,13 +163,13 @@ ai_daily_digest/
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐⭐ (92.0/100)
 
-**核心价值**: Arrow 通过标准化的内存列式数据格式与 IPC 交换协议，解决了不同语言/库/系统之间高成本数据拷贝与序列化开销导致的互操作性与性能问题。其长期稳定的兼容性承诺让数据工具链可以在统一基础上演进并形成规模化生态。
+**核心价值**: Arrow 的核心价值是提供语言无关、高效、可长期兼容的内存列式数据标准与 IPC 交换机制，解决不同系统/库之间列式数据互操作与零拷贝共享的成本问题。它与 Parquet（持久化列存）形成互补，显著降低数据在分析/数据库/计算引擎间流转的摩擦。
 
-**技术栈**: Apache Arrow Columnar Format, Arrow IPC, FlatBuffers, C, C++, C#, Go, Java, JavaScript, Julia, MATLAB, Python, R, Ruby, Rust, CI/Integration Tests, Apache Parquet, ADBC, nanoarrow, Apache DataFusion, GeoArrow
+**技术栈**: Apache Arrow Columnar Format, Arrow IPC, FlatBuffers, C, C++, Java, Python, C#, Go, JavaScript, Julia, MATLAB, R, Ruby, Rust, ADBC, nanoarrow, Apache DataFusion, Apache Parquet
 
-**摘要**: 文章回顾了 Apache Arrow 自 2016 年首个提交以来的 10 年发展，强调其作为“跨语言、跨系统交换列式数据”的标准在格式稳定性与生态扩张上的成果。内容重点梳理了 0.1.0 早期设计、跨语言集成测试的建立、格式演进中几乎零破坏性变更（仅 Union 有一次兼容性破坏），以及 2020 年 1.0.0 后对兼容性承诺的“成年化”。同时概览了 Arrow 今日的多语言实现、子项目（ADBC、nanoarrow）与生态成功案例（DataFusion、GeoArrow），并说明未来将以共识驱动、持续增量扩展规范与实现。
+**摘要**: 文章回顾了 Apache Arrow 自 2016 年建立以来的 10 年发展历程，强调其作为“列式数据交换标准”在格式稳定性、跨语言互操作与生态扩张方面的成果。内容重点梳理了 0.1.0 早期设计、跨语言集成测试体系的建立、格式演进中几乎零破坏性变更（仅 Union validity 相关一次）以及 2020 年 1.0.0 后的成熟期定位。最后展望 Arrow 在无正式路线图下以社区共识驱动，继续通过稳定规范与实现迭代支撑更广泛的第三方生态创新。
 
-**推荐理由**: Arrow 10 年几乎零破坏性变更的记录证明其规范与工程治理足够成熟，适合作为数据平台/分析引擎/数据库之间的长期互操作基础。文章也提供了理解 Arrow 与 Parquet 分工、生态版图与未来演进方式的高层入口，便于技术选型与架构规划。
+**推荐理由**: Arrow 以“十年几乎零破坏性变更”的格式稳定性证明其可作为数据基础设施的长期标准，适合构建跨语言、跨系统的数据管道与分析平台。其生态已从核心格式扩展到 ADBC、DataFusion 等项目，并被大量第三方工具采用，关注它能把握数据互操作与高性能分析的主线趋势。
 
   <p align='right'><a href='output/report/2026/02/14/daily_report_2026-02-14.md'>🔍 查看完整报告详情</a></p>
   </blockquote>
