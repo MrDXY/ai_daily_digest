@@ -5,11 +5,11 @@
 # 应用基础配置
 app:
   name: "AI Daily Digest"
-  version: "1.0.0"
+  version: "2.0.0"
   output_dir: "./output"
   log_level: "INFO"
 
-# 爬虫配置
+# 爬虫配置 (StealthFetcher)
 crawler:
   # 并发数
   concurrency: 5
@@ -19,26 +19,18 @@ crawler:
   max_retries: 3
   # 重试间隔 (秒)
   retry_delay: 2
-  # 抓取方式: auto | light | heavy | crawl4ai
-  fetcher: "auto"
   # 目录页爬取深度
   list_depth: 1
   # 页面缓存配置
   cache:
-    # 是否启用缓存
     enabled: true
-    # 缓存目录 (相对于项目根目录)
     cache_dir: "./output/cache"
-    # 缓存保留天数
     keep_days: 7
-  # User-Agent 池
-  user_agents:
-    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
-    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  # User-Agent 池 (可选，默认使用内置池)
+  user_agents: []
   # Playwright 配置
   playwright:
     headless: true
-    slow_mo: 100  # 毫秒，模拟人类操作
   # Crawl4AI 配置
   crawl4ai:
     headless: true

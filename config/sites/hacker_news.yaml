@@ -2,16 +2,16 @@
 site:
   name: "Hacker News"
   url: "https://news.ycombinator.com/best"
-  type: "structured"  # structured: 目录页，需要解析列表 | article: 内容页，直接爬取
+  type: "structured"  # structured: 目录页 | article: 内容页
 
 # 抓取策略
 fetch:
-  prefer_light: false
+  # 需要 JS 渲染
   requires_js: false
+  # 页面加载后等待时间 (毫秒)
   wait_for: 1000
 
-# 列表页解析规则（仅 structured 类型需要）
-# 如果此字段为空，则直接将页面作为内容页处理
+# 列表页解析规则
 list_parser:
   container: "tr.athing"
   selectors:
@@ -19,19 +19,9 @@ list_parser:
     url: "span.titleline > a"
   url_prefix: ""
 
-# 文章详情抓取
+# 详情页抓取 (二次爬取文章内容)
 detail_parser:
-  # 是否启用二次爬取详情页
   enabled: true
-  # 最大抓取详情数
   max_details: 30
-  # 是否使用 readability 自动提取（当 content_selectors 未定义时）
+  # 使用 readability 自动提取文章正文
   use_readability: true
-  # 内容选择器配置 - 为空时使用 readability 自动提取
-  # content_selectors:
-  #   title: "h1.article-title"
-  #   content: "div.article-body"
-
-cleaning:
-  remove_tags: ["script", "style", "nav", "footer", "aside"]
-  extract_text: true

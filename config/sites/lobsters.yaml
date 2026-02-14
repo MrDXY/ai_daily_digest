@@ -1,37 +1,27 @@
+# Lobsters 站点配置
 site:
   name: "Lobsters"
   url: "https://lobste.rs/"
   type: "structured"
 
+# 抓取策略
 fetch:
-  prefer_light: false
   requires_js: false
+  # 页面加载后等待时间 (毫秒)
   wait_for: 500
 
+# 列表页解析规则
 list_parser:
   container: "ol.stories.list > li.story"
   selectors:
-    id: ":scope"
-    short_id: ":scope"
-    title: ":scope .details span.link a.u-url"
-    url: ":scope .details span.link a.u-url"
-    score: ":scope .voters a.upvoter"
-    tags: ":scope .details span.tags a.tag"
-    domain: ":scope .details a.domain"
-    author: ":scope .details .byline a.u-author"
-    author_url: ":scope .details .byline a.u-author"
-    time: ":scope .details .byline time"
-    comments_text: ":scope .details .byline span.comments_label a"
-    comments_url: ":scope .details .byline span.comments_label a"
-    description_hint: ":scope .details a.description_present"
-  url_prefix: "https://lobste.rs"
+    title: ".details span.link a.u-url"
+    url: ".details span.link a.u-url"
+    tags: ".details span.tags a.tag"
+    author: ".details .byline a.u-author"
+  url_prefix: ""
 
+# 详情页抓取
 detail_parser:
   enabled: true
   max_details: 20
   use_readability: true
-
-cleaning:
-  remove_tags: ["script", "style", "nav", "footer", "aside", "form"]
-  extract_text: true
-  trim: true

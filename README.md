@@ -111,26 +111,30 @@ ai_daily_digest/
 │   │   ├── models.py            # 数据模型
 │   │   ├── queue.py             # 异步队列
 │   │   └── exceptions.py        # 自定义异常
-│   ├── crawler/                 # 爬虫模块
-│   │   ├── light_fetcher.py     # curl_cffi 轻量抓取
-│   │   ├── heavy_fetcher.py     # Playwright 重量抓取
-│   │   ├── cache.py             # 缓存管理
-│   │   └── manager.py           # 抓取管理器
+│   ├── crawler/                 # 爬虫模块 (重构版)
+│   │   ├── stealth_fetcher.py   # 🆕 隐身抓取器（多层反爬虫）
+│   │   ├── manager.py           # 抓取管理器
+│   │   ├── light_fetcher.py     # curl_cffi 轻量抓取 (备用)
+│   │   ├── heavy_fetcher.py     # Playwright 重量抓取 (备用)
+│   │   └── cache.py             # 缓存管理
 │   ├── processor/               # 处理模块
+│   │   ├── content_extractor.py # 🆕 智能内容提取器
 │   │   ├── html_cleaner.py      # HTML 清洗
 │   │   ├── ai_summarizer.py     # AI 摘要
 │   │   ├── ai_provider.py       # AI 服务封装
 │   │   └── pipeline.py          # 处理流水线
 │   ├── generator/               # 配置生成模块
 │   │   └── config_generator.py  # AI 自动生成站点配置
-│   └── notifier/                # 输出模块
-│       ├── report_generator.py  # 报告生成
-│       └── terminal_display.py  # 终端显示
+│   ├── notifier/                # 输出模块
+│   │   ├── report_generator.py  # 报告生成
+│   │   └── terminal_display.py  # 终端显示
+│   └── test/                    # 测试模块
+│       ├── test_crawler.py      # 🆕 爬虫测试
+│       ├── test_content_extractor.py  # 🆕 内容提取测试
+│       └── test_integration.py  # 🆕 集成测试
 ├── output/                      # 输出目录
 │   ├── report/                  # 每日生成的报告
-│   │   └── YYYY/MM/DD/           # 按日期分层
-│   │       ├── daily_report_*.md
-│   │       └── daily_report_*.json
+│   │   └── YYYY/MM/DD/          # 按日期分层
 │   ├── cache/                   # 抓取缓存
 │   └── dedup_cache/             # 跨日去重缓存
 └── templates/                   # 报告模板
@@ -147,6 +151,56 @@ ai_daily_digest/
 ### 🚀 最近一周内容脱水 (Weekly Digest)
 
 <details open>
+  <summary><b>📅 2026-02-14 重点速览 (点击展开)</b></summary>
+  <blockquote style='margin-top: 10px;'>
+
+(评分 ≥ 80.0)
+
+
+#### 1. [Apache Arrow is 10 years old](https://arrow.apache.org/blog/2026/02/12/arrow-anniversary/)
+
+
+
+**评分**: ⭐⭐⭐⭐⭐⭐⭐⭐⭐ (92.0/100)
+
+**核心价值**: Arrow 通过标准化的内存列式数据格式与 IPC 交换协议，解决了不同语言/库/系统之间高成本数据拷贝与序列化开销导致的互操作性与性能问题。其长期稳定的兼容性承诺让数据工具链可以在统一基础上演进并形成规模化生态。
+
+**技术栈**: Apache Arrow Columnar Format, Arrow IPC, FlatBuffers, C, C++, C#, Go, Java, JavaScript, Julia, MATLAB, Python, R, Ruby, Rust, CI/Integration Tests, Apache Parquet, ADBC, nanoarrow, Apache DataFusion, GeoArrow
+
+**摘要**: 文章回顾了 Apache Arrow 自 2016 年首个提交以来的 10 年发展，强调其作为“跨语言、跨系统交换列式数据”的标准在格式稳定性与生态扩张上的成果。内容重点梳理了 0.1.0 早期设计、跨语言集成测试的建立、格式演进中几乎零破坏性变更（仅 Union 有一次兼容性破坏），以及 2020 年 1.0.0 后对兼容性承诺的“成年化”。同时概览了 Arrow 今日的多语言实现、子项目（ADBC、nanoarrow）与生态成功案例（DataFusion、GeoArrow），并说明未来将以共识驱动、持续增量扩展规范与实现。
+
+**推荐理由**: Arrow 10 年几乎零破坏性变更的记录证明其规范与工程治理足够成熟，适合作为数据平台/分析引擎/数据库之间的长期互操作基础。文章也提供了理解 Arrow 与 Parquet 分工、生态版图与未来演进方式的高层入口，便于技术选型与架构规划。
+
+  <p align='right'><a href='output/report/2026/02/14/daily_report_2026-02-14.md'>🔍 查看完整报告详情</a></p>
+  </blockquote>
+</details>
+
+<details >
+  <summary><b>📅 2026-02-13 重点速览 (点击展开)</b></summary>
+  <blockquote style='margin-top: 10px;'>
+
+(评分 ≥ 80.0)
+
+
+#### 1. [google-deepmind /superhuman](https://github.com/google-deepmind/superhuman)
+
+⭐ 304 stars | 🔤 TeX
+
+**评分**: ⭐⭐⭐⭐⭐⭐⭐⭐⭐ (92.0/100)
+
+**核心价值**: 通过开源基准、数据与代理输出，为“如何可靠评测与推进 AI 的强数学推理（含证明）能力”提供可复用的公共基础设施。尤其补齐了证明题评测、短答题评测与自动评分数据等关键环节。
+
+**技术栈**: Python, 大语言模型（Gemini Deep Think）, 数学推理/自动定理证明（几何证明）, 基准测试与数据集构建, 自动评测/评分（grading）
+
+**摘要**: google-deepmind/superhuman 汇集了 DeepMind“Superhuman Reasoning”团队发布的多个数学推理相关项目与数据集，包括 AlphaGeometry/AlphaGeometry2、IMO Bench 以及数学研究代理 Aletheia。项目覆盖从几何自动证明到 IMO 级别评测与自动评分数据，面向提升与评估 AI 的高阶数学推理能力。
+
+**推荐理由**: 同时提供 SOTA 级项目（AlphaGeometry 系列）与系统化评测套件（IMO Bench），对研究“推理能力提升+可靠评估”非常有参考价值。Aletheia 的提示词与输出也为构建可迭代验证/修正的数学研究代理提供了直接素材。
+
+  <p align='right'><a href='output/report/2026/02/13/daily_report_2026-02-13.md'>🔍 查看完整报告详情</a></p>
+  </blockquote>
+</details>
+
+<details >
   <summary><b>📅 2026-02-12 重点速览 (点击展开)</b></summary>
   <blockquote style='margin-top: 10px;'>
 
@@ -183,12 +237,63 @@ ai_daily_digest/
 | 特性 | 描述 |
 |------|------|
 | 🤖 **AI 自动生成配置** | 只需提供 URL，自动分析页面结构生成爬取配置 |
-| 🚀 **轻重结合抓取** | 优先使用 `curl_cffi` 快速抓取，失败自动回退到 `Playwright` |
+| 🛡️ **隐身抓取器** | 🆕 多层反爬虫策略（Crawl4AI + Playwright + httpx），自动回退与重试 |
+| 🔍 **智能内容提取** | 🆕 自动识别页面类型，无需复杂配置即可提取列表/文章内容 |
 | 🧠 **多 AI 模型支持** | Claude、OpenAI、Azure OpenAI、自定义模型 |
-| 🛡️ **反检测能力** | `playwright-stealth` + TLS 指纹模拟 |
+| 🛡️ **反检测能力** | 浏览器指纹伪装、请求头随机化、智能延迟 |
 | ⚡ **异步高并发** | 异步架构，支持并发抓取和处理 |
 | 📦 **智能缓存** | 自动缓存抓取内容，避免重复请求 |
 | 📊 **精美报告** | Markdown 报告 + Rich 终端显示 |
+| ✅ **完整测试覆盖** | 🆕 单元测试 + 集成测试确保稳定性 |
+
+---
+
+## 🕷️ 爬虫架构 (v2.0 重构)
+
+### 隐身抓取器 (StealthFetcher)
+
+新的爬虫架构采用多层抓取策略，自动处理反爬虫机制：
+
+```
+请求 → [随机延迟] → [指纹伪装] → httpx (轻量)
+                                    ↓ 失败或被阻止
+                               Crawl4AI (浏览器)
+                                    ↓ 失败
+                               Playwright (完整浏览器)
+```
+
+**特性：**
+- 🎭 **浏览器指纹伪装**：随机 User-Agent、Accept-Language、Sec-CH-UA 等请求头
+- ⏱️ **智能延迟**：自动添加随机延迟，模拟人类行为
+- 🔄 **多层回退**：httpx → Crawl4AI → Playwright 自动回退
+- 🛡️ **反爬检测**：自动检测 captcha、403、rate limit、"You can't perform that action" 等反爬页面
+- ✅ **内容验证**：针对特定站点（GitHub/HN/Lobsters）验证返回内容是否有效
+- 🔁 **指数退避重试**：失败后自动重试，使用指数退避策略
+
+### 智能内容提取器 (SmartContentExtractor)
+
+无需复杂的 CSS 选择器配置，自动识别和提取页面内容：
+
+```python
+from src.processor.content_extractor import extract_content
+
+# 自动识别页面类型并提取
+result = extract_content(html, url)
+# result = {
+#     "page_type": "list" | "article",
+#     "items": [...],      # 列表页的条目
+#     "content": "...",    # 文章页的正文
+#     "markdown": "...",   # Markdown 格式
+#     "metadata": {...},   # 页面元数据
+# }
+```
+
+**特性：**
+- 📋 **自动识别列表页**：识别常见的列表容器（article、post、item、card 等）
+- 📄 **文章正文提取**：使用 readability 算法自动提取正文
+- 🔗 **URL 规范化**：自动处理相对/绝对/协议相对 URL
+- 📝 **Markdown 输出**：自动将 HTML 转换为 Markdown 格式
+- 🧹 **噪声过滤**：移除广告、导航、评论等噪声元素
 
 ---
 
