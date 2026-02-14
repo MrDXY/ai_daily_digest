@@ -83,7 +83,8 @@ class AIConfig(BaseModel):
 
 class DigestConfig(BaseModel):
     """脱水配置"""
-    score_threshold: int = 80
+    high_quality_score_threshold: int = Field(default=80, validation_alias="score_threshold")
+    remove_score_threshold: int = 50
     batch_size: int = 10
     max_summary_length: int = 500
     semantic_dedup_enabled: bool = True

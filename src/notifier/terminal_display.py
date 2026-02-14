@@ -136,7 +136,7 @@ class TerminalDisplay:
             content,
             title=title,
             subtitle=subtitle,
-            border_style="green" if article.is_high_quality else "blue",
+            border_style="green" if article.score >= self.score_threshold else "blue",
         )
 
         self.console.print(panel)

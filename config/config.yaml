@@ -84,8 +84,10 @@ ai:
 
 # 脱水配置
 digest:
-  # 评分阈值 (终端只显示高于此分数的项目)
-  score_threshold: 80
+  # 高质量评分阈值 (终端只显示高于此分数的项目)
+  high_quality_score_threshold: 80
+  # 删除阈值 (低于此分数将被丢弃)
+  remove_score_threshold: 50
   # 批量处理大小
   batch_size: 10
   # 摘要最大长度

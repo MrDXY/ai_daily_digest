@@ -167,8 +167,9 @@ class ReportGenerator:
         report_date = datetime.now().strftime("%Y-%m-%d")
         history_cache = await self._load_dedup_history(report_date)
 
-        # 先去重，再排序（价值高到低，受众小的靠后）
-        deduped_articles = await self._deduplicate_articles(articles, history_cache)
+        # 先去掉低价值，再去重，再排序（价值高到低，受众小的靠后）
+        valueable_articles = await self._remove_less_valuable_articles(articles)
+        deduped_articles = await self._deduplicate_articles(valueable_articles, history_cache)
         sorted_articles = self._sort_articles(deduped_articles)
 
         # 创建报告对象
@@ -178,7 +179,7 @@ class ReportGenerator:
             articles=sorted_articles,
             errors=errors or [],
             processing_time_seconds=processing_time,
-            score_threshold=float(self.config.digest.score_threshold),
+            score_threshold=float(self.config.digest.high_quality_score_threshold),
         )
 
         # 计算统计信息
@@ -202,7 +203,7 @@ class ReportGenerator:
 
         # 分离高质量和其他文章
         high_quality = report.get_high_quality_articles()
-        other = [a for a in report.articles if not a.is_high_quality]
+        other = [a for a in report.articles if a.score < report.score_threshold]
 
         # 渲染模板
         content = template.render(
@@ -235,6 +236,21 @@ class ReportGenerator:
                 a.title or "",
             ),
         )
+
+    async def _remove_less_valuable_articles(
+        self,
+        articles: list[Article],
+    ) -> list[Article]:
+        """删除低于阈值的低价值文章"""
+        if not articles:
+            return []
+
+        threshold = float(self.config.digest.remove_score_threshold)
+        kept = [a for a in articles if (a.score or 0) >= threshold]
+        removed = len(articles) - len(kept)
+        if removed > 0:
+            logger.info(f"Removed {removed} low-value articles (score < {threshold})")
+        return kept
 
     async def _deduplicate_articles(
         self,
@@ -571,6 +587,8 @@ class ReportGenerator:
                     summary_norm = self._normalize_text(article.summary or "")
                     semantic_text = self._build_semantic_text(article)
                     semantic_embedding = await self._semantic.embed(semantic_text)
+                    if semantic_embedding is not None:
+                        semantic_embedding = [float(x) for x in semantic_embedding]
                     entry = {
                         "date": report_date,
                         "canonical_url": canonical_url,

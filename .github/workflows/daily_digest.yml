@@ -51,3 +51,4 @@ jobs:
           delete-branch: true
           add-paths: |
             output/report/**
+            README.md

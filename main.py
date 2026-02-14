@@ -78,7 +78,7 @@ class DailyDigestApp:
 
         # 重新初始化显示器（使用配置中的评分阈值）
         self.display = TerminalDisplay(
-            score_threshold=float(self.config.digest.score_threshold),
+            score_threshold=float(self.config.digest.high_quality_score_threshold),
             show_low_score=self.config.output.terminal.get("show_low_score", False),
         )
 
@@ -162,7 +162,7 @@ class DailyDigestApp:
             "AI Provider": self.config.ai.default_provider,
             "Sites": ", ".join(enabled_sites),
             "Concurrency": self.config.crawler.concurrency,
-            "Score Threshold": self.config.digest.score_threshold,
+            "Score Threshold": self.config.digest.high_quality_score_threshold,
             "Dry Run": self.dry_run,
         }
 
