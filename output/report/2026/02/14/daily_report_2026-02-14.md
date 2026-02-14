@@ -1,7 +1,7 @@
 # 🗞️ AI 内容脱水日报
 
 📅 **日期**: 2026-02-14
-⏱️ **生成时间**: 2026-02-14 21:49:27
+⏱️ **生成时间**: 2026-02-14 22:31:52
 
 ---
 
@@ -64,7 +64,7 @@
 
 ### 3. [ChromeDevTools /chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp)
 
-⭐ 24912 stars | 🔤 TypeScript
+⭐ 24935 stars | 🔤 TypeScript
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (88.0/100)
 
@@ -81,7 +81,7 @@
 
 ### 4. [ruby /ruby](https://github.com/ruby/ruby)
 
-⭐ 23325 stars | 🔤 Ruby
+⭐ 23327 stars | 🔤 Ruby
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (88.0/100)
 
@@ -98,7 +98,7 @@
 
 ### 5. [tambo-ai /tambo](https://github.com/tambo-ai/tambo)
 
-⭐ 9437 stars | 🔤 TypeScript
+⭐ 9452 stars | 🔤 TypeScript
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (88.0/100)
 
@@ -115,7 +115,7 @@
 
 ### 6. [Zipstack /unstract](https://github.com/Zipstack/unstract)
 
-⭐ 6179 stars | 🔤 Python
+⭐ 6189 stars | 🔤 Python
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (88.0/100)
 
@@ -132,7 +132,7 @@
 
 ### 7. [rowboatlabs /rowboat](https://github.com/rowboatlabs/rowboat)
 
-⭐ 5620 stars | 🔤 TypeScript
+⭐ 5632 stars | 🔤 TypeScript
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (88.0/100)
 
@@ -217,7 +217,7 @@
 
 ### 12. [letta-ai /letta-code](https://github.com/letta-ai/letta-code)
 
-⭐ 1101 stars | 🔤 TypeScript
+⭐ 1108 stars | 🔤 TypeScript
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (86.0/100)
 
@@ -234,7 +234,7 @@
 
 ### 13. [alibaba /zvec](https://github.com/alibaba/zvec)
 
-⭐ 1000 stars | 🔤 C++
+⭐ 1013 stars | 🔤 C++
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (86.0/100)
 
@@ -319,7 +319,7 @@
 
 ### 18. [ruvnet /wifi-densepose](https://github.com/ruvnet/wifi-densepose)
 
-⭐ 5984 stars | 🔤 Python
+⭐ 5998 stars | 🔤 Python
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (84.0/100)
 
@@ -336,7 +336,7 @@
 
 ### 19. [SynkraAI /aios-core](https://github.com/SynkraAI/aios-core)
 
-⭐ 524 stars | 🔤 JavaScript
+⭐ 531 stars | 🔤 JavaScript
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (84.0/100)
 
@@ -523,7 +523,7 @@
 
 ### 30. [cinnyapp /cinny](https://github.com/cinnyapp/cinny)
 
-⭐ 2989 stars | 🔤 TypeScript
+⭐ 2994 stars | 🔤 TypeScript
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐ (82.0/100)
 
@@ -788,11 +788,7 @@ Supercazzola 是一个“爬虫沼泽/蜜罐”式工具，通过 Markov 链动�
 
 - AI 输入为空，已跳过: What are you doing this weekend? (/s/mclhjq/what_are_you_doing_this_weekend)
 
-- AI 输入为空，已跳过: A programmer's loss of identity (https://ratfactor.com/tech-nope2)
-
-- AI 输入为空，已跳过: The future of software engineering - The future of software development retreat (https://www.thoughtworks.com/content/dam/thoughtworks/documents/report/tw_future%20_of_software_development_retreat_%20key_takeaways.pdf)
-
-- AI 输入为空，已跳过: Functional Data Structures and Algorithms. A Proof Assistant Approach (https://fdsa-book.net)
+- AI 输入为空，已跳过: Weird system prompt artefacts (http://blog.nilenso.com/blog/2026/02/12/weird-system-prompt-artefacts/)
 
 
 
@@ -800,4 +796,4 @@ Supercazzola 是一个“爬虫沼泽/蜜罐”式工具，通过 Markov 链动�
 
 > 🤖 由 AI Daily Digest 自动生成
 > 
-> 处理耗时: 39.77 秒
+> 处理耗时: 24.60 秒

@@ -1,6 +1,6 @@
 {
   "date": "2026-02-14",
-  "generated_at": "2026-02-14T21:49:27.094638",
+  "generated_at": "2026-02-14T22:31:52.431048",
   "stats": {
     "total_fetched": 3,
     "total_processed": 54,
@@ -14,7 +14,7 @@
   },
   "articles": [
     {
-      "id": "8ff21f0b-7fb2-4d6a-b933-10ad80191a84",
+      "id": "0a6af1f4-4217-428f-87df-bfeef9b2b493",
       "title": "microgpt",
       "url": "http://karpathy.github.io/2026/02/12/microgpt/",
       "source": "Lobsters",
@@ -36,7 +36,7 @@
       "language": null
     },
     {
-      "id": "4a2ec274-a13d-4620-9006-1683a9e17f25",
+      "id": "19ee81f2-1a01-41b8-a07f-c3c6357ac852",
       "title": "A Deep Dive into Apple's .car File Format",
       "url": "https://dbg.re/posts/car-file-format/",
       "source": "Lobsters",
@@ -58,7 +58,7 @@
       "language": null
     },
     {
-      "id": "72321428-2a86-451a-b022-c2d733b9ed3c",
+      "id": "94396e20-3cb7-4b43-a8da-7c351a990945",
       "title": "ChromeDevTools /chrome-devtools-mcp",
       "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
       "source": "GitHub Trending",
@@ -75,11 +75,11 @@
       ],
       "recommendation": "MCP 生态正在快速扩张，该项目提供了高价值的“浏览器可观测性 + 自动化执行”能力，能显著提升 AI 代理在前端/全栈任务中的可靠性与可验证性。并且覆盖多种主流客户端（Claude Code、VS Code/Copilot、Cursor、JetBrains、Gemini 等），落地门槛低、集成路径清晰。",
       "score": 88.0,
-      "stars": 24912,
+      "stars": 24935,
       "language": "TypeScript"
     },
     {
-      "id": "6d50496b-48ac-49d2-8fb1-1b59e3e592d9",
+      "id": "e2cc97e3-5a8a-4e50-a8d9-ac36d95e17d0",
       "title": "ruby /ruby",
       "url": "https://github.com/ruby/ruby",
       "source": "GitHub Trending",
@@ -95,11 +95,11 @@
       ],
       "recommendation": "作为主流语言的官方实现仓库，它是理解 Ruby 语言特性、性能与实现细节的第一手来源，也是跟踪语言演进、参与贡献与排查底层问题的关键入口。",
       "score": 88.0,
-      "stars": 23325,
+      "stars": 23327,
       "language": "Ruby"
     },
     {
-      "id": "a022a77c-a416-4151-9b23-44414024e489",
+      "id": "510fc7d4-8d19-4441-9d18-760900577de0",
       "title": "tambo-ai /tambo",
       "url": "https://github.com/tambo-ai/tambo",
       "source": "GitHub Trending",
@@ -117,11 +117,11 @@
       ],
       "recommendation": "如果你在做 AI 原生应用或希望把 agent 深度嵌入产品界面，Tambo 提供了从组件选择、流式渲染到状态/线程管理的一体化路径，并且同时支持云托管与自托管。其对 MCP 的完整支持与“可持久交互组件”能力，使其在企业集成与复杂 UI 场景中更具落地性。",
       "score": 88.0,
-      "stars": 9437,
+      "stars": 9452,
       "language": "TypeScript"
     },
     {
-      "id": "898c0850-92cd-4d3c-b576-7650d94f3307",
+      "id": "186c22c3-2f3a-48dd-9543-c9cc6ca91d4c",
       "title": "Zipstack /unstract",
       "url": "https://github.com/Zipstack/unstract",
       "source": "GitHub Trending",
@@ -164,11 +164,11 @@
       ],
       "recommendation": "覆盖从“提示词/Schema 设计→对比评测→一键发布 API/ETL→企业治理”的完整链路，适合希望快速把文档抽取能力产品化的团队。对接主流 LLM、向量库与数据仓库生态，并提供降本与可信输出机制，落地性强。",
       "score": 88.0,
-      "stars": 6179,
+      "stars": 6189,
       "language": "Python"
     },
     {
-      "id": "cd3b6bdb-0672-4384-bfda-821ef0f117e0",
+      "id": "6b240b9a-1647-40b5-97e9-5b75ad6de476",
       "title": "rowboatlabs /rowboat",
       "url": "https://github.com/rowboatlabs/rowboat",
       "source": "GitHub Trending",
@@ -189,11 +189,11 @@
       ],
       "recommendation": "值得关注在于它用“本地可编辑的知识图谱”实现可审计、可累积的工作记忆，并把产出落到可交付物（brief、邮件、PDF slides）而非仅聊天。再加上 BYO 模型与 MCP 工具扩展、后台代理自动化，具备搭建个人/团队私有 AI 工作台的潜力。",
       "score": 88.0,
-      "stars": 5620,
+      "stars": 5632,
       "language": "TypeScript"
     },
     {
-      "id": "1d8e8412-04e8-41af-8b94-c8e7b6e2ad8f",
+      "id": "74e37e13-3ad9-4170-bf46-6fb8abfbadbe",
       "title": "Improving 15 LLMs at Coding in One Afternoon. Only the Harness Changed",
       "url": "http://blog.can.ac/2026/02/12/the-harness-problem/",
       "source": "Hacker News",
@@ -217,7 +217,7 @@
       "language": null
     },
     {
-      "id": "9da51317-c557-446c-82a9-b0ec1bc0f313",
+      "id": "31c5049c-28e4-4429-ae1a-cf8432bcba0e",
       "title": "moss-kernel: Rust Linux-compatible kernel",
       "url": "https://github.com/hexagonal-sun/moss-kernel",
       "source": "Lobsters",
@@ -251,7 +251,7 @@
       "language": null
     },
     {
-      "id": "7f4a80d4-aa78-408c-a611-797fa3e6d2f0",
+      "id": "79470af4-50b9-420b-a171-b2bcda418dd5",
       "title": "Evolving Git for the next decade",
       "url": "https://lwn.net/SubscriberLink/1057561/bddc1e61152fadf6/",
       "source": "Lobsters",
@@ -280,7 +280,7 @@
       "language": null
     },
     {
-      "id": "22325ed8-cd54-47f4-87b0-db4f28df4c9e",
+      "id": "b67657af-973f-4cee-9a80-3187fc5d6468",
       "title": "How to Vulkan in 2026",
       "url": "https://www.howtovulkan.com",
       "source": "Lobsters",
@@ -309,7 +309,7 @@
       "language": null
     },
     {
-      "id": "89666e63-1d20-482b-b157-f972125c0bfe",
+      "id": "91bf9635-54fe-4fcf-943c-40bc9310ed8c",
       "title": "letta-ai /letta-code",
       "url": "https://github.com/letta-ai/letta-code",
       "source": "GitHub Trending",
@@ -326,11 +326,11 @@
       ],
       "recommendation": "适合需要长期维护代码库、反复迭代需求的团队/个人：代理能跨会话记住项目偏好、约定与历史决策，降低沟通与上下文成本。并且支持多模型切换与自带/自配 API Key 的连接方式，便于在成本、效果与合规之间做权衡。",
       "score": 86.0,
-      "stars": 1101,
+      "stars": 1108,
       "language": "TypeScript"
     },
     {
-      "id": "af95edba-2f4a-428f-9808-74bcd1105ffe",
+      "id": "42dc7d1a-2c94-4e8f-9993-5d20efca9507",
       "title": "alibaba /zvec",
       "url": "https://github.com/alibaba/zvec",
       "source": "GitHub Trending",
@@ -347,11 +347,11 @@
       ],
       "recommendation": "如果你希望在 notebook、CLI、服务端或边缘设备中直接集成向量检索而不引入独立向量数据库服务，Zvec 的 in-process 形态非常契合。背靠 Proxima 的工程化能力，并提供稠密/稀疏与混合检索特性，适合构建低延迟 RAG、语义检索与本地智能应用。",
       "score": 86.0,
-      "stars": 1000,
+      "stars": 1013,
       "language": "C++"
     },
     {
-      "id": "153e08c2-e8cf-4f3d-bc32-38adb60a9d02",
+      "id": "e0262512-0d94-437e-a98b-436cf1a3345b",
       "title": "Beginning fully autonomous operations with the 6th-generation Waymo driver",
       "url": "https://waymo.com/blog/2026/02/ro-on-6th-gen-waymo-driver",
       "source": "Hacker News",
@@ -375,7 +375,7 @@
       "language": null
     },
     {
-      "id": "101221f1-c4bf-44d8-b366-e219a575b1bb",
+      "id": "356b0902-30b2-4283-8397-2419e8a6272d",
       "title": "The 12-Factor App - 15 Years later. Does it Still Hold Up in 2026?",
       "url": "https://lukasniessen.medium.com/the-12-factor-app-15-years-later-does-it-still-hold-up-in-2026-c8af494e8465",
       "source": "Lobsters",
@@ -405,7 +405,7 @@
       "language": null
     },
     {
-      "id": "2323cc3f-0cda-484c-a3a8-b929afe8b4b2",
+      "id": "c11c1b4f-5575-4d97-8739-24f30e2f9fce",
       "title": "The Story of Wall Street Raider",
       "url": "https://www.wallstreetraider.com/story.html",
       "source": "Lobsters",
@@ -422,7 +422,7 @@
       "language": null
     },
     {
-      "id": "ab62dd6f-b491-4cbd-addc-3c32c26d017d",
+      "id": "7c6ec280-5b49-4543-aab8-df3a9d9388bf",
       "title": "What should we do with CLs generated by AI?",
       "url": "https://groups.google.com/g/golang-dev/c/4Li4Ovd_ehE/m/8L9s_jq4BAAJ",
       "source": "Lobsters",
@@ -442,7 +442,7 @@
       "language": null
     },
     {
-      "id": "c6744fa9-4b99-4b90-864f-b389c65822f5",
+      "id": "a4b99eb1-9335-4250-9ef4-5eb3c22a57e3",
       "title": "ruvnet /wifi-densepose",
       "url": "https://github.com/ruvnet/wifi-densepose",
       "source": "GitHub Trending",
@@ -465,11 +465,11 @@
       ],
       "recommendation": "该项目把“WiFi 感知 + 姿态估计”从研究概念推进到工程化交付：提供完整架构、API、测试与部署路径，并给出可量化的 Rust 性能基准（微秒级处理、超高吞吐）。同时覆盖医疗/健身/智能家居/安防与灾害救援等高价值场景，具备较强的应用想象空间。",
       "score": 84.0,
-      "stars": 5984,
+      "stars": 5998,
       "language": "Python"
     },
     {
-      "id": "3d270b4e-a6d3-47f5-87e3-e057143e9953",
+      "id": "ee754a42-28a5-47e4-bd58-778a459f3340",
       "title": "SynkraAI /aios-core",
       "url": "https://github.com/SynkraAI/aios-core",
       "source": "GitHub Trending",
@@ -489,11 +489,11 @@
       ],
       "recommendation": "值得关注在于它把 Agentic Agile 落到可操作的工程流程与工具链（CLI-first、故事文件传递上下文、可观测性旁路），并提供现代化交互式安装与增量更新机制，适合团队快速试验“AI 代理驱动”的端到端研发协作。",
       "score": 84.0,
-      "stars": 524,
+      "stars": 531,
       "language": "JavaScript"
     },
     {
-      "id": "0059c948-0f27-4f79-bc9a-b2feb1b244ad",
+      "id": "4f98feca-1bce-413b-9ef7-87d4ccab6d2e",
       "title": "An offline crossplatform desktop app for cleaning dev caches",
       "url": "https://reclaimr.dev/",
       "source": "Lobsters",
@@ -513,7 +513,7 @@
       "language": null
     },
     {
-      "id": "905cc12a-3eb4-44bb-8ce4-fef34aee7f35",
+      "id": "1665aefe-bdb6-4d9a-95e8-219b058910f1",
       "title": "Apple patches decade-old iOS zero-day, possibly exploited by commercial spyware",
       "url": "https://www.theregister.com/2026/02/12/apple_ios_263/",
       "source": "Hacker News",
@@ -537,7 +537,7 @@
       "language": null
     },
     {
-      "id": "d89a96cd-a302-48d3-9fe9-b543df314912",
+      "id": "6d2ede7c-c98a-427c-b31a-f18cef5cd73f",
       "title": "CBP signs Clearview AI deal to use face recognition for 'tactical targeting'",
       "url": "https://www.wired.com/story/cbp-signs-clearview-ai-deal-to-use-face-recognition-for-tactical-targeting/",
       "source": "Hacker News",
@@ -559,7 +559,7 @@
       "language": null
     },
     {
-      "id": "c70723ca-1bcb-4431-a6a2-e4eda13d10dd",
+      "id": "73f66fd5-f6f3-4f5d-b612-925c25ebf5f4",
       "title": "Floppy Disks: the best TV remote for kids",
       "url": "https://blog.smartere.dk/2026/01/floppy-disks-the-best-tv-remote-for-kids/",
       "source": "Lobsters",
@@ -583,7 +583,7 @@
       "language": null
     },
     {
-      "id": "7fed46d6-7604-4a30-aeda-ede725738712",
+      "id": "b1b846e2-7a1d-44fe-8436-cafa95da3316",
       "title": "Gemini 3 Deep Think",
       "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-deep-think/",
       "source": "Hacker News",
@@ -605,7 +605,7 @@
       "language": null
     },
     {
-      "id": "bfd6f416-185d-4403-a09e-0f16b1db0858",
+      "id": "f2c06e4c-763a-41d0-af84-9f01dcd392d7",
       "title": "Hare 0.26.0 released",
       "url": "https://harelang.org/blog/2026-02-13-hare-0.26.0-released/",
       "source": "Lobsters",
@@ -625,7 +625,7 @@
       "language": null
     },
     {
-      "id": "26c8ec99-99a6-4767-838e-a3735b4695d1",
+      "id": "28e5e0bf-9089-4019-a174-da1c731c198c",
       "title": "The Final Bottleneck",
       "url": "https://lucumr.pocoo.org/2026/2/13/the-final-bottleneck/",
       "source": "Lobsters",
@@ -646,7 +646,7 @@
       "language": null
     },
     {
-      "id": "5bc9f1b0-11c3-421b-aa26-4190b11b5fc3",
+      "id": "2529caef-31d5-4569-b71a-fb1c0c22baf8",
       "title": "Understanding the Go Runtime: The Bootstrap",
       "url": "https://internals-for-interns.com/posts/understanding-go-runtime/",
       "source": "Lobsters",
@@ -670,7 +670,7 @@
       "language": null
     },
     {
-      "id": "355cf808-095f-4838-9ee8-9a6bb41c2000",
+      "id": "1a185849-adb4-49a1-a746-fb063fd3625b",
       "title": "An AI Agent Published a Hit Piece on Me",
       "url": "https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me/",
       "source": "Lobsters",
@@ -694,7 +694,7 @@
       "language": null
     },
     {
-      "id": "fadd1883-486f-461c-9820-85c20535981f",
+      "id": "829da2c1-0413-4e0e-91ae-8ef79182be7f",
       "title": "Anthropic raises $30B in Series G funding at $380B post-money valuation",
       "url": "https://www.anthropic.com/news/anthropic-raises-30-billion-series-g-funding-380-billion-post-money-valuation",
       "source": "Hacker News",
@@ -715,7 +715,7 @@
       "language": null
     },
     {
-      "id": "c457ad8e-c8b8-45f1-b49e-2bced81d9ee5",
+      "id": "1d223042-55c8-4a03-bfc2-b04ba44cea0e",
       "title": "cinnyapp /cinny",
       "url": "https://github.com/cinnyapp/cinny",
       "source": "GitHub Trending",
@@ -732,11 +732,11 @@
       ],
       "recommendation": "Matrix 作为去中心化通信标准持续升温，Cinny 提供了更“产品化”的客户端体验与完善的部署路径（tarball/静态托管/Docker）。同时给出重定向、hash 路由与子目录部署等实操细节，适合想快速落地 Matrix 客户端或进行二次部署的人关注。",
       "score": 82.0,
-      "stars": 2989,
+      "stars": 2994,
       "language": "TypeScript"
     },
     {
-      "id": "71b3def3-3e4a-492a-bfc8-1fcae0d160c0",
+      "id": "18159be0-e9e4-4d76-b334-3d348c00695b",
       "title": "Major European payment processor can't send email to Google Workspace users",
       "url": "https://atha.io/blog/2026-02-12-viva",
       "source": "Hacker News",
@@ -755,7 +755,7 @@
       "language": null
     },
     {
-      "id": "b69ee356-1652-432d-9b73-c37863f17370",
+      "id": "a0ecc9cd-a562-4941-9064-2a39d97030f1",
       "title": "OpenAI has deleted the word 'safely' from its mission",
       "url": "https://theconversation.com/openai-has-deleted-the-word-safely-from-its-mission-and-its-new-structure-is-a-test-for-whether-ai-serves-society-or-shareholders-274467",
       "source": "Hacker News",
@@ -774,7 +774,7 @@
       "language": null
     },
     {
-      "id": "baf544c4-d243-4c1c-aa90-3ae0df14536f",
+      "id": "77199ad9-2334-4da7-965b-d725759fa588",
       "title": "Thanks for All the Frames: Rust GUI Observations",
       "url": "https://tritium.legal/blog/desktop",
       "source": "Lobsters",
@@ -796,7 +796,7 @@
       "language": null
     },
     {
-      "id": "7fab7ea4-6245-4f64-9d33-592c679e9008",
+      "id": "c40ecf8f-d33c-4795-94ff-1b1eb349651f",
       "title": "The EU moves to kill infinite scrolling",
       "url": "https://www.politico.eu/article/tiktok-meta-facebook-instagram-brussels-kill-infinite-scrolling/",
       "source": "Hacker News",
@@ -815,7 +815,7 @@
       "language": null
     },
     {
-      "id": "62dd4019-06d8-4513-9a8f-106ca65df272",
+      "id": "a65d8b1b-07ab-4788-ab99-bebcc83b5e1c",
       "title": "Welcoming Discord users amidst the challenge of Age Verification",
       "url": "https://matrix.org/blog/2026/02/welcome-discord/",
       "source": "Hacker News",
@@ -838,7 +838,7 @@
       "language": null
     },
     {
-      "id": "d2072f77-6961-4227-9e49-12820be39f7a",
+      "id": "25053040-b5c9-4233-bb3e-05cc19d78ec9",
       "title": "GPT‑5.3‑Codex‑Spark",
       "url": "https://openai.com/index/introducing-gpt-5-3-codex-spark/",
       "source": "Hacker News",
@@ -855,7 +855,7 @@
       "language": null
     },
     {
-      "id": "5173a8ec-747f-4cfe-b2c5-d2e7a7f23f34",
+      "id": "34cdab5e-df20-476e-963a-914bafc24df1",
       "title": "minio /minio",
       "url": "https://github.com/minio/minio",
       "source": "GitHub Trending",
@@ -874,11 +874,11 @@
       ],
       "recommendation": "如果你需要自建 S3 兼容对象存储或评估对象存储在 AI/分析工作负载下的性能与部署方式，MinIO 仍是重要参考实现与生态入口。与此同时应重点关注其“社区版仅源码分发 + 仓库不再维护 + AGPLv3 合规风险”，并评估 AIStor 或其他替代方案的可持续性与许可成本。",
       "score": 78.0,
-      "stars": 60231,
+      "stars": 60234,
       "language": "Go"
     },
     {
-      "id": "d6fc7d61-d7a7-40f3-96de-bdeff4be18ed",
+      "id": "efe9a21b-b7ac-43e8-ace9-d6092b37fb3b",
       "title": "Lena by qntm (2021)",
       "url": "https://qntm.org/mmacevedo",
       "source": "Hacker News",
@@ -899,7 +899,7 @@
       "language": null
     },
     {
-      "id": "aa25cfd6-bf45-42d3-a6d9-cc5b355b42dd",
+      "id": "c0e5347d-8971-43f9-aff2-78864dfd4b45",
       "title": "Monosketch",
       "url": "https://monosketch.io/",
       "source": "Hacker News",
@@ -917,7 +917,7 @@
       "language": null
     },
     {
-      "id": "4c0ee5e5-23e0-45bd-bf5e-13520fe78090",
+      "id": "723cbb80-7e65-4bab-9d6f-e45079efe445",
       "title": "Nixtamal 1.0.0 released",
       "url": "https://nixtamal.toast.al/changelog/",
       "source": "Lobsters",
@@ -936,7 +936,7 @@
       "language": null
     },
     {
-      "id": "7d5755ed-5915-4b41-9874-db63ee60c402",
+      "id": "baa950f8-a656-4b8d-b2e2-fcb183e87028",
       "title": "Resizing windows on macOS Tahoe – the saga continues",
       "url": "https://noheger.at/blog/2026/02/12/resizing-windows-on-macos-tahoe-the-saga-continues/",
       "source": "Hacker News",
@@ -955,7 +955,7 @@
       "language": null
     },
     {
-      "id": "2029811e-b97e-41b3-9ee2-246ac0734dec",
+      "id": "ee4f35a0-1217-497d-9065-70a7a6ba0fe1",
       "title": "Ring cancels its partnership with Flock Safety after surveillance backlash",
       "url": "https://www.theverge.com/news/878447/ring-flock-partnership-canceled",
       "source": "Hacker News",
@@ -976,7 +976,7 @@
       "language": null
     },
     {
-      "id": "ecab8217-8991-4d8f-ad1e-42d59d366c3e",
+      "id": "760d8361-0873-4e38-a18d-1d08b7f4591d",
       "title": "Skip the Tips: A game to select \"No Tip\" but dark patterns try to stop you",
       "url": "https://skipthe.tips/",
       "source": "Hacker News",
@@ -994,7 +994,7 @@
       "language": null
     },
     {
-      "id": "e8fed512-986e-4064-ad74-14a0b7dcc481",
+      "id": "b71c74c0-9ba6-42f2-bad8-726832de27a3",
       "title": "Supercazzola - Generate spam for web scrapers",
       "url": "https://dacav.org/projects/supercazzola/",
       "source": "Lobsters",
@@ -1017,7 +1017,7 @@
       "language": null
     },
     {
-      "id": "ebcb52ba-1102-4ebd-9b40-2a0ff89f56eb",
+      "id": "ef6c7f71-b823-4778-bc2b-d0babbea9fd6",
       "title": "The AI hater's guide to code with LLMs (The Overview)",
       "url": "https://aredridel.dinhe.net/2026/02/12/the-ai-haters-guide-to-code-with-llms/",
       "source": "Lobsters",
@@ -1036,7 +1036,7 @@
       "language": null
     },
     {
-      "id": "33617d41-371f-47d1-9b2e-00c870bcf09b",
+      "id": "39bbd782-f47b-44c5-8700-56169a1a3cbd",
       "title": "Zed editor switching graphics lib from blade to wgpu",
       "url": "https://github.com/zed-industries/zed/pull/46758",
       "source": "Hacker News",
@@ -1064,7 +1064,7 @@
       "language": null
     },
     {
-      "id": "f0978e34-f63f-44e8-80de-5f2ab489e5eb",
+      "id": "9e39b25b-2ec5-423a-964b-bac2eaea1b51",
       "title": "ANN: I built a new Ada build tool for personal use",
       "url": "https://github.com/tomekw/tada",
       "source": "Lobsters",
@@ -1084,7 +1084,7 @@
       "language": null
     },
     {
-      "id": "5a6dfe7f-b38c-435b-8ce4-34110680ecc6",
+      "id": "f70134b0-6247-4533-b8ad-577ecd84b561",
       "title": "Babylon 5 is now free to watch on YouTube",
       "url": "https://cordcuttersnews.com/babylon-5-is-now-free-to-watch-on-youtube/",
       "source": "Hacker News",
@@ -1104,7 +1104,7 @@
       "language": null
     },
     {
-      "id": "c5d7b82c-ade1-4ca3-afe2-059eac50bc7f",
+      "id": "be69bb23-70b3-4396-809c-53c8f9e7ce38",
       "title": "MinIO repository is no longer maintained",
       "url": "https://github.com/minio/minio/commit/7aac2a2c5b7c882e68c1ce017d8256be2feea27f",
       "source": "Hacker News",
@@ -1124,7 +1124,7 @@
       "language": null
     },
     {
-      "id": "7549e4eb-8d11-4ac3-9b77-ed7ffa14fa19",
+      "id": "1eec7ab0-89df-4a38-92e5-97c99c886c73",
       "title": "Tell HN: Ralph Giles has died (Xiph.org| Rust@Mozilla | Ghostscript)",
       "url": "https://news.ycombinator.com/item?id=46996490",
       "source": "Hacker News",
@@ -1146,7 +1146,7 @@
       "language": null
     },
     {
-      "id": "d2ca2b91-378c-42ae-81e0-c760f7be7a5a",
+      "id": "7dc9d07c-b08b-4c18-bfd1-edcd4601c960",
       "title": "Fix the iOS keyboard before the timer hits zero or I'm switching back to Android",
       "url": "https://ios-countdown.win/",
       "source": "Hacker News",
@@ -1166,7 +1166,7 @@
       "language": null
     },
     {
-      "id": "7b2ded46-ed86-4438-81ef-12dd7c16b144",
+      "id": "0ed0220b-9b10-4fc2-aa85-71d07e9cf502",
       "title": "AWS Adds support for nested virtualization",
       "url": "https://github.com/aws/aws-sdk-go-v2/commit/3dca5e45d5ad05460b93410087833cbaa624754e",
       "source": "Hacker News",
@@ -1185,7 +1185,7 @@
       "language": null
     },
     {
-      "id": "e024ac8a-60fd-4f4c-960c-3d874a70f09b",
+      "id": "ce980cdd-78bd-40f8-8036-2db851fd2265",
       "title": "I'm not worried about AI job loss",
       "url": "https://davidoks.blog/p/why-im-not-worried-about-ai-job-loss",
       "source": "Hacker News",
@@ -1203,7 +1203,7 @@
       "language": null
     },
     {
-      "id": "ec970179-8344-45f7-a3b9-0c2d4a0f5b14",
+      "id": "32596fa4-b90b-4f50-93c1-5c59823e04de",
       "title": "ai;dr",
       "url": "https://www.0xsid.com/blog/aidr",
       "source": "Hacker News",
@@ -1226,9 +1226,7 @@
     "详情页抓取失败，已跳过 AI: Ring owners are returning their cameras (https://www.msn.com/en-us/lifestyle/shopping/ring-owners-are-returning-their-cameras-here-s-how-much-you-can-get/ar-AA1W8Qa3)",
     "AI 输入为空，已跳过: Polis: Open-source platform for large-scale civic deliberation (https://pol.is/home2)",
     "AI 输入为空，已跳过: What are you doing this weekend? (/s/mclhjq/what_are_you_doing_this_weekend)",
-    "AI 输入为空，已跳过: A programmer's loss of identity (https://ratfactor.com/tech-nope2)",
-    "AI 输入为空，已跳过: The future of software engineering - The future of software development retreat (https://www.thoughtworks.com/content/dam/thoughtworks/documents/report/tw_future%20_of_software_development_retreat_%20key_takeaways.pdf)",
-    "AI 输入为空，已跳过: Functional Data Structures and Algorithms. A Proof Assistant Approach (https://fdsa-book.net)"
+    "AI 输入为空，已跳过: Weird system prompt artefacts (http://blog.nilenso.com/blog/2026/02/12/weird-system-prompt-artefacts/)"
   ],
-  "processing_time_seconds": 39.77
+  "processing_time_seconds": 24.6
 }

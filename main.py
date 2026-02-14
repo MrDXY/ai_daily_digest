@@ -27,7 +27,8 @@ from src.core.models import FetchTask, FetchResult, FetchStatus, Article, Digest
 from src.core.exceptions import DigestException
 from src.scrapy_crawler import ScrapyFetchManager
 from src.processor import ProcessingPipeline, HTMLCleaner
-from src.notifier import ReportGenerator, TerminalDisplay, ReadmeUpdater
+from src.notifier import TerminalDisplay, ReadmeUpdater
+from src.report import ReportGenerator
 from src.generator import ConfigGenerator
 
 
@@ -150,10 +151,42 @@ class DailyDigestApp:
         )
         self.display.show_completion(str(report_path))
 
+        # 生成每日洞察报告（二次炼金）
+        if not self.dry_run:
+            self.display.show_info("Generating daily insight (second pass analysis)...")
+            await self._generate_insight(report.date)
+
+        # 更新 README（使用 insight 内容）
         print("正在更新 README 索引...")
         self.updater.update()
 
         return report
+
+    async def _generate_insight(self, report_date: str) -> None:
+        """生成每日洞察报告"""
+        from datetime import datetime as dt
+        from src.insight import DailyInsightGenerator
+
+        try:
+            target_date = dt.strptime(report_date, "%Y-%m-%d").date()
+            generator = DailyInsightGenerator(self.config)
+
+            try:
+                summaries = await generator.load_summaries(target_date)
+                if summaries:
+                    insight, output_path = await generator.generate_and_save(
+                        target_date=target_date,
+                        output_format="both",
+                    )
+                    logger.info(f"Daily insight generated: {output_path}")
+                    self.display.show_info(f"Daily insight saved to {output_path}")
+                else:
+                    logger.warning(f"No summaries found for insight generation")
+            finally:
+                await generator.close()
+
+        except Exception as e:
+            logger.error(f"Failed to generate daily insight: {e}")
 
     def _show_config_summary(self) -> None:
         """显示配置摘要"""
@@ -410,6 +443,20 @@ def parse_args() -> argparse.Namespace:
         help="配置文件输出路径（配合 --generate-config 使用）",
     )
 
+    # Daily Insight 相关参数
+    parser.add_argument(
+        "--generate-insight",
+        action="store_true",
+        help="生成每日洞察报告（二次炼金）",
+    )
+
+    parser.add_argument(
+        "--insight-date",
+        type=str,
+        metavar="YYYY-MM-DD",
+        help="洞察报告的目标日期（配合 --generate-insight 使用）",
+    )
+
     return parser.parse_args()
 
 
@@ -429,6 +476,14 @@ async def main() -> int:
                 provider=args.provider,
                 use_js=args.use_js,
                 output_path=args.output,
+            )
+
+        # 如果是生成洞察报告模式
+        if args.generate_insight:
+            return await generate_daily_insight(
+                config_path=args.config,
+                provider=args.provider,
+                target_date=args.insight_date,
             )
 
         # 正常的日报生成模式
@@ -453,6 +508,108 @@ async def main() -> int:
     except Exception as e:
         logger.exception(f"Unexpected error: {e}")
         return 1
+
+
+async def generate_daily_insight(
+    config_path: Optional[str] = None,
+    provider: Optional[str] = None,
+    target_date: Optional[str] = None,
+) -> int:
+    """
+    生成每日洞察报告
+
+    Args:
+        config_path: 主配置文件路径
+        provider: AI provider
+        target_date: 目标日期 (YYYY-MM-DD)
+
+    Returns:
+        退出码
+    """
+    from datetime import date as date_type
+    from rich.console import Console
+    from rich.panel import Panel
+
+    from src.insight import DailyInsightGenerator
+
+    console = Console()
+
+    # 解析日期
+    if target_date:
+        try:
+            parsed_date = datetime.strptime(target_date, "%Y-%m-%d").date()
+        except ValueError:
+            console.print(f"[bold red]❌ 无效的日期格式: {target_date}，请使用 YYYY-MM-DD[/bold red]")
+            return 1
+    else:
+        parsed_date = date_type.today()
+
+    console.print(Panel.fit(
+        f"[bold blue]🚀 每日洞察生成器[/bold blue]\n\n"
+        f"目标日期: [cyan]{parsed_date.isoformat()}[/cyan]",
+        border_style="blue",
+    ))
+
+    # 加载配置
+    config = load_config(config_path)
+
+    # 覆盖 AI provider
+    if provider:
+        config.ai.default_provider = provider
+
+    console.print(f"\n[dim]AI Provider: {config.ai.default_provider}[/dim]\n")
+
+    # 创建生成器
+    generator = DailyInsightGenerator(config)
+
+    try:
+        # 加载摘要
+        with console.status("[bold green]正在加载摘要数据...", spinner="dots"):
+            summaries = await generator.load_summaries(parsed_date)
+
+        if not summaries:
+            console.print(f"[bold yellow]⚠️ 未找到 {parsed_date} 的摘要数据[/bold yellow]")
+            return 1
+
+        console.print(f"[green]✓[/green] 找到 {len(summaries)} 条摘要\n")
+
+        # 生成洞察
+        with console.status("[bold green]正在生成洞察报告（AI 二次炼金中）...", spinner="dots"):
+            insight, output_path = await generator.generate_and_save(
+                target_date=parsed_date,
+                output_format="both",
+            )
+
+        # 显示结果
+        console.print("\n[bold green]✅ 洞察报告生成成功！[/bold green]\n")
+        console.print(f"报告文件已保存到: [cyan]{output_path}[/cyan]\n")
+
+        # 显示简要统计
+        console.print("[bold]📊 统计摘要:[/bold]")
+        console.print(f"   - 分析条目: {insight.statistics.total_analyzed}")
+        console.print(f"   - 筛除条目: {insight.statistics.filtered_out_count}")
+        console.print(f"   - 核心推荐: {len(insight.high_impact_picks)} 个")
+        console.print(f"   - 遗珠发现: {len(insight.hidden_gems)} 个")
+        console.print(f"   - 来源分布: {insight.statistics.sources_breakdown}")
+        console.print(f"   - 热门技术: {', '.join(insight.statistics.top_tech_stacks)}")
+        console.print()
+
+        # 显示宏观趋势预览
+        console.print(Panel(
+            f"[bold]{insight.macro_trend.title}[/bold]\n\n{insight.macro_trend.content}",
+            title="🌪️ 今日宏观趋势",
+            border_style="cyan",
+        ))
+
+        return 0
+
+    except Exception as e:
+        console.print(f"\n[bold red]❌ 洞察报告生成失败: {e}[/bold red]")
+        logger.exception("洞察报告生成错误")
+        return 1
+
+    finally:
+        await generator.close()
 
 
 async def generate_site_config(

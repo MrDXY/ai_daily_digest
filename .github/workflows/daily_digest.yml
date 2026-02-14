@@ -30,7 +30,7 @@ jobs:
       - name: Install Playwright browsers
         run: python -m playwright install --with-deps
 
-      - name: Run daily digest
+      - name: Run daily digest (fetch, summarize & generate insight)
         env:
           AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
           AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
@@ -40,12 +40,13 @@ jobs:
           CUSTOM_API_KEY: ${{ secrets.CUSTOM_API_KEY }}
         run: python main.py --provider azure_openai
 
+
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
-          commit-message: "chore: update daily digest report"
-          title: "chore: daily digest report"
-          body: "Automated daily digest report."
+          commit-message: "chore: update daily digest and insight report"
+          title: "chore: daily digest and insight report"
+          body: "Automated daily digest report with AI-powered insight analysis."
           branch: "automation/daily-digest-${{ github.run_id }}"
           base: "main"
           delete-branch: true

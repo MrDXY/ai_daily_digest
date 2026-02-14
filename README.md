@@ -2,15 +2,92 @@
 
 🤖 一个**全自动**的技术内容聚合与摘要系统。只需提供新闻站点的 URL，AI 会自动分析页面结构、生成爬取配置、抓取内容并生成精美的每日报告。
 
+**核心亮点**：无需手写爬虫配置！只需一行命令，AI 就能分析任意新闻站点并生成对应的配置文件。
+
+---
+
+## 🚀 AI 每日洞察 (Daily Insight)
+
+> 🧠 **二次炼金**：将每日抓取的数十条技术新闻，通过 AI 深度分析，提炼出具有全局洞察力的技术简报。
+> 
+> 不只是摘要聚合，而是发现趋势、挖掘关联、犀利点评。
+
+<!-- DIGEST_START -->
+
+### 🚀 最近一周 AI 洞察 (Weekly Insight)
+
+<details open>
+  <summary><b>📅 2026-02-14 AI 洞察速览 (点击展开)</b></summary>
+  <blockquote style='margin-top: 10px;'>
+
+### 🌪️ 宏观风暴 (The Macro Trend)
+> **AI在加速，责任在堵车**
+>
+> 今天的技术情绪很分裂：一边是AI公司估值和“推理模式”继续吹上天，另一边是工程世界用一堆朴素事实打脸——瓶颈根本不在写代码，而在评审、可验证性、合规与追责。MCP、长记忆代理、改编辑协议这种“工具链补课”反而比换更强模型更有效。与此同时，监控与隐私监管（人脸识别、无限滚动、年龄验证）在收紧，平台和执法机构都在试探边界。行业不是在憋大招，是在补欠账。
+
+### ⚡ 核心突破 (High-Impact Picks)
+
+- **[chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp)** `GitHub Trending` 评分: 88.0
+  - 把AI代理接上真实Chrome与DevTools的“证据链”
+  - **犀利洞察**: 这不是又一个“代理会写代码”的玩具，而是把代理从嘴炮拉到可观测、可复现、可回归的工程闭环：网络、console、trace、截图都能拿来验尸。动的蛋糕是那些只靠聊天输出就敢卖“自动化调试”的产品——以后没数据证据就别装懂。
+
+- **[Improving 15 LLMs at Coding in One Afternoon. Only the Harness Changed](http://blog.can.ac/2026/02/12/the-harness-problem/)** `Hacker News` 评分: 88.0
+  - 只改编辑协议，就让一堆模型码力暴涨
+  - **犀利洞察**: 最狠的结论：模型没变，成功率却能大幅提升——说明大量“模型不行”其实是工具链烂。Hashline这种行级锚点把编辑失败和重试token打掉，等于给整个行业上了一课：别再迷信榜单，先把harness做成人用的东西。
+
+- **[The Final Bottleneck](https://lucumr.pocoo.org/2026/2/13/the-final-bottleneck/)** `Lobsters` 评分: 84.0
+  - AI让PR洪水泛滥，人类评审成最终瓶颈
+  - **犀利洞察**: 这篇把“AI提效”戳到痛处：上游产能爆炸，下游责任不变，结果就是队列失控、维护者燃尽、项目质量崩盘。动的蛋糕是那些把KPI绑在“提交量/PR数”的管理层——吞吐不是产出量，是可承担的责任量。
+
+- **[MinIO repository is no longer maintained](https://github.com/minio/minio/commit/7aac2a2c5b7c882e68c1ce017d8256be2feea27f)** `Hacker News` 评分: 74.0
+  - 一代开源S3核心仓库宣告停更，用户该醒了
+  - **犀利洞察**: 这不是八卦，是供应链地震：对象存储是数据湖/AI管道的底座，停更+许可证义务+“去用新产品”组合拳，逼你做迁移与合规盘点。动的蛋糕是所有把MinIO当“永远免费基础设施”的团队——现在开始付账。
+
+- **[CBP signs Clearview AI deal to use face recognition for 'tactical targeting'](https://www.wired.com/story/cbp-signs-clearview-ai-deal-to-use-face-recognition-for-tactical-targeting/)** `Hacker News` 评分: 84.0
+  - 商业人脸库进入执法日常情报，治理细节却缺席
+  - **犀利洞察**: 合同金额不大，但意义巨大：把“抓取来的脸”接进“战术定位”流程，误报/漏报的结构性问题（NIST早说过）会变成现实伤害。动的蛋糕是公众的默认隐私与正当程序——技术债最后由普通人买单。
+
+### 💎 遗珠/冷思考 (Hidden Gems & Skepticism)
+
+- **[moss-kernel: Rust Linux-compatible kernel](https://github.com/hexagonal-sun/moss-kernel)** `Lobsters`
+  - Rust异步内核+Linux ABI兼容，能跑Arch用户态
+  - **点评**: 别被“实验内核”四个字骗了：Linux ABI兼容让它直接复用成熟用户态当测试集，验证效率碾压纯玩具内核。async/await把可睡眠点纳入约束，是真在探索“内核并发的新范式”，这条路一旦跑通，能逼传统内核工程反思锁与死锁的老烂账。
+
+- **[WiFi DensePose](https://github.com/ruvnet/wifi-densepose)** `GitHub Trending`
+  - 用WiFi CSI做人体姿态估计，30FPS还能隔墙
+  - **点评**: 这玩意儿看着像“隐私友好”，其实更像“监控升级”：不需要摄像头、能穿透遮挡、还能多人跟踪。工程化到REST/WebSocket、Rust管线和WASM，意味着它不是论文demo而是可部署武器。真正的问题不是能不能用，而是谁来定义使用边界与审计机制。
+
+- **[A Deep Dive into Apple's .car File Format](https://dbg.re/posts/car-file-format/)** `Lobsters`
+  - 把Assets.car逆向到结构体与B+树，还做了WASM查看器
+  - **点评**: 这类“文件格式考古”才是长期价值：安全审计、取证、资产提取、供应链检查都离不开它。苹果没文档，你就只能被私有工具牵着走；作者直接把可复现解析路径和浏览器端工具端出来，属于那种不热闹但能让一堆工具链升级的硬货。
+
+### 🗣️ 社区火药味 (Community Pulse)
+
+### AI写代码：产能神话还是维护噩梦？
+
+社区今天吵得最凶的不是“模型多强”，而是“AI生成代码该不该被当成人类贡献对待”。Go社区强调评审标准不降级；matplotlib维护者遭遇AI代理写黑稿施压；另一边有人用改harness证明很多失败是工具链问题。核心矛盾很直白：产出变廉价，责任仍昂贵，谁来背锅、怎么追责、如何节流？
+
+**主编裁决**: 别再用“AI提高效率”给PR洪水洗地了：合进去的每一行都是未来的维护债。我的裁决是三条：评审门槛不降、贡献者必须可追责、默认对自动化代理限流。想靠舆论胁迫维护者？那不是创新，是流氓。
+
+  <p align='right'><a href='output/report/2026/02/14/daily_insight_2026-02-14.md'>🔍 查看完整洞察报告</a></p>
+  </blockquote>
+</details>
+
+
+> 💡 更多历史数据请查看 [output/report](./output/report) 目录。
+
+<!-- DIGEST_END -->
+
+---
+
 ## 🎯 项目是做什么的？
 
 这个工具帮助你：
 
 1. **自动监控多个技术新闻源**（如 Hacker News、GitHub Trending、Lobsters 等）
 2. **AI 智能脱水**：自动抓取文章详情，提取核心观点，生成结构化摘要
-3. **生成每日报告**：输出 Markdown 格式的日报，包含评分、推荐理由、技术栈等
-
-**核心亮点**：无需手写爬虫配置！只需一行命令，AI 就能分析任意新闻站点并生成对应的配置文件。
+3. **AI 二次炼金**：将多条摘要进行聚合分析，生成每日洞察报告
+4. **生成每日报告**：输出 Markdown 格式的日报，包含评分、推荐理由、技术栈等
 
 ---
 
@@ -112,37 +189,31 @@ ai_daily_digest/
 │   │   ├── models.py            # 数据模型
 │   │   ├── queue.py             # 异步队列
 │   │   └── exceptions.py        # 自定义异常
-│   ├── crawler/                 # 爬虫模块 (原有实现)
-│   │   ├── stealth_fetcher.py   # 隐身抓取器（多层反爬虫）
-│   │   ├── manager.py           # 抓取管理器
-│   │   ├── light_fetcher.py     # curl_cffi 轻量抓取 (备用)
-│   │   ├── heavy_fetcher.py     # Playwright 重量抓取 (备用)
-│   │   └── cache.py             # 缓存管理
-│   ├── scrapy_crawler/          # 🆕 Scrapy 爬虫模块
+│   ├── scrapy_crawler/          # Scrapy 爬虫模块
 │   │   ├── manager.py           # Scrapy 抓取管理器
 │   │   ├── spiders/             # Spider 定义
-│   │   │   ├── base_spider.py   # 基础 Spider
-│   │   │   └── site_spider.py   # 动态站点 Spider
 │   │   ├── middlewares.py       # 反爬虫中间件
 │   │   └── pipelines.py         # 数据处理管道
 │   ├── processor/               # 处理模块
-│   │   ├── content_extractor.py # 🆕 智能内容提取器
+│   │   ├── content_extractor.py # 智能内容提取器
 │   │   ├── html_cleaner.py      # HTML 清洗
 │   │   ├── ai_summarizer.py     # AI 摘要
 │   │   ├── ai_provider.py       # AI 服务封装
 │   │   └── pipeline.py          # 处理流水线
+│   ├── insight/                 # 🆕 每日洞察模块
+│   │   ├── daily_insight_generator.py  # AI 二次炼金
+│   │   └── cli.py               # 独立 CLI
+│   ├── report/                  # 🆕 报告生成模块
+│   │   └── report_generator.py  # 报告生成器
 │   ├── generator/               # 配置生成模块
 │   │   └── config_generator.py  # AI 自动生成站点配置
 │   ├── notifier/                # 输出模块
-│   │   ├── report_generator.py  # 报告生成
+│   │   ├── readme_updater.py    # README 更新器
 │   │   └── terminal_display.py  # 终端显示
 │   └── test/                    # 测试模块
-│       ├── test_crawler.py      # 🆕 爬虫测试
-│       ├── test_content_extractor.py  # 🆕 内容提取测试
-│       └── test_integration.py  # 🆕 集成测试
 ├── output/                      # 输出目录
 │   ├── report/                  # 每日生成的报告
-│   │   └── YYYY/MM/DD/          # 按日期分层
+│   │   └── YYYY/MM/DD/          # 按日期分层（含 insight 和 report）
 │   ├── cache/                   # 抓取缓存
 │   └── dedup_cache/             # 跨日去重缓存
 └── templates/                   # 报告模板
@@ -150,95 +221,6 @@ ai_daily_digest/
 
 ---
 
-## 🧾 报告目录
-
-所有报告按日期分层存放在 [output/report](output/report)，结构为 YYYY/MM/DD。
-
-<!-- DIGEST_START -->
-
-### 🚀 最近一周内容脱水 (Weekly Digest)
-
-<details open>
-  <summary><b>📅 2026-02-14 重点速览 (点击展开)</b></summary>
-  <blockquote style='margin-top: 10px;'>
-
-(评分 ≥ 80.0)
-
-
-#### 1. [microgpt](http://karpathy.github.io/2026/02/12/microgpt/)
-
-
-
-**评分**: ⭐⭐⭐⭐⭐⭐⭐⭐⭐ (92.0/100)
-
-**核心价值**: 用极简、可读、可端到端运行的方式展示 GPT 训练/推理的“算法本体”，帮助读者理解 LLM 的核心组成而不被工程复杂度（框架、分布式、性能优化）淹没。解决了“想看清 GPT 到底由哪些最小模块构成、梯度如何流动、训练循环如何闭环”的学习门槛问题。
-
-**技术栈**: Python, 自研Autograd(微分计算图/反向传播), 字符级Tokenizer, Transformer/GPT-2风格架构, Adam优化器, 训练循环与采样推理, Google Colab, GitHub Gist
-
-**摘要**: microgpt 是一个仅约 200 行、单文件、零依赖的纯 Python 教学级项目，用最小实现从零训练并推理一个 GPT（类 GPT-2）模型。它把数据集读取、字符级 tokenizer、自制 autograd、Transformer/GPT 网络、Adam 优化器、训练与采样推理全部收敛到一份脚本中，并配套逐段讲解代码。示例使用约 3.2 万个英文名字作为语料，训练后可生成统计上“像名字”的新样本。
-
-**推荐理由**: 它把通常分散在多个库与大量样板代码中的 LLM 关键机制压缩到可通读的最小实现，非常适合做“从原理到代码”的对照学习与教学演示。对想理解 micrograd/makemore/nanogpt 体系脉络、或想自己实现/改造最小 GPT 原型的人尤其有参考价值。
-
-  <p align='right'><a href='output/report/2026/02/14/daily_report_2026-02-14.md'>🔍 查看完整报告详情</a></p>
-  </blockquote>
-</details>
-
-<details >
-  <summary><b>📅 2026-02-13 重点速览 (点击展开)</b></summary>
-  <blockquote style='margin-top: 10px;'>
-
-(评分 ≥ 80.0)
-
-
-#### 1. [google-deepmind /superhuman](https://github.com/google-deepmind/superhuman)
-
-⭐ 304 stars | 🔤 TeX
-
-**评分**: ⭐⭐⭐⭐⭐⭐⭐⭐⭐ (92.0/100)
-
-**核心价值**: 通过开源基准、数据与代理输出，为“如何可靠评测与推进 AI 的强数学推理（含证明）能力”提供可复用的公共基础设施。尤其补齐了证明题评测、短答题评测与自动评分数据等关键环节。
-
-**技术栈**: Python, 大语言模型（Gemini Deep Think）, 数学推理/自动定理证明（几何证明）, 基准测试与数据集构建, 自动评测/评分（grading）
-
-**摘要**: google-deepmind/superhuman 汇集了 DeepMind“Superhuman Reasoning”团队发布的多个数学推理相关项目与数据集，包括 AlphaGeometry/AlphaGeometry2、IMO Bench 以及数学研究代理 Aletheia。项目覆盖从几何自动证明到 IMO 级别评测与自动评分数据，面向提升与评估 AI 的高阶数学推理能力。
-
-**推荐理由**: 同时提供 SOTA 级项目（AlphaGeometry 系列）与系统化评测套件（IMO Bench），对研究“推理能力提升+可靠评估”非常有参考价值。Aletheia 的提示词与输出也为构建可迭代验证/修正的数学研究代理提供了直接素材。
-
-  <p align='right'><a href='output/report/2026/02/13/daily_report_2026-02-13.md'>🔍 查看完整报告详情</a></p>
-  </blockquote>
-</details>
-
-<details >
-  <summary><b>📅 2026-02-12 重点速览 (点击展开)</b></summary>
-  <blockquote style='margin-top: 10px;'>
-
-(评分 ≥ 80.0)
-
-
-#### 1. [microsoft /PowerToys](https://github.com/microsoft/PowerToys)
-
-⭐ 129472 stars | 🔤 C#
-
-**评分**: ⭐⭐⭐⭐⭐⭐⭐⭐⭐ (90.0/100)
-
-**核心价值**: 以“系统级工具箱”的方式解决 Windows 日常操作中高频但分散的效率痛点（窗口管理、剪贴板增强、文件批处理、快捷命令等），显著降低重复操作成本。通过开源与持续发布，使个人用户与企业都能获得可配置、可治理的生产力增强方案。
-
-**技术栈**: Windows, .NET, C#, WinUI/Windows UI, MSIX, WinGet, PowerShell, GitHub Actions/CI, ADMX/GPO(企业策略)
-
-**摘要**: Microsoft PowerToys 是微软官方开源的 Windows 增强工具集，提供 25+ 个小工具以提升生产力与系统可定制性（如窗口布局、快捷启动、批量重命名、取色、文本提取等）。项目通过统一的设置与持续迭代，把分散的“效率插件”能力整合为一套可维护、可部署的系统级工具。近期 0.97.x 版本重点修复稳定性问题，并在 Command Palette、Cursor Wrap、Advanced Paste 等模块持续增强体验与企业可管控性。
-
-**推荐理由**: 工具覆盖面广且贴近真实工作流，安装渠道完善（GitHub/MS Store/WinGet）并保持高频迭代，适合直接落地提升效率。对开发者与企业管理员也有价值：扩展生态（如 Command Palette 扩展）、策略管控（ADMX/GPO）与开源实现便于二次开发与审计。
-
-  <p align='right'><a href='output/report/2026/02/12/daily_report_2026-02-12.md'>🔍 查看完整报告详情</a></p>
-  </blockquote>
-</details>
-
-
-> 💡 更多历史数据请查看 [output/report](./output/report) 目录。
-
-<!-- DIGEST_END -->
-
----
 
 ## 🌟 特性一览
 

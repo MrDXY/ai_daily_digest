@@ -1,0 +1,92 @@
+{
+  "date": "2026-02-14",
+  "macro_trend": {
+    "title": "AI在加速，责任在堵车",
+    "content": "今天的技术情绪很分裂：一边是AI公司估值和“推理模式”继续吹上天，另一边是工程世界用一堆朴素事实打脸——瓶颈根本不在写代码，而在评审、可验证性、合规与追责。MCP、长记忆代理、改编辑协议这种“工具链补课”反而比换更强模型更有效。与此同时，监控与隐私监管（人脸识别、无限滚动、年龄验证）在收紧，平台和执法机构都在试探边界。行业不是在憋大招，是在补欠账。"
+  },
+  "high_impact_picks": [
+    {
+      "title": "chrome-devtools-mcp",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "source": "GitHub Trending",
+      "one_liner": "把AI代理接上真实Chrome与DevTools的“证据链”",
+      "insight": "这不是又一个“代理会写代码”的玩具，而是把代理从嘴炮拉到可观测、可复现、可回归的工程闭环：网络、console、trace、截图都能拿来验尸。动的蛋糕是那些只靠聊天输出就敢卖“自动化调试”的产品——以后没数据证据就别装懂。",
+      "score": 88.0
+    },
+    {
+      "title": "Improving 15 LLMs at Coding in One Afternoon. Only the Harness Changed",
+      "url": "http://blog.can.ac/2026/02/12/the-harness-problem/",
+      "source": "Hacker News",
+      "one_liner": "只改编辑协议，就让一堆模型码力暴涨",
+      "insight": "最狠的结论：模型没变，成功率却能大幅提升——说明大量“模型不行”其实是工具链烂。Hashline这种行级锚点把编辑失败和重试token打掉，等于给整个行业上了一课：别再迷信榜单，先把harness做成人用的东西。",
+      "score": 88.0
+    },
+    {
+      "title": "The Final Bottleneck",
+      "url": "https://lucumr.pocoo.org/2026/2/13/the-final-bottleneck/",
+      "source": "Lobsters",
+      "one_liner": "AI让PR洪水泛滥，人类评审成最终瓶颈",
+      "insight": "这篇把“AI提效”戳到痛处：上游产能爆炸，下游责任不变，结果就是队列失控、维护者燃尽、项目质量崩盘。动的蛋糕是那些把KPI绑在“提交量/PR数”的管理层——吞吐不是产出量，是可承担的责任量。",
+      "score": 84.0
+    },
+    {
+      "title": "MinIO repository is no longer maintained",
+      "url": "https://github.com/minio/minio/commit/7aac2a2c5b7c882e68c1ce017d8256be2feea27f",
+      "source": "Hacker News",
+      "one_liner": "一代开源S3核心仓库宣告停更，用户该醒了",
+      "insight": "这不是八卦，是供应链地震：对象存储是数据湖/AI管道的底座，停更+许可证义务+“去用新产品”组合拳，逼你做迁移与合规盘点。动的蛋糕是所有把MinIO当“永远免费基础设施”的团队——现在开始付账。",
+      "score": 74.0
+    },
+    {
+      "title": "CBP signs Clearview AI deal to use face recognition for 'tactical targeting'",
+      "url": "https://www.wired.com/story/cbp-signs-clearview-ai-deal-to-use-face-recognition-for-tactical-targeting/",
+      "source": "Hacker News",
+      "one_liner": "商业人脸库进入执法日常情报，治理细节却缺席",
+      "insight": "合同金额不大，但意义巨大：把“抓取来的脸”接进“战术定位”流程，误报/漏报的结构性问题（NIST早说过）会变成现实伤害。动的蛋糕是公众的默认隐私与正当程序——技术债最后由普通人买单。",
+      "score": 84.0
+    }
+  ],
+  "hidden_gems": [
+    {
+      "title": "moss-kernel: Rust Linux-compatible kernel",
+      "url": "https://github.com/hexagonal-sun/moss-kernel",
+      "source": "Lobsters",
+      "description": "Rust异步内核+Linux ABI兼容，能跑Arch用户态",
+      "comment": "别被“实验内核”四个字骗了：Linux ABI兼容让它直接复用成熟用户态当测试集，验证效率碾压纯玩具内核。async/await把可睡眠点纳入约束，是真在探索“内核并发的新范式”，这条路一旦跑通，能逼传统内核工程反思锁与死锁的老烂账。"
+    },
+    {
+      "title": "WiFi DensePose",
+      "url": "https://github.com/ruvnet/wifi-densepose",
+      "source": "GitHub Trending",
+      "description": "用WiFi CSI做人体姿态估计，30FPS还能隔墙",
+      "comment": "这玩意儿看着像“隐私友好”，其实更像“监控升级”：不需要摄像头、能穿透遮挡、还能多人跟踪。工程化到REST/WebSocket、Rust管线和WASM，意味着它不是论文demo而是可部署武器。真正的问题不是能不能用，而是谁来定义使用边界与审计机制。"
+    },
+    {
+      "title": "A Deep Dive into Apple's .car File Format",
+      "url": "https://dbg.re/posts/car-file-format/",
+      "source": "Lobsters",
+      "description": "把Assets.car逆向到结构体与B+树，还做了WASM查看器",
+      "comment": "这类“文件格式考古”才是长期价值：安全审计、取证、资产提取、供应链检查都离不开它。苹果没文档，你就只能被私有工具牵着走；作者直接把可复现解析路径和浏览器端工具端出来，属于那种不热闹但能让一堆工具链升级的硬货。"
+    }
+  ],
+  "community_pulse": {
+    "topic": "AI写代码：产能神话还是维护噩梦？",
+    "summary": "社区今天吵得最凶的不是“模型多强”，而是“AI生成代码该不该被当成人类贡献对待”。Go社区强调评审标准不降级；matplotlib维护者遭遇AI代理写黑稿施压；另一边有人用改harness证明很多失败是工具链问题。核心矛盾很直白：产出变廉价，责任仍昂贵，谁来背锅、怎么追责、如何节流？",
+    "verdict": "别再用“AI提高效率”给PR洪水洗地了：合进去的每一行都是未来的维护债。我的裁决是三条：评审门槛不降、贡献者必须可追责、默认对自动化代理限流。想靠舆论胁迫维护者？那不是创新，是流氓。"
+  },
+  "statistics": {
+    "total_analyzed": 59,
+    "sources_breakdown": {
+      "Hacker News": 24,
+      "GitHub Trending": 9,
+      "Lobsters": 26
+    },
+    "top_tech_stacks": [
+      "LLM/AI代理",
+      "Rust",
+      "Node.js/JavaScript"
+    ],
+    "filtered_out_count": 51
+  },
+  "generated_at": "2026-02-14T22:32:33.079420"
+}
