@@ -3,7 +3,10 @@ Semantic similarity helper using embeddings.
 """
 
 import logging
-from typing import Optional
+import os
+import shutil
+from pathlib import Path
+from typing import Any, Optional
 
 import httpx
 
@@ -38,11 +41,45 @@ class SemanticSimilarity:
         self.api_base = api_base.rstrip("/") if api_base else ""
         self.api_version = api_version
         self.deployment = deployment
-        self._embedder: Optional[TextEmbedding] = None
+        self._embedder: Optional[Any] = None
         self._client: Optional[httpx.AsyncClient] = None
         self._warned_missing = False
+        self._warned_fastembed_failure = False
+        self._fastembed_retry_done = False
 
-    def _load_fastembed(self) -> Optional[TextEmbedding]:
+    def _fastembed_cache_root(self) -> Path:
+        # fastembed 默认缓存：$FASTEMBED_CACHE_PATH 或系统临时目录下 fastembed_cache
+        override = os.environ.get("FASTEMBED_CACHE_PATH") or os.environ.get("FASTEMBED_CACHE_DIR")
+        if override:
+            return Path(override)
+        tmp = os.environ.get("TMPDIR") or "/tmp"
+        return Path(tmp) / "fastembed_cache"
+
+    def _safe_clear_fastembed_model_cache(self) -> bool:
+        """Best-effort 清理当前模型缓存，避免残缺下载导致的 NO_SUCHFILE。"""
+        try:
+            root = self._fastembed_cache_root()
+            if not root.exists():
+                return False
+
+            # fastembed 通常用 huggingface 风格目录：models--ORG--NAME
+            safe_model_dir = "models--" + self.model_name.replace("/", "--")
+            target = root / safe_model_dir
+            if target.exists() and target.is_dir():
+                shutil.rmtree(target, ignore_errors=True)
+                return True
+            return False
+        except Exception as exc:  # pragma: no cover
+            logger.debug(f"Failed to clear fastembed cache: {exc}")
+            return False
+
+    def _disable_semantic_dedup(self, reason: str) -> None:
+        self.enabled = False
+        if not self._warned_fastembed_failure:
+            logger.warning(f"Semantic dedup disabled: {reason}")
+            self._warned_fastembed_failure = True
+
+    def _load_fastembed(self) -> Optional[Any]:
         if not self.enabled:
             return None
         if TextEmbedding is None:
@@ -50,9 +87,33 @@ class SemanticSimilarity:
                 logger.warning("fastembed is not installed; semantic dedup disabled")
                 self._warned_missing = True
             return None
-        if self._embedder is None:
+
+        if self._embedder is not None:
+            return self._embedder
+
+        # fastembed 第一次初始化时可能因为缓存残缺导致 onnx 文件缺失（NO_SUCHFILE）。
+        # 这里做一次清缓存重试，仍失败则直接降级禁用语义去重。
+        try:
             self._embedder = TextEmbedding(model_name=self.model_name)
-        return self._embedder
+            return self._embedder
+        except Exception as exc:
+            if not self._fastembed_retry_done:
+                self._fastembed_retry_done = True
+                cleared = self._safe_clear_fastembed_model_cache()
+                logger.warning(
+                    "fastembed init failed (%s). cache_cleared=%s. retrying once...",
+                    exc,
+                    cleared,
+                )
+                try:
+                    self._embedder = TextEmbedding(model_name=self.model_name)
+                    return self._embedder
+                except Exception as exc2:
+                    self._disable_semantic_dedup(f"fastembed init failed after retry: {exc2}")
+                    return None
+
+            self._disable_semantic_dedup(f"fastembed init failed: {exc}")
+            return None
 
     async def _get_client(self) -> httpx.AsyncClient:
         if self._client is None:
@@ -76,7 +137,12 @@ class SemanticSimilarity:
             embedder = self._load_fastembed()
             if embedder is None:
                 return None
-            vector = next(iter(embedder.embed([prepared])), None)
+            try:
+                vector = next(iter(embedder.embed([prepared])), None)
+            except Exception as exc:
+                # 这里常见是 ONNXRuntimeError / 文件缺失 / 模型损坏
+                self._disable_semantic_dedup(f"fastembed embed failed: {exc}")
+                return None
             if vector is None:
                 return None
             return self._normalize_vector(list(vector))
@@ -159,4 +225,3 @@ class SemanticSimilarity:
     @staticmethod
     def _dot(a: list[float], b: list[float]) -> float:
         return sum(x * y for x, y in zip(a, b))
-

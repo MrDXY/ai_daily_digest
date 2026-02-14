@@ -9,7 +9,7 @@ app:
   output_dir: "./output"
   log_level: "INFO"
 
-# 爬虫配置 (StealthFetcher)
+# 爬虫配置 (Scrapy)
 crawler:
   # 并发数
   concurrency: 5

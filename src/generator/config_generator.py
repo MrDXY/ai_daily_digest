@@ -14,11 +14,11 @@ from pathlib import Path
 from typing import Optional
 from urllib.parse import urlparse
 
+import httpx
 import yaml
 
 from ..core.config import AppConfig, get_config_dir
 from ..core.models import FetchTask, FetchStatus
-from ..crawler import LightFetcher, HeavyFetcher
 from ..processor import AIProviderClient
 
 logger = logging.getLogger(__name__)
@@ -68,11 +68,7 @@ list_parser:
 detail_parser:
   enabled: true  # 是否启用二次爬取详情页
   max_details: 20  # 最大详情抓取数
-  use_readability: true  # 是否使用 readability 自动提取
-  # 或者使用自定义选择器
-  # content_selectors:
-  #   title: "CSS选择器"
-  #   content: "CSS选择器"
+  # 正文提取使用 trafilatura 自动提取
 
 # 数据清洗配置
 cleaning:
@@ -108,8 +104,6 @@ class ConfigGenerator:
         """
         self.config = config
         self._ai_provider: Optional[AIProviderClient] = None
-        self._light_fetcher: Optional[LightFetcher] = None
-        self._heavy_fetcher: Optional[HeavyFetcher] = None
 
     def _get_ai_provider(self) -> AIProviderClient:
         """获取 AI Provider"""
@@ -117,23 +111,38 @@ class ConfigGenerator:
             self._ai_provider = AIProviderClient(self.config)
         return self._ai_provider
 
-    async def _get_light_fetcher(self) -> LightFetcher:
-        """获取轻量抓取器"""
-        if self._light_fetcher is None:
-            self._light_fetcher = LightFetcher({
-                "timeout": self.config.crawler.timeout,
-                "user_agents": self.config.crawler.user_agents,
-            })
-        return self._light_fetcher
+    async def _fetch_with_httpx(self, url: str) -> str:
+        """使用 httpx 抓取页面"""
+        async with httpx.AsyncClient(
+            timeout=self.config.crawler.timeout,
+            follow_redirects=True,
+            headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                "Accept-Language": "en-US,en;q=0.9",
+            },
+        ) as client:
+            response = await client.get(url)
+            return response.text
 
-    async def _get_heavy_fetcher(self) -> HeavyFetcher:
-        """获取重量抓取器"""
-        if self._heavy_fetcher is None:
-            self._heavy_fetcher = HeavyFetcher({
-                "timeout": self.config.crawler.timeout,
-                "playwright": self.config.crawler.playwright,
-            })
-        return self._heavy_fetcher
+    async def _fetch_with_playwright(self, url: str) -> str:
+        """使用 Playwright 抓取页面"""
+        from playwright.async_api import async_playwright
+
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            context = await browser.new_context(
+                user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            )
+            page = await context.new_page()
+
+            try:
+                await page.goto(url, wait_until="domcontentloaded", timeout=30000)
+                await page.wait_for_timeout(3000)
+                html = await page.content()
+                return html
+            finally:
+                await browser.close()
 
     async def fetch_page(self, url: str, use_js: bool = False) -> str:
         """
@@ -146,24 +155,13 @@ class ConfigGenerator:
         Returns:
             HTML 内容
         """
-        task = FetchTask(
-            id="config_gen",
-            url=url,
-            site_name="config_generator",
-            site_config={},
-        )
-
-        if use_js:
-            fetcher = await self._get_heavy_fetcher()
-        else:
-            fetcher = await self._get_light_fetcher()
-
-        result = await fetcher.fetch(task)
-
-        if result.status != FetchStatus.SUCCESS:
-            raise RuntimeError(f"抓取失败: {result.error_message}")
-
-        return result.html
+        try:
+            if use_js:
+                return await self._fetch_with_playwright(url)
+            else:
+                return await self._fetch_with_httpx(url)
+        except Exception as e:
+            raise RuntimeError(f"抓取失败: {e}")
 
     def _extract_html_snippet(self, html: str, max_length: int = 30000) -> str:
         """
@@ -391,10 +389,6 @@ class ConfigGenerator:
         if not isinstance(selectors, dict):
             selectors = {}
 
-        content_selectors = detail_parser.get("content_selectors", {})
-        if not isinstance(content_selectors, dict):
-            content_selectors = {}
-
         filtered = {
             "site": pick(site, ["name", "url", "type"]),
             "fetch": pick(fetch, ["prefer_light", "requires_js", "wait_for"]),
@@ -402,10 +396,7 @@ class ConfigGenerator:
                 **pick(list_parser, ["container", "url_prefix"]),
                 "selectors": selectors,
             },
-            "detail_parser": {
-                **pick(detail_parser, ["enabled", "max_details", "use_readability"]),
-                "content_selectors": content_selectors,
-            },
+            "detail_parser": pick(detail_parser, ["enabled", "max_details"]),
             "cleaning": pick(cleaning, ["remove_tags", "extract_text"]),
         }
 
@@ -419,7 +410,4 @@ class ConfigGenerator:
 
     async def close(self):
         """关闭资源"""
-        if self._light_fetcher:
-            await self._light_fetcher.close()
-        if self._heavy_fetcher:
-            await self._heavy_fetcher.close()
+        pass

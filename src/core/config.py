@@ -24,6 +24,7 @@ class CacheConfig(BaseModel):
 
 class CrawlerConfig(BaseModel):
     """爬虫配置"""
+    backend: str = "scrapy"  # 默认使用 scrapy
     concurrency: int = 5
     timeout: int = 30
     max_retries: int = 3

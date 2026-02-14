@@ -35,9 +35,5 @@ detail_parser:
   enabled: true
   # 最大抓取详情数
   max_details: 20
-  # 是否使用 readability 自动提取正文
-  use_readability: false
-  # 内容选择器配置
-  content_selectors:
-    readme: "article.markdown-body"
+  # 正文提取使用 trafilatura 自动提取
 

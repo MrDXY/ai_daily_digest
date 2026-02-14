@@ -24,4 +24,4 @@ list_parser:
 detail_parser:
   enabled: true
   max_details: 20
-  use_readability: true
+  # 正文提取使用 trafilatura 自动提取

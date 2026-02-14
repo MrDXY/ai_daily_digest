@@ -9,15 +9,15 @@
 配置说明:
 - site.type: 页面类型 (structured | article)
 - list_parser: 列表页解析配置，如果为空则直接作为内容页处理
-- detail_parser: 详情页解析配置
-  - content_selectors: 最终内容获取的字段配置
-  - use_readability: 是否使用 readability 自动提取
+- detail_parser: 详情页解析配置（使用 trafilatura 自动提取正文）
 """
 
 import logging
 import uuid
 from datetime import datetime
 from typing import Any, Optional, Callable
+
+import trafilatura
 
 from ..core.config import AppConfig, get_cache_dir
 from ..core.models import FetchTask, FetchResult, FetchStatus, FetchPageType, Article
@@ -38,7 +38,7 @@ class ProcessingPipeline:
     2. 根据站点配置判断页面类型
     3. 如果是 structured 类型且有 list_parser，提取列表项并二次爬取
     4. 如果是 article 类型或无 list_parser，直接解析内容
-    5. 根据 detail_parser.content_selectors 提取最终内容字段
+    5. 使用 trafilatura 提取正文内容
     6. 调用 AI 进行脱水摘要
     7. 生成 Article 对象
     """
@@ -189,12 +189,9 @@ class ProcessingPipeline:
         """
         处理内容页面
 
-        根据 detail_parser.content_selectors 提取内容，
-        或使用 readability 自动提取
+        使用 trafilatura 自动提取正文内容
         """
         detail_parser = site_config.get("detail_parser", {})
-        content_selectors = detail_parser.get("content_selectors", {})
-        use_readability = detail_parser.get("use_readability", True)
 
         item = {"url": result.url}
 
@@ -202,17 +199,9 @@ class ProcessingPipeline:
         if not html and result.parsed_data.get("crawl4ai"):
             html = result.parsed_data.get("crawl4ai", {}).get("cleaned_html")
 
-        if content_selectors and html:
-            # 使用 content_selectors 提取指定字段
-            item = self._extract_content_by_selectors(
-                html,
-                content_selectors,
-                result.url,
-            )
-            item["url"] = result.url
-        elif use_readability and html:
-            # 使用 readability 提取正文
-            article_data = self.cleaner.extract_article(html)
+        if html:
+            # 使用 trafilatura 提取正文
+            article_data = self._extract_with_trafilatura(html)
             item = {
                 "title": article_data.get("title", "Untitled"),
                 "url": result.url,
@@ -229,12 +218,11 @@ class ProcessingPipeline:
         else:
             # 提取元数据作为基础信息
             metadata = self.cleaner.extract_metadata(html or "")
-            _, plain_text = self.cleaner.clean(html or "", result.url)
             item = {
                 "title": metadata.get("title", "Untitled"),
                 "url": result.url,
                 "description": metadata.get("description", ""),
-                "content": plain_text,
+                "content": "",
             }
 
         # 预先构建 AI 输入并缓存
@@ -242,57 +230,51 @@ class ProcessingPipeline:
 
         return [item]
 
-    def _extract_content_by_selectors(
-        self,
-        html: str,
-        content_selectors: dict[str, Any],
-        base_url: str,
-    ) -> dict[str, Any]:
-        """
-        根据 content_selectors 提取内容字段
-
-        content_selectors 格式:
-        {
-            "title": "h1.article-title",
-            "content": "div.article-body",
-            "author": "span.author-name",
-            "publish_date": "time.publish-date",
-            ...
-        }
-        """
+    def _extract_with_trafilatura(self, html: str) -> dict[str, str]:
+        """使用 trafilatura 提取文章内容"""
         from bs4 import BeautifulSoup
 
-        soup = BeautifulSoup(html, "lxml")
-        result = {}
+        try:
+            # 使用 trafilatura 提取正文
+            text = trafilatura.extract(
+                html,
+                include_comments=False,
+                include_tables=True,
+                no_fallback=False,
+                favor_precision=True,
+            )
 
-        for field_name, selector_config in content_selectors.items():
-            # 支持简单字符串或复杂配置
-            if isinstance(selector_config, str):
-                selector = selector_config
-                attr = None
-            elif isinstance(selector_config, dict):
-                selector = selector_config.get("selector", "")
-                attr = selector_config.get("attr")  # 可选：提取属性而非文本
-            else:
-                continue
+            # 提取标题
+            soup = BeautifulSoup(html, "lxml")
+            title = ""
 
-            if not selector:
-                continue
+            # 尝试从 meta og:title 获取
+            og_title = soup.find("meta", property="og:title")
+            if og_title and og_title.get("content"):
+                title = og_title.get("content")
 
-            elem = soup.select_one(selector)
-            if elem:
-                if attr:
-                    result[field_name] = elem.get(attr, "")
-                else:
-                    # 对于 content 字段，保留更多格式
-                    if field_name == "content":
-                        result[field_name] = elem.get_text(separator="\n", strip=True)
-                    else:
-                        result[field_name] = elem.get_text(strip=True)
-            else:
-                result[field_name] = ""
+            # 尝试从 title 标签获取
+            if not title:
+                title_tag = soup.find("title")
+                if title_tag:
+                    title = title_tag.get_text(strip=True)
 
-        return result
+            # 尝试从 h1 获取
+            if not title:
+                h1 = soup.find("h1")
+                if h1:
+                    title = h1.get_text(strip=True)
+
+            if text:
+                return {"title": title, "text": text}
+
+            # trafilatura 提取失败，回退到 cleaner
+            logger.debug("Trafilatura extraction returned empty, falling back to cleaner")
+            return self.cleaner.extract_article(html)
+
+        except Exception as e:
+            logger.warning(f"Trafilatura extraction failed: {e}")
+            return self.cleaner.extract_article(html)
 
     async def _fetch_details(
         self,
@@ -304,8 +286,6 @@ class ProcessingPipeline:
         """
         detail_parser = site_config.get("detail_parser", {})
         max_details = detail_parser.get("max_details", 20)
-        content_selectors = detail_parser.get("content_selectors", {})
-        use_readability = detail_parser.get("use_readability", True)
 
         # 过滤有效 URL 的项目
         items_to_fetch = [
@@ -352,30 +332,15 @@ class ProcessingPipeline:
             if not detail_html and detail_result.parsed_data.get("crawl4ai"):
                 detail_html = detail_result.parsed_data.get("crawl4ai", {}).get("cleaned_html")
 
-            if content_selectors and detail_html:
-                # 使用 content_selectors 提取
-                extracted = self._extract_content_by_selectors(
-                    detail_html,
-                    content_selectors,
-                    url,
-                )
-                # 合并提取的内容到 item
-                for key, value in extracted.items():
-                    if value:  # 只更新非空值
-                        item[key] = value
-            elif use_readability and detail_html:
-                # 使用 readability 提取正文
-                article_data = self.cleaner.extract_article(detail_html)
+            if detail_html:
+                # 使用 trafilatura 提取正文
+                article_data = self._extract_with_trafilatura(detail_html)
                 item["content"] = article_data.get("text", "")
                 # 如果列表页没有标题，使用详情页标题
                 if not item.get("title"):
                     item["title"] = article_data.get("title", "Untitled")
             elif detail_result.text:
                 item["content"] = detail_result.text
-            else:
-                # 直接提取纯文本
-                _, plain_text = self.cleaner.clean(detail_html or "", url)
-                item["content"] = plain_text
 
             # 构建 AI payload 并缓存
             self._attach_ai_payload(item, detail_parser)
@@ -509,7 +474,7 @@ class ProcessingPipeline:
         """
         对项目列表进行 AI 摘要
 
-        支持将 content_selectors 中定义的所有字段传递给 AI 进行分析
+        使用 trafilatura 提取的正文内容传递给 AI 进行分析
         """
         if not self.summarizer:
             raise RuntimeError("Summarizer not initialized")
@@ -620,22 +585,7 @@ class ProcessingPipeline:
         detail_parser: Optional[dict[str, Any]] = None,
     ) -> dict[str, Any]:
         """构建发送给 AI 的 payload"""
-        content_selectors = (detail_parser or {}).get("content_selectors", {})
-        content_fields = list(content_selectors.keys()) if content_selectors else ["content"]
-
-        content_parts = []
-        for field in content_fields:
-            value = item.get(field)
-            if value and field not in ["title", "url"]:
-                if field == "content":
-                    content_parts.append(value)
-                else:
-                    content_parts.append(f"{field}: {value}")
-
-        if not content_parts:
-            content = item.get("content") or item.get("description") or ""
-        else:
-            content = "\n\n".join(content_parts)
+        content = item.get("content") or item.get("description") or ""
 
         payload = {
             "title": item.get("title", "Untitled"),

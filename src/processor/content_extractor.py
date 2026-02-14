@@ -16,6 +16,7 @@ from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup, Tag
 from readability import Document
+import trafilatura
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +128,52 @@ class SmartContentExtractor:
         return self._extract_article(html)
 
     def _extract_article(self, html: str) -> dict[str, str]:
-        """使用 readability 提取文章"""
+        """使用 trafilatura 提取文章"""
+        try:
+            # 使用 trafilatura 提取正文
+            text = trafilatura.extract(
+                html,
+                include_comments=False,
+                include_tables=True,
+                no_fallback=False,
+                favor_precision=True,
+            )
+
+            # 提取标题
+            soup = BeautifulSoup(html, "lxml")
+            title = ""
+
+            # 尝试从 meta og:title 获取
+            og_title = soup.find("meta", property="og:title")
+            if og_title and og_title.get("content"):
+                title = og_title.get("content")
+
+            # 尝试从 title 标签获取
+            if not title:
+                title_tag = soup.find("title")
+                if title_tag:
+                    title = title_tag.get_text(strip=True)
+
+            # 尝试从 h1 获取
+            if not title:
+                h1 = soup.find("h1")
+                if h1:
+                    title = h1.get_text(strip=True)
+
+            if text:
+                text = self._clean_whitespace(text)
+                return {"title": title, "content": "", "text": text, "markdown": text}
+
+            # trafilatura 提取失败，回退到 readability
+            logger.debug("Trafilatura extraction returned empty, falling back to readability")
+            return self._extract_article_fallback(html)
+
+        except Exception as e:
+            logger.warning(f"Trafilatura extraction failed: {e}, falling back to readability")
+            return self._extract_article_fallback(html)
+
+    def _extract_article_fallback(self, html: str) -> dict[str, str]:
+        """使用 readability 作为回退提取文章"""
         try:
             doc = Document(html)
             title = doc.title()

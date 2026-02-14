@@ -7,11 +7,14 @@ curl_cffi>=0.7.0              # 轻量级抓取，支持 impersonate
 playwright>=1.40.0            # 重量级抓取，JS渲染
 playwright-stealth>=1.0.6     # 绕过检测
 crawl4ai>=0.4.0               # Crawl4AI 爬取
+scrapy>=2.11.0                # Scrapy 爬虫框架
+scrapy-playwright>=0.0.40     # Scrapy Playwright 集成（可选）
 
 # === 解析层 ===
 beautifulsoup4>=4.12.0        # HTML解析
 lxml>=5.0.0                   # 高性能解析器
 readability-lxml>=0.8.1       # 正文提取算法
+trafilatura>=1.6.0            # 高质量网页正文提取
 
 # === AI 层 (多模型支持) ===
 anthropic>=0.39.0             # Claude API

@@ -25,7 +25,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from src.core.config import load_config, AppConfig, get_report_date_dir, get_cache_dir
 from src.core.models import FetchTask, FetchResult, FetchStatus, Article, DigestReport
 from src.core.exceptions import DigestException
-from src.crawler import FetchManager
+from src.scrapy_crawler import ScrapyFetchManager
 from src.processor import ProcessingPipeline, HTMLCleaner
 from src.notifier import ReportGenerator, TerminalDisplay, ReadmeUpdater
 from src.generator import ConfigGenerator
@@ -97,10 +97,11 @@ class DailyDigestApp:
             self.display.show_warning("No tasks to process")
             return DigestReport(date=datetime.now().strftime("%Y-%m-%d"))
 
-        # 使用 FetchManager 进行抓取和处理（保持 manager 可用于二次爬取）
+        # 使用 Scrapy 爬虫后端
         errors: list[str] = []
+        self.display.show_info("Using Scrapy backend...")
 
-        async with FetchManager(
+        async with ScrapyFetchManager(
             self.config.crawler,
         ) as fetch_manager:
             # 执行抓取
@@ -199,7 +200,7 @@ class DailyDigestApp:
     async def _execute_fetch_with_manager(
         self,
         tasks: list[FetchTask],
-        manager: 'FetchManager',
+        manager: ScrapyFetchManager,
     ) -> list[FetchResult]:
         """使用指定的 FetchManager 执行抓取"""
         # 使用进度条
@@ -219,37 +220,10 @@ class DailyDigestApp:
 
         return results
 
-    async def _execute_fetch(self, tasks: list[FetchTask]) -> list[FetchResult]:
-        """执行抓取（独立使用 FetchManager）"""
-        # 获取缓存配置
-        cache_dir = get_cache_dir(self.config)
-        cache_enabled = self.config.crawler.cache.enabled
-
-        async with FetchManager(
-            self.config.crawler,
-            cache_dir=cache_dir,
-            cache_enabled=cache_enabled,
-        ) as manager:
-            # 清理旧缓存
-            keep_days = self.config.crawler.cache.keep_days
-            manager.clear_old_cache(keep_days)
-
-            results = await self._execute_fetch_with_manager(tasks, manager)
-
-            # 显示缓存统计
-            cache_stats = manager.get_stats().get("cache", {})
-            if cache_stats.get("enabled"):
-                self.display.show_info(
-                    f"Cache: {cache_stats.get('total_files', 0)} files, "
-                    f"{cache_stats.get('total_size_mb', 0)} MB"
-                )
-
-        return results
-
     async def _process_results(
         self,
         results: list[FetchResult],
-        fetch_manager: Optional['FetchManager'] = None,
+        fetch_manager: Optional[ScrapyFetchManager] = None,
     ) -> tuple[list[Article], list[str]]:
         """处理抓取结果"""
         articles = []
@@ -414,6 +388,7 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="详细输出",
     )
+
 
     # 配置生成相关参数
     parser.add_argument(

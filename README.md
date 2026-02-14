@@ -40,6 +40,7 @@ export OPENAI_API_KEY="your-api-key"         # 或 OpenAI
 python main.py
 ```
 
+
 ---
 
 ## ✨ 一键添加新闻站点（核心功能）
@@ -111,12 +112,19 @@ ai_daily_digest/
 │   │   ├── models.py            # 数据模型
 │   │   ├── queue.py             # 异步队列
 │   │   └── exceptions.py        # 自定义异常
-│   ├── crawler/                 # 爬虫模块 (重构版)
-│   │   ├── stealth_fetcher.py   # 🆕 隐身抓取器（多层反爬虫）
+│   ├── crawler/                 # 爬虫模块 (原有实现)
+│   │   ├── stealth_fetcher.py   # 隐身抓取器（多层反爬虫）
 │   │   ├── manager.py           # 抓取管理器
 │   │   ├── light_fetcher.py     # curl_cffi 轻量抓取 (备用)
 │   │   ├── heavy_fetcher.py     # Playwright 重量抓取 (备用)
 │   │   └── cache.py             # 缓存管理
+│   ├── scrapy_crawler/          # 🆕 Scrapy 爬虫模块
+│   │   ├── manager.py           # Scrapy 抓取管理器
+│   │   ├── spiders/             # Spider 定义
+│   │   │   ├── base_spider.py   # 基础 Spider
+│   │   │   └── site_spider.py   # 动态站点 Spider
+│   │   ├── middlewares.py       # 反爬虫中间件
+│   │   └── pipelines.py         # 数据处理管道
 │   ├── processor/               # 处理模块
 │   │   ├── content_extractor.py # 🆕 智能内容提取器
 │   │   ├── html_cleaner.py      # HTML 清洗
@@ -157,19 +165,19 @@ ai_daily_digest/
 (评分 ≥ 80.0)
 
 
-#### 1. [Apache Arrow is 10 years old](https://arrow.apache.org/blog/2026/02/12/arrow-anniversary/)
+#### 1. [microgpt](http://karpathy.github.io/2026/02/12/microgpt/)
 
 
 
 **评分**: ⭐⭐⭐⭐⭐⭐⭐⭐⭐ (92.0/100)
 
-**核心价值**: Arrow 通过标准化的内存列式数据格式与 IPC 交换协议，解决了不同语言/库/系统之间高成本数据拷贝与序列化开销导致的互操作性与性能问题。其长期稳定的兼容性承诺让数据工具链可以在统一基础上演进并形成规模化生态。
+**核心价值**: 用极简、可读、可端到端运行的方式展示 GPT 训练/推理的“算法本体”，帮助读者理解 LLM 的核心组成而不被工程复杂度（框架、分布式、性能优化）淹没。解决了“想看清 GPT 到底由哪些最小模块构成、梯度如何流动、训练循环如何闭环”的学习门槛问题。
 
-**技术栈**: Apache Arrow Columnar Format, Arrow IPC, FlatBuffers, C, C++, C#, Go, Java, JavaScript, Julia, MATLAB, Python, R, Ruby, Rust, CI/Integration Tests, Apache Parquet, ADBC, nanoarrow, Apache DataFusion, GeoArrow
+**技术栈**: Python, 自研Autograd(微分计算图/反向传播), 字符级Tokenizer, Transformer/GPT-2风格架构, Adam优化器, 训练循环与采样推理, Google Colab, GitHub Gist
 
-**摘要**: 文章回顾了 Apache Arrow 自 2016 年首个提交以来的 10 年发展，强调其作为“跨语言、跨系统交换列式数据”的标准在格式稳定性与生态扩张上的成果。内容重点梳理了 0.1.0 早期设计、跨语言集成测试的建立、格式演进中几乎零破坏性变更（仅 Union 有一次兼容性破坏），以及 2020 年 1.0.0 后对兼容性承诺的“成年化”。同时概览了 Arrow 今日的多语言实现、子项目（ADBC、nanoarrow）与生态成功案例（DataFusion、GeoArrow），并说明未来将以共识驱动、持续增量扩展规范与实现。
+**摘要**: microgpt 是一个仅约 200 行、单文件、零依赖的纯 Python 教学级项目，用最小实现从零训练并推理一个 GPT（类 GPT-2）模型。它把数据集读取、字符级 tokenizer、自制 autograd、Transformer/GPT 网络、Adam 优化器、训练与采样推理全部收敛到一份脚本中，并配套逐段讲解代码。示例使用约 3.2 万个英文名字作为语料，训练后可生成统计上“像名字”的新样本。
 
-**推荐理由**: Arrow 10 年几乎零破坏性变更的记录证明其规范与工程治理足够成熟，适合作为数据平台/分析引擎/数据库之间的长期互操作基础。文章也提供了理解 Arrow 与 Parquet 分工、生态版图与未来演进方式的高层入口，便于技术选型与架构规划。
+**推荐理由**: 它把通常分散在多个库与大量样板代码中的 LLM 关键机制压缩到可通读的最小实现，非常适合做“从原理到代码”的对照学习与教学演示。对想理解 micrograd/makemore/nanogpt 体系脉络、或想自己实现/改造最小 GPT 原型的人尤其有参考价值。
 
   <p align='right'><a href='output/report/2026/02/14/daily_report_2026-02-14.md'>🔍 查看完整报告详情</a></p>
   </blockquote>
