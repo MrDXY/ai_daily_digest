@@ -1,0 +1,65 @@
+# 🚀 AI Daily Insight: 2026-02-15
+
+## 🌪️ 宏观风暴 (The Macro Trend)
+> **AI落地开始“还债”**
+>
+> 今天的技术情绪很一致：AI从“能不能”转向“敢不敢、管不管、怎么接入”。一边是MCP、记忆型代理、生成式UI把工具链打通，想把人从重复劳动里挤出去；另一边是“vibe coding”与AI slopware把代码质量、文档与可维护性炸成废墟。更讽刺的是，真正的生产力提升不靠更玄学的模型，而靠可观测、可复现、可审计的工程化。行业在憋大招，但欠的技术债和治理债也在集体到期。
+
+## ⚡ 核心突破 (High-Impact Picks)
+
+- **[chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp)** `GitHub` 评分: 87.0
+  - 把真实Chrome DevTools接进AI代理工作流
+  - **犀利洞察**: 这不是“又一个Agent玩具”，而是把Web调试与性能证据链（trace/网络/控制台）标准化给模型用。它动的是一堆“靠截图+猜测写PR”的AI编程工具的蛋糕：以后你得拿数据说话，不是拿幻觉糊弄。
+
+- **[I Fixed Windows Native Development](https://marler8997.github.io/blog/fixed-windows/)** `Lobsters` 评分: 90.0
+  - 用CLI把MSVC/SDK变成可锁定、可复现依赖
+  - **犀利洞察**: Windows原生开发最大毒瘤不是C++，是VS Installer的不可控与漂移。msvcup把工具链拆成声明式依赖，直接把CI和维护者从“装机客服”解放出来。它动的是IDE绑定式生态的蛋糕：构建应该像包管理一样可复制。
+
+- **[My smart sleep mask broadcasts users' brainwaves to an open MQTT broker](https://aimilios.bearblog.dev/reverse-engineering-sleep-mask/)** `HN` 评分: 90.0
+  - 可穿戴设备把EEG数据裸奔到公网MQTT还可远控电刺激
+  - **犀利洞察**: 这不是“隐私担忧”，是高风险医疗级事故前兆：共享凭据+开放Broker=群体性泄露与任意控制。更狠的是作者展示了从Flutter二进制到云端入口的完整审计路径，给IoT厂商上了一课：安全不是PR稿，是架构底线。
+
+- **[Zig – io_uring and Grand Central Dispatch std.Io implementations landed](https://ziglang.org/devlog/2026/#2026-02-13)** `HN` 评分: 86.0
+  - Zig标准库I/O后端可插拔：io_uring与GCD落地
+  - **犀利洞察**: 别小看“换I/O后端不改业务代码”，这才是语言生态能长大的硬实力：把并发模型从宗教战争变成可替换组件。再加上zig-pkg与可共享缓存，Zig在补齐“工程可玩性”，这是抢系统级开发者的地盘。
+
+- **[Breaking the spell of vibe coding](https://www.fast.ai/posts/2026-01-28-dark-flow/)** `HN` 评分: 82.0
+  - 揭穿“氛围编码”带来的虚假高产与组织误激励
+  - **犀利洞察**: 这篇骂得准：AI让你爽，不代表你快。把产出量当KPI只会堆出维护地狱，METR式“主观提效≠客观提效”会越来越常见。它动的是管理层的蛋糕：别再用生成行数自我催眠了，拿质量与回归成本算账。
+
+## 💎 遗珠/冷思考 (Hidden Gems & Skepticism)
+
+- **[Supercazzola - Generate spam for web scrapers](https://dacav.org/projects/supercazzola/)** `Lobsters`
+  - 用马尔可夫链造“爬虫沼泽”反制无视robots的抓取
+  - **点评**: 别被“生成垃圾网页”这句吓到，它解决的是AI抓取时代的成本不对称：你防不住，就让对方抓到吐。配合反向代理做引流，能把贪婪bot的带宽和预算烧穿，比写十条WAF规则更现实。
+
+- **[sql-tap – Real-time SQL traffic viewer for PostgreSQL and MySQL](https://github.com/mickamy/sql-tap)** `HN`
+  - 解析DB wire protocol做实时SQL抓包+TUI观测
+  - **点评**: APM埋点和慢日志经常“缺参数、缺事务关联、缺现场”。sql-tap走代理抓协议，直接把真实查询与绑定参数端上来，还能一键EXPLAIN，定位线上怪SQL的效率会非常暴力。小工具，但专治“看不见”。
+
+- **[Borrowed tuple indexing for HashMap](https://traxys.me/tuple_borrow.html)** `Lobsters`
+  - Rust里复合键零拷贝查询的可行解法
+  - **点评**: 这类文章看着小，但是真在救命：大量Rust服务在(HashMap<(Kind,String)>)这种键上白白clone，最后怪“Rust慢”。作者把Borrow限制、生命周期与HashMap查找机制讲透，属于能立刻省CPU和内存的硬技巧。
+
+## 🗣️ 社区火药味 (Community Pulse)
+
+### AI编程：工程化接管还是“AI垃圾化”
+
+社区今天吵的核心不是模型强不强，而是AI把软件工程带向两条路：一条是MCP、可观测、计划驱动、长期记忆，把代理变成可审计的工具链成员；另一条是vibe coding和AI slopware，文档缺失、环境耦合、PR秒合、维护者和用户一起受罪。甚至连媒体引用与叙事都开始翻车，信任成本飙升。
+
+**主编裁决**: 我站工程化那边：没有可复现、可观测、可回滚的AI协作，都是在给未来的事故写邀请函。AI生成代码可以多，但必须更可验证；谁拿“氛围”当交付标准，谁就是在用团队信誉给自己刷短期绩效。
+
+---
+
+## 📊 数据统计
+
+- 分析条目: 56
+- 筛除条目: 48
+- 来源分布: HN: 24, GitHub: 10, Lobsters: 22
+- 热门技术: LLM/AI代理与MCP, Git/GitHub协作与治理, Rust/系统级工程
+
+---
+
+> 🤖 由 AI Daily Insight 于 2026-02-15 10:13:27 生成
+> 
+> 本报告使用 LLM 进行二次分析，观点仅供参考
