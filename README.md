@@ -17,6 +17,63 @@
 ### 🚀 最近一周 AI 洞察 (Weekly Insight)
 
 <details open>
+  <summary><b>📅 2026-02-15 AI 洞察速览 (点击展开)</b></summary>
+  <blockquote style='margin-top: 10px;'>
+
+### 🌪️ 宏观风暴 (The Macro Trend)
+> **AI工具链开始“长骨头”**
+>
+> 今天的技术情绪很明确：生成式AI从“嘴炮聊天”进入“可控生产”。一边是MCP把浏览器、工具、工作流接上，代理终于能被观测、能验证；另一边是开源与内容生态被AI抓取逼到收缩，连Internet Archive这种公共基础设施都要挨揍。更讽刺的是：企业发现AI替不了基层，反而得扩招补人肉闭环。行业在憋大招，但大招不是更强模型，而是更硬的工具边界、数据边界、责任边界。
+
+### ⚡ 核心突破 (High-Impact Picks)
+
+- **[chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp)** `GitHub` 评分: 87.0
+  - 让AI代理直接操控真实Chrome与DevTools做可验证调试
+  - **犀利洞察**: 这不是“又一个Agent玩具”，而是把AI从幻觉输出拽到可观测的现实世界：性能trace、网络、控制台、截图全接入。动的蛋糕是那些靠“LLM自动修前端”卖故事的工具商——没有浏览器级证据链，你的自动化就是玄学。
+
+- **[Evolving Git for the next decade](https://lwn.net/SubscriberLink/1057561/bddc1e61152fadf6/)** `Lobsters` 评分: 88.0
+  - Git迈向SHA-256与reftables，逼生态升级
+  - **犀利洞察**: 基础设施升级永远最难、也最值钱：SHA-1迁移不是“安全洁癖”，是合规与供应链现实；reftables则是为海量refs与并发一致性还债。动的蛋糕是所有半吊子Git实现与老旧CI工具链——不跟进就等着被淘汰。
+
+- **[MinIO repository is no longer maintained](https://github.com/minio/minio/commit/7aac2a2c5b7c882e68c1ce017d8256be2feea27f)** `HN` 评分: 74.0
+  - MinIO社区仓库停更，迁移到AIStor“免费许可证/企业订阅”
+  - **犀利洞察**: 这不是新闻，这是警报：对象存储这种底座一停更，安全补丁、合规与SLA全变成你的锅。动的蛋糕是“我用开源省钱”的幻想——现在你要么付费买承诺，要么自己承担运维与法律风险。
+
+- **[News publishers limit Internet Archive access due to AI scraping concerns](https://www.niemanlab.org/2026/01/news-publishers-limit-internet-archive-access-due-to-ai-scraping-concerns/)** `HN` 评分: 84.0
+  - 出版商为防AI抓取，开始限制Internet Archive接口
+  - **犀利洞察**: AI数据饥渴正在把开放网络的“公共水电煤”掐断：真正被封的不是网页，而是可批量的API与结构化入口。动的蛋糕是训练数据的灰色获取链条，但代价是公共存档的可用性被连坐，开放互联网继续碎片化。
+
+- **[My smart sleep mask broadcasts users' brainwaves to an open MQTT broker](https://aimilios.bearblog.dev/reverse-engineering-sleep-mask/)** `HN` 评分: 90.0
+  - 智能睡眠眼罩用共享MQTT账号广播脑电，还能被远程电刺激
+  - **犀利洞察**: 这是IoT安全下限的新样板：硬编码共享凭据+开放broker=批量窃听与远程控制。更关键的是，作者用AI辅助逆向把门槛打穿——以后这种“作死式架构”会被更快、更大规模地挖出来并武器化。
+
+### 💎 遗珠/冷思考 (Hidden Gems & Skepticism)
+
+- **[moss-kernel: Rust Linux-compatible kernel](https://github.com/hexagonal-sun/moss-kernel)** `Lobsters`
+  - Rust异步内核，能跑Arch Linux aarch64用户态
+  - **点评**: 别看它没大厂光环，这才是“新内核冷启动”的正确姿势：Linux ABI兼容直接借生态，async/await把并发正确性往编译期推。真正解决的是内核开发最贵的两件事：并发Bug与生态荒漠。
+
+- **[Supercazzola - Generate spam for web scrapers](https://dacav.org/projects/supercazzola/)** `Lobsters`
+  - 用Markov链生成无限网页迷宫，专治无视robots的爬虫
+  - **点评**: 别被“反爬玩具”外表骗了，它抓住了当下痛点：AI爬虫不讲武德、成本外部化。与其跪着上Cloudflare套餐，不如让违规抓取付出算力代价。它解决的是资源消耗战的经济学问题。
+
+- **[sql-tap – Real-time SQL traffic viewer](https://github.com/mickamy/sql-tap)** `HN`
+  - 通过wire协议做SQL流量“旁路抓包”，TUI里直接EXPLAIN
+  - **点评**: Star不重要，思路很硬：不用改代码、不靠采样APM，直接还原真实事务与参数绑定。它解决的是“线上SQL到底发生了什么”这个老大难，尤其适合回归验证与疑难性能抖动排查。
+
+### 🗣️ 社区火药味 (Community Pulse)
+
+### AI抓取把开放生态逼到关门
+
+一边是出版商因AI训练数据抓取开始封Internet Archive接口，另一边开源圈在吵“AI slopware”污染依赖、维护质量崩坏。表面是版权与道德，底层是成本转嫁：抓取方把带宽、存档、维护压力甩给公共基础设施和志愿者，最后大家只能加墙、加许可、加门槛，开放网络继续塌方。
+
+**主编裁决**: 别再装无辜了：没有可审计的数据来源与付费机制，所谓“开放”只会变成被薅秃的公共牧场。对抗抓取、限制API、提高贡献门槛会越来越普遍——这不是倒退，是生态自救。
+
+  <p align='right'><a href='output/report/2026/02/15/daily_insight_2026-02-15.md'>🔍 查看完整洞察报告</a></p>
+  </blockquote>
+</details>
+
+<details >
   <summary><b>📅 2026-02-14 AI 洞察速览 (点击展开)</b></summary>
   <blockquote style='margin-top: 10px;'>
 
